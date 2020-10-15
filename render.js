@@ -1,4 +1,4 @@
-import { getTurn, changeTurn } from "./data.js";
+import { getTurn, changeTurn, addColoredLine } from "./data.js";
 const rowCount = 5;
 const columnCount = 5;
 const oddScale = 1;
@@ -6,13 +6,13 @@ const evenScale = 4;
 const paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
-const dots = document.getElementsByClassName("dot");
 const spaces = document.getElementsByClassName("space");
 const setClickEventLine = (array) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener("click", () => {
       array[i].style.backgroundColor = getTurn();
       changeTurn();
+      addColoredLine(array[i]);
     });
   }
 };
@@ -28,6 +28,8 @@ const createElements = () => {
     for (let j = 1; j <= 2 * columnCount - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
+      div.setAttribute("i", i);
+      div.setAttribute("j", j);
       paper.appendChild(div);
       alignStyle(div, i, j);
     }
