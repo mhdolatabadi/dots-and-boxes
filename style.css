@@ -6,14 +6,14 @@ body {
   background-color: darkgrey;
 }
 
-#turn{
-    background-color: red;
-    text-align: center;
-    text-shadow: thistle;
-    color: white;
-    font-size: 40px;
-    font-family: sans-serif;
-    height: 10vh;
+#turn {
+  background-color: red;
+  text-align: center;
+  text-shadow: thistle;
+  color: white;
+  font-size: 40px;
+  font-family: sans-serif;
+  height: 50px;
 }
 
 #paper {
@@ -21,19 +21,40 @@ body {
   display: grid;
   margin: auto;
   position: relative;
-  width: 70vw;
-  height: 70vw;
+  width: 500px;
+  height: 500px;
   background-color: white;
 }
 
-#scoreboard{
-    background-color: yellowgreen;
-    text-align: center;
-    text-shadow: thistle;
-    color: white;
-    font-size: 40px;
-    font-family: sans-serif;
-    height: 10vh;
+#score-board {
+  display: flex;
+  margin: auto;
+  height: 200px;
+}
+
+#blue {
+  background-color: darkblue;
+  text-align: center;
+  text-shadow: thistle;
+  color: white;
+  font-size: 40px;
+  font-family: sans-serif;
+  height: 50px;
+  margin: auto;
+  border-radius: 25px;
+  padding: 10px;
+}
+#red {
+  background-color: darkred;
+  text-align: center;
+  text-shadow: thistle;
+  color: white;
+  font-size: 40px;
+  font-family: sans-serif;
+  height: 50px;
+  margin: auto;
+  border-radius: 25px;
+  padding: 10px;
 }
 .grid-item {
   width: 100%;
@@ -47,6 +68,7 @@ body {
   width: 90%;
   border-radius: 15px;
   margin: auto;
+  /* border: solid black 5px; */
 }
 .xline:hover {
   background-color: rgb(214, 213, 213);
@@ -58,22 +80,31 @@ body {
   width: 60%;
   border-radius: 15px;
   margin: auto;
+  /* border: solid black 5px; */
 }
 .yline:hover {
   background-color: rgb(214, 213, 213);
 }
 .dot {
-  z-index: 100;
+  z-index: 1;
   width: 100%;
   height: 100%;
+  /* border: solid black 5px; */
   border-radius: 99999999px;
   background-color: gray;
   margin: auto;
+  /* border: solid black 5px; */
 }
 .dot:hover {
   background-color: yellow;
 }
 .space {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  color: white;
+  text-align: center;
   height: 90%;
   width: 90%;
   border-radius: 15px;

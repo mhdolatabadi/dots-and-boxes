@@ -1,4 +1,5 @@
-import { getTurn, changeTurn, addColoredLine } from "./data.js";
+import { getTurn, changeTurn} from "./data.js";
+import { addLineToSquare } from "./logic.js";
 const rowCount = 5;
 const columnCount = 5;
 const oddScale = 1;
@@ -11,8 +12,9 @@ const setClickEventLine = (array) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener("click", () => {
       array[i].style.backgroundColor = getTurn();
+      array[i].setAttribute("lock", "1");
       changeTurn();
-      addColoredLine(array[i]);
+      addLineToSquare(array[i]);
     });
   }
 };
@@ -55,5 +57,8 @@ const setSpanStyle = (div, col, row, styleClass) => {
   div.style.gridColumn = col;
   div.style.gridRow = row;
   div.setAttribute("class", styleClass);
+  if(styleClass == "space"){
+    div.setAttribute("line", 0)
+  }
 };
 render();
