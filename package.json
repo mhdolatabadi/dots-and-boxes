@@ -1,0 +1,9 @@
+{
+  "name": "dots-and-boxes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mhdolatabadi/DotsAndBoxes.git",
+  "author": "mohammadhossein <m.h.dolatabadi.a@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
