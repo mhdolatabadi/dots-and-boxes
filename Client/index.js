@@ -1,6 +1,5 @@
 import {render} from "./render.js";
-// import io from 'socket.io-client';
-const socket = io()
+const socket = io("http://localhost:3000")
 console.log(socket.connected); // false
 
 socket.on('connect', () => {

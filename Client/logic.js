@@ -31,10 +31,11 @@ export const checkCondition = () => {
         condition[i][j] += 1;
         updateScore();
         checkCondition();
+        changeTurn();
+
       }
     }
   }
-  changeTurn();
 };
 const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {
