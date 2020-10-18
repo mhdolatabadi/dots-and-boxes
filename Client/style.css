@@ -1,5 +1,4 @@
 body {
-  /* display: flex; */
   width: 100vw;
   height: 100vh;
   margin: 0;
@@ -17,6 +16,7 @@ body {
 }
 
 #paper {
+  top: 30px;
   padding: 30px;
   display: grid;
   margin: auto;
@@ -24,6 +24,7 @@ body {
   width: 500px;
   height: 500px;
   background-color: white;
+  border: solid rgb(46, 46, 46) 10px;
 }
 
 #score-board {
@@ -68,10 +69,9 @@ body {
   width: 90%;
   border-radius: 15px;
   margin: auto;
-  /* border: solid black 5px; */
 }
 .xline:hover {
-  background-color: rgb(214, 213, 213);
+  background-color: rgb(207, 207, 207);
 }
 .yline {
   position: relative;
@@ -80,20 +80,17 @@ body {
   width: 60%;
   border-radius: 15px;
   margin: auto;
-  /* border: solid black 5px; */
 }
 .yline:hover {
-  background-color: rgb(214, 213, 213);
+  background-color: rgb(207, 207, 207);
 }
 .dot {
   z-index: 1;
   width: 100%;
   height: 100%;
-  /* border: solid black 5px; */
   border-radius: 99999999px;
   background-color: gray;
   margin: auto;
-  /* border: solid black 5px; */
 }
 .dot:hover {
   background-color: yellow;
@@ -102,7 +99,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50px;
+  font-size: 300%;
   color: white;
   text-align: center;
   height: 90%;

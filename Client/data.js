@@ -1,33 +1,33 @@
 import { checkCondition } from "./logic.js";
 
-let turn = "red";
+export const rowCount = 10;
+export const columnCount = 10;
 let blueScore = 0;
 let redScore = 0;
-const updateScoreBoard = () => {
-  document.getElementById("blue").innerHTML = "Blue: " + blueScore
-  document.getElementById("red").innerHTML = "Red: " + redScore
-
-}
-export const updateScore = () => {
-  if (getWinner() != "red") redScore += 1;
-  else blueScore += 1;
-  updateScoreBoard();
+let turn = "red";
+export const getBlueScore = () => {
+  return blueScore;
+};
+export const getRedScore = () => {
+  return redScore;
+};
+export const setBlueScore = (score) => {
+  blueScore = score;
+};
+export const setRedScore = (score) => {
+  redScore = score;
 };
 const create2DArray = (rows) => {
   let arr = [];
   for (let i = 0; i < rows; i++) arr[i] = [];
   return arr;
 };
-let squaresCondition = create2DArray(5);
-// const turnBar = document.getElementById("turn");
-
+let squaresCondition = create2DArray(rowCount);
 export const changeTurn = () => {
-  document.getElementById(turn).style.border = ""
-
+  document.getElementById(turn).style.border = "";
   if (turn === "red") turn = "blue";
   else turn = "red";
-  document.getElementById(turn).style.border = "solid black 5px"
-  // turnBar.style.backgroundColor = turn;
+  document.getElementById(turn).style.border = "solid black 5px";
 };
 export const getTurn = () => {
   return turn;
@@ -37,11 +37,9 @@ export const getWinner = () => {
   else return "red";
 };
 export const addCondition = (i, j) => {
-  console.log(i, j);
   if (squaresCondition[i][j] >= 1) squaresCondition[i][j] += 1;
   else if (squaresCondition[i][j] != 1) squaresCondition[i][j] = 1;
   checkCondition();
-  console.log(squaresCondition[i][j]);
 };
 export const getCondition = () => {
   return squaresCondition;

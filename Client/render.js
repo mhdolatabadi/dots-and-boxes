@@ -1,7 +1,16 @@
-import { getTurn, changeTurn} from "./data.js";
+import {
+  getTurn,
+  changeTurn,
+  rowCount,
+  columnCount,
+  getWinner,
+  getBlueScore,
+  getRedScore,
+  setBlueScore,
+  setRedScore,
+} from "./data.js";
 import { addLineToSquare } from "./logic.js";
-const rowCount = 5;
-const columnCount = 5;
+
 const oddScale = 1;
 const evenScale = 4;
 const paper = document.getElementById("paper");
@@ -11,10 +20,15 @@ const spaces = document.getElementsByClassName("space");
 const setClickEventLine = (array) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener("click", () => {
-      array[i].style.backgroundColor = getTurn();
-      array[i].setAttribute("lock", "1");
-      changeTurn();
-      addLineToSquare(array[i]);
+      console.log(array[i].style.backgroundColor);
+      if (
+        array[i].style.backgroundColor !== "red" &&
+        array[i].style.backgroundColor !== "blue"
+      ) {
+        array[i].style.backgroundColor = getTurn();
+        changeTurn();
+        addLineToSquare(array[i]);
+      }
     });
   }
 };
@@ -57,8 +71,17 @@ const setSpanStyle = (div, col, row, styleClass) => {
   div.style.gridColumn = col;
   div.style.gridRow = row;
   div.setAttribute("class", styleClass);
-  if(styleClass == "space"){
-    div.setAttribute("line", 0)
+  if (styleClass == "space") {
+    div.setAttribute("line", 0);
   }
+};
+const updateScoreBoard = () => {
+  document.getElementById("blue").innerHTML = "Blue: " + getBlueScore();
+  document.getElementById("red").innerHTML = "Red: " + getRedScore();
+};
+export const updateScore = () => {
+  if (getWinner() == "red") setRedScore(getRedScore() + 1);
+  else setBlueScore(getBlueScore() + 1);
+  updateScoreBoard();
 };
 render();
