@@ -5,5 +5,9 @@
   "repository": "https://github.com/mhdolatabadi/DotsAndBoxes.git",
   "author": "mohammadhossein <m.h.dolatabadi.a@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "express": "4.15.2",
+    "socket.io": "^2.3.0"
+  }
 }
