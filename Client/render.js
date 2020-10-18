@@ -32,7 +32,7 @@ const setClickEventLine = (array) => {
     });
   }
 };
-const render = () => {
+export const render = () => {
   createElements();
   stylePaperBy("row");
   stylePaperBy("column");
@@ -84,4 +84,3 @@ export const updateScore = () => {
   else setBlueScore(getBlueScore() + 1);
   updateScoreBoard();
 };
-render();
