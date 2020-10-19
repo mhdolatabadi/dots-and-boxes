@@ -9,6 +9,7 @@ import {
 import { updateScore } from "./render.js";
 
 const spaces = document.getElementsByClassName("space");
+
 export const addLineToSquare = (line) => {
   const j = line.getAttribute("j");
   const i = line.getAttribute("i");
@@ -32,7 +33,6 @@ export const checkCondition = () => {
         updateScore();
         checkCondition();
         changeTurn();
-
       }
     }
   }

@@ -1,7 +1,7 @@
 import { checkCondition } from "./logic.js";
 
-export const rowCount = 5;
-export const columnCount = 5;
+export const rowCount = 10;
+export const columnCount = 10;
 let blueScore = 0;
 let redScore = 0;
 let turn = "red";

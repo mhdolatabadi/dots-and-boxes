@@ -4,6 +4,7 @@ console.log(socket.connected); // false
 
 socket.on('connect', () => {
   console.log(socket.connected); // true
+  
 });
 
 socket.on('disconnect', () => {

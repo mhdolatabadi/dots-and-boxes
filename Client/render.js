@@ -20,14 +20,13 @@ const spaces = document.getElementsByClassName("space");
 const setClickEventLine = (array) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener("click", () => {
-      console.log(array[i].style.backgroundColor);
       if (
         array[i].style.backgroundColor !== "red" &&
         array[i].style.backgroundColor !== "blue"
-      ) {
+      ){
         array[i].style.backgroundColor = getTurn();
-        changeTurn();
         addLineToSquare(array[i]);
+        changeTurn();
       }
     });
   }
