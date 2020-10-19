@@ -1,15 +1,13 @@
 import {
   getTurn,
-  changeTurn,
   rowCount,
   columnCount,
-  getWinner,
   getBlueScore,
   getRedScore,
   setBlueScore,
   setRedScore,
 } from "./data.js";
-import { addLineToSquare } from "./logic.js";
+import { addLineToSquare, checkCondition } from "./logic.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -23,10 +21,10 @@ const setClickEventLine = (array) => {
       if (
         array[i].style.backgroundColor !== "red" &&
         array[i].style.backgroundColor !== "blue"
-      ){
+      ) {
         array[i].style.backgroundColor = getTurn();
         addLineToSquare(array[i]);
-        changeTurn();
+        checkCondition();
       }
     });
   }
@@ -79,7 +77,7 @@ const updateScoreBoard = () => {
   document.getElementById("red").innerHTML = "Red: " + getRedScore();
 };
 export const updateScore = () => {
-  if (getWinner() == "red") setRedScore(getRedScore() + 1);
+  if (getTurn() == "red") setRedScore(getRedScore() + 1);
   else setBlueScore(getBlueScore() + 1);
   updateScoreBoard();
 };

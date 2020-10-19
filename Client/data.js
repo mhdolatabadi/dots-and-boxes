@@ -23,12 +23,12 @@ const create2DArray = (rows) => {
   return arr;
 };
 
-
 let squaresCondition = create2DArray(rowCount);
 const getSquareCondition = () => {
   return squaresCondition;
-}
+};
 export const changeTurn = () => {
+  console.log("changing...");
   document.getElementById(turn).style.border = "";
   if (turn === "red") turn = "blue";
   else turn = "red";
@@ -37,14 +37,9 @@ export const changeTurn = () => {
 export const getTurn = () => {
   return turn;
 };
-export const getWinner = () => {
-  if (turn == "red") return "blue";
-  else return "red";
-};
 export const addCondition = (i, j) => {
   if (squaresCondition[i][j] >= 1) squaresCondition[i][j] += 1;
   else if (squaresCondition[i][j] != 1) squaresCondition[i][j] = 1;
-  checkCondition();
 };
 export const getCondition = () => {
   return squaresCondition;

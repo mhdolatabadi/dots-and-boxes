@@ -1,12 +1,14 @@
 import {
   addCondition,
-  changeTurn,
   getCondition,
-  getWinner,
   rowCount,
   columnCount,
+  getTurn,
+  changeTurn,
 } from "./data.js";
 import { updateScore } from "./render.js";
+
+let gift = false;
 
 const spaces = document.getElementsByClassName("space");
 
@@ -22,20 +24,22 @@ export const addLineToSquare = (line) => {
   }
 };
 export const checkCondition = () => {
+  console.log("checking...");
   const condition = getCondition();
-  for (let i = 0; i < condition.length; i++){
-    for (let j = 0; j < condition[i].length; j++){
+  for (let i = 0; i < condition.length; i++) {
+    for (let j = 0; j < condition[i].length; j++) {
       if (condition[i][j] == 4) {
         const space = findSpace(i, j);
-        space.style.backgroundColor = "dark" + getWinner();
-        space.innerHTML = getWinner().slice(0, 1).toUpperCase();
+        space.style.backgroundColor = "dark" + getTurn();
+        space.innerHTML = getTurn().slice(0, 1).toUpperCase();
         condition[i][j] += 1;
         updateScore();
-        checkCondition();
-        changeTurn();
+        gift = true;
       }
     }
   }
+  if (!gift) changeTurn();
+  gift = false;
 };
 const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {
