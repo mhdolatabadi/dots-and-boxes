@@ -1,61 +1,70 @@
+@font-face {
+  font-family: Vazir;
+  src: url('./Vazir-FD.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+*{
+  font-family: Vazir;
+}
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
   background-color: darkgrey;
+  display: flex;
 }
 
-#turn {
-  background-color: red;
+
+#root-container{
+  margin: auto;
+  display: grid;
+  grid-template-areas:
+    "titr titr"
+    "paper paper"
+    "blue-score red-score"
+  ;
+  grid-template-columns: 1fr 1fr;
+  
+}
+#paper {
+  grid-area: paper;
+  padding: 30px;
+  display: grid;
+  margin: 0 auto;
+  width: 65vmin;
+  height: 65vmin;
+  background-color: white;
+  background-color: rgb(46, 46, 46);
+}
+
+#titr{
+  grid-area: titr;
+  font-size: 10vmin;
+  text-align: center;
+  border-radius: 80px 80px 0 0 ;
+}
+
+
+.score{
   text-align: center;
   text-shadow: thistle;
   color: white;
   font-size: 40px;
-  font-family: sans-serif;
   height: 50px;
-}
-
-#paper {
-  top: 30px;
-  padding: 30px;
-  display: grid;
-  margin: auto;
-  position: relative;
-  width: 75vmin;
-  height: 75vmin;
-  background-color: white;
-  border: solid rgb(46, 46, 46) 10px;
-}
-
-#score-board {
-  display: flex;
-  margin: auto;
-  height: 200px;
+  padding: 10px;
 }
 
 #blue {
+  grid-area: blue-score;
   background-color: darkblue;
-  text-align: center;
-  text-shadow: thistle;
-  color: white;
-  font-size: 40px;
-  font-family: sans-serif;
-  height: 50px;
-  margin: auto;
-  border-radius: 25px;
-  padding: 10px;
+  /* border-radius: 0 0  0 80px ; */
 }
 #red {
+  grid-area: red-score;
   background-color: darkred;
-  text-align: center;
-  text-shadow: thistle;
-  color: white;
-  font-size: 40px;
-  font-family: sans-serif;
-  height: 50px;
-  margin: auto;
-  border-radius: 25px;
-  padding: 10px;
+  /* border-radius: 0 0 80px 0; */
+
 }
 .grid-item {
   width: 100%;
@@ -64,36 +73,33 @@ body {
 }
 .xline {
   position: relative;
-  background-color: white;
   height: 60%;
   width: 90%;
   border-radius: 15px;
   margin: auto;
 }
 .xline:hover {
-  background-color: rgb(207, 207, 207);
-}
+  background-color: rgb(65, 65, 65);}
 .yline {
   position: relative;
-  background-color: white;
   height: 90%;
   width: 60%;
   border-radius: 15px;
   margin: auto;
 }
 .yline:hover {
-  background-color: rgb(207, 207, 207);
+  background-color: rgb(65, 65, 65);
 }
 .dot {
   z-index: 1000;
   width: 100%;
   height: 100%;
   border-radius: 99999999px;
-  background-color: orange;
+  background-color: yellow;
   margin: auto;
 }
 .dot:hover {
-  background-color: yellow;
+  background-color: orange;
 }
 .space {
   display: flex;

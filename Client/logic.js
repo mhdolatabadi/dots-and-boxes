@@ -30,8 +30,10 @@ export const checkCondition = () => {
     for (let j = 0; j < condition[i].length; j++) {
       if (condition[i][j] == 4) {
         const space = findSpace(i, j);
+        if(getTurn() === "red") space.innerHTML = "ق";
+        else space.innerHTML = "آ";
         space.style.backgroundColor = "dark" + getTurn();
-        space.innerHTML = getTurn().slice(0, 1).toUpperCase();
+        
         condition[i][j] += 1;
         updateScore();
         gift = true;

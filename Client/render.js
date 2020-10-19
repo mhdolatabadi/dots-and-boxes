@@ -73,8 +73,8 @@ const setSpanStyle = (div, col, row, styleClass) => {
   }
 };
 const updateScoreBoard = () => {
-  document.getElementById("blue").innerHTML = "Blue: " + getBlueScore();
-  document.getElementById("red").innerHTML = "Red: " + getRedScore();
+  document.getElementById("blue").innerHTML = "آبی: " + getBlueScore();
+  document.getElementById("red").innerHTML = "قرمز: " + getRedScore();
 };
 export const updateScore = () => {
   if (getTurn() == "red") setRedScore(getRedScore() + 1);

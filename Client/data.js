@@ -32,11 +32,18 @@ export const changeTurn = () => {
   document.getElementById(turn).style.border = "";
   if (turn === "red") turn = "blue";
   else turn = "red";
-  document.getElementById(turn).style.border = "solid black 5px";
+  document.getElementById(turn).style.borderBottom = "solid rgb(46, 46, 46) 5px";
+  document.getElementById("titr").style.backgroundColor =  "dark" + getTurn()
+  document.getElementById("titr").style.color = "white"
 };
+
 export const getTurn = () => {
   return turn;
 };
+const getOpponent = () => {
+  if (turn === "red") return "blue"
+  else return "red"
+}
 export const addCondition = (i, j) => {
   if (squaresCondition[i][j] >= 1) squaresCondition[i][j] += 1;
   else if (squaresCondition[i][j] != 1) squaresCondition[i][j] = 1;
