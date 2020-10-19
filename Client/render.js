@@ -88,14 +88,21 @@ export const updateScore = () => {
   updateScoreBoard();
 };
 export const changeTurnStyle = () => {
-  document.getElementById(getOpponent()).style.border = "";
-  document.getElementById(getTurn()).style.borderBottom =
-    "solid rgb(46, 46, 46) 5px";
+  document.getElementById(getOpponent()).style.border = "none";
+  if(getTurn() === "red"){
+    document.getElementById(getTurn()).style.borderRight =
+    "solid" + " " + getTurn() + " " + " 5px";
+  } else {
+    document.getElementById(getTurn()).style.borderLeft =
+    "solid" + " " + getTurn() + " " + " 5px";
+  }
+  
+  document.getElementById("titr").style.border = "none"
   document.getElementById("titr").style.backgroundColor = "dark" + getTurn();
   document.getElementById("titr").style.color = "white";
 };
 export const notifEndOfGame = () => {
-  document.body.style.backgroundColor = getTurn();
+  document.body.style.backgroundColor = "goldenrod";
   document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
   if (getTurn() === "red") document.getElementById("titr").innerHTML += " قرمز";
   else document.getElementById("titr").innerHTML += "آبی";

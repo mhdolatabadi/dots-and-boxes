@@ -1,31 +1,29 @@
 @font-face {
   font-family: Vazir;
-  src: url('./Vazir-FD.ttf') format('truetype');
+  src: url("./Vazir-FD.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
-*{
+* {
   font-family: Vazir;
 }
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  background-color: darkgrey;
+  background-color: gray;
   display: flex;
 }
 
-
-#root-container{
+#root-container {
   margin: auto;
   display: grid;
   grid-template-areas:
     "titr titr"
     "paper paper"
     "blue-score red-score"
-  ;
+    "resign resign";
   grid-template-columns: 1fr 1fr;
-  
 }
 #paper {
   grid-area: paper;
@@ -34,19 +32,18 @@ body {
   margin: 0 auto;
   width: 65vmin;
   height: 65vmin;
-  background-color: white;
   background-color: rgb(46, 46, 46);
 }
 
-#titr{
+#titr {
   grid-area: titr;
   font-size: 10vmin;
   text-align: center;
-  border-radius: 80px 80px 0 0 ;
+  border-radius: 60px 60px 0 0;
+  background-color: darkgray;
 }
 
-
-.score{
+.score {
   text-align: center;
   text-shadow: thistle;
   color: white;
@@ -64,7 +61,13 @@ body {
   grid-area: red-score;
   background-color: darkred;
   /* border-radius: 0 0 80px 0; */
-
+}
+#resign{
+  grid-area: resign;
+  background-color: darkgoldenrod;
+  color: white;
+  text-align: center;
+  font-size: 30px;
 }
 .grid-item {
   width: 100%;
@@ -79,7 +82,8 @@ body {
   margin: auto;
 }
 .xline:hover {
-  background-color: rgb(65, 65, 65);}
+  background-color: rgb(65, 65, 65);
+}
 .yline {
   position: relative;
   height: 90%;
