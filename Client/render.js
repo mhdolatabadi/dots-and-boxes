@@ -6,8 +6,10 @@ import {
   getRedScore,
   setBlueScore,
   setRedScore,
+  getOpponent,
+  checkEndOfGame,
 } from "./data.js";
-import { addLineToSquare, checkCondition } from "./logic.js";
+import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -15,9 +17,10 @@ const paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 const spaces = document.getElementsByClassName("space");
-const setClickEventLine = (array) => {
+const addEventToLines = (array, event) => {
+  console.log("setting event listener...");
   for (let i = 0; i < array.length; i++) {
-    array[i].addEventListener("click", () => {
+    array[i].addEventListener(event, () => {
       if (
         array[i].style.backgroundColor !== "red" &&
         array[i].style.backgroundColor !== "blue"
@@ -25,6 +28,7 @@ const setClickEventLine = (array) => {
         array[i].style.backgroundColor = getTurn();
         addLineToSquare(array[i]);
         checkCondition();
+        checkEndOfGame();
       }
     });
   }
@@ -33,8 +37,10 @@ export const render = () => {
   createElements();
   stylePaperBy("row");
   stylePaperBy("column");
-  setClickEventLine(xlines);
-  setClickEventLine(ylines);
+  addEventToLines(xlines, "click");
+  addEventToLines(ylines, "click");
+  addEventToLines(xlines, "touch");
+  addEventToLines(ylines, "touch");
 };
 const createElements = () => {
   for (let i = 1; i <= 2 * rowCount - 1; i++)
@@ -57,14 +63,14 @@ const stylePaperBy = (orientation) => {
   else if (orientation === "column") paper.style.gridTemplateColumns = template;
 };
 const alignStyle = (div, i, j) => {
-  if ((i * j) % 2 === 1) setSpanStyle(div, `${j}`, `${i}`, "dot");
+  if ((i * j) % 2 === 1) setDivStyle(div, `${j}`, `${i}`, "dot");
   else if (i % 2 === 1 && j % 2 !== 1)
-    setSpanStyle(div, `${j - 1} / ${j + 2}`, `${i}`, "xline");
+    setDivStyle(div, `${j - 1} / ${j + 2}`, `${i}`, "xline");
   else if (i % 2 !== 1 && j % 2 === 1)
-    setSpanStyle(div, `${j}`, `${i - 1} / ${i + 2}`, "yline");
-  else setSpanStyle(div, `${j - 1} / ${j + 2}`, `${i - 1} / ${i + 2}`, "space");
+    setDivStyle(div, `${j}`, `${i - 1} / ${i + 2}`, "yline");
+  else setDivStyle(div, `${j - 1} / ${j + 2}`, `${i - 1} / ${i + 2}`, "space");
 };
-const setSpanStyle = (div, col, row, styleClass) => {
+const setDivStyle = (div, col, row, styleClass) => {
   div.style.gridColumn = col;
   div.style.gridRow = row;
   div.setAttribute("class", styleClass);
@@ -80,4 +86,23 @@ export const updateScore = () => {
   if (getTurn() == "red") setRedScore(getRedScore() + 1);
   else setBlueScore(getBlueScore() + 1);
   updateScoreBoard();
+};
+export const changeTurnStyle = () => {
+  document.getElementById(getOpponent()).style.border = "";
+  document.getElementById(getTurn()).style.borderBottom =
+    "solid rgb(46, 46, 46) 5px";
+  document.getElementById("titr").style.backgroundColor = "dark" + getTurn();
+  document.getElementById("titr").style.color = "white";
+};
+export const notifEndOfGame = () => {
+  document.body.style.backgroundColor = getTurn();
+  document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
+  if (getTurn() === "red") document.getElementById("titr").innerHTML += " قرمز";
+  else document.getElementById("titr").innerHTML += "آبی";
+};
+export const colorBox = (i, j) => {
+  const space = findSpace(i, j);
+  if (getTurn() === "red") space.innerHTML = "ق";
+  else space.innerHTML = "آ";
+  space.style.backgroundColor = "dark" + getTurn();
 };

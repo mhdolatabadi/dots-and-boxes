@@ -3,10 +3,9 @@ import {
   getCondition,
   rowCount,
   columnCount,
-  getTurn,
   changeTurn,
 } from "./data.js";
-import { updateScore } from "./render.js";
+import { colorBox, updateScore } from "./render.js";
 
 let gift = false;
 
@@ -26,24 +25,18 @@ export const addLineToSquare = (line) => {
 export const checkCondition = () => {
   console.log("checking...");
   const condition = getCondition();
-  for (let i = 0; i < condition.length; i++) {
-    for (let j = 0; j < condition[i].length; j++) {
+  for (let i = 0; i < condition.length; i++)
+    for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] == 4) {
-        const space = findSpace(i, j);
-        if(getTurn() === "red") space.innerHTML = "ق";
-        else space.innerHTML = "آ";
-        space.style.backgroundColor = "dark" + getTurn();
-        
+        colorBox(i, j);
         condition[i][j] += 1;
         updateScore();
         gift = true;
       }
-    }
-  }
   if (!gift) changeTurn();
   gift = false;
 };
-const findSpace = (i, j) => {
+export const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {
     const x = spaces[k].getAttribute("i");
     const y = spaces[k].getAttribute("j");
