@@ -16,7 +16,8 @@ const evenScale = 4;
 const paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
-const spaces = document.getElementsByClassName("space");
+
+
 const addEventToLines = (array, event) => {
   console.log("setting event listener...");
   for (let i = 0; i < array.length; i++) {

@@ -5,6 +5,7 @@ try {
   console.log(socket.connected); // false
   socket.on("connect", () => {
     console.log(socket.connected); // true
+    socket.send("salam")
   });
   socket.on("disconnect", () => {
     console.log(socket.connected); // false
