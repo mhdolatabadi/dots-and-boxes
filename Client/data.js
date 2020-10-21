@@ -1,4 +1,5 @@
 import { changeTurnStyle, notifEndOfGame } from "./render.js";
+import { notifChange } from "./router.js";
 let blueScore = 0;
 let redScore = 0;
 let turn = "red";
@@ -39,9 +40,13 @@ export const getOpponent = () => {
 export const addCondition = (i, j) => {
   if (squaresCondition[i][j] >= 1) squaresCondition[i][j] += 1;
   else if (squaresCondition[i][j] != 1) squaresCondition[i][j] = 1;
+  notifChange();
 };
 export const getCondition = () => {
   return squaresCondition;
+};
+export const setCondition = (change) => {
+  squaresCondition = change;
 };
 export const checkEndOfGame = () => {
   if (blueScore + redScore == (rowCount - 1) * (rowCount - 1))

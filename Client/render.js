@@ -17,20 +17,24 @@ const paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 
+export const colorLine = (line) => {
+  if (
+    line.style.backgroundColor !== "red" &&
+    line.style.backgroundColor !== "blue"
+  ) 
+    line.style.backgroundColor = getTurn();
+}
+
 
 const addEventToLines = (array, event) => {
   console.log("setting event listener...");
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
-      if (
-        array[i].style.backgroundColor !== "red" &&
-        array[i].style.backgroundColor !== "blue"
-      ) {
-        array[i].style.backgroundColor = getTurn();
+        colorLine(array[i])
         addLineToSquare(array[i]);
         checkCondition();
         checkEndOfGame();
-      }
+      
     });
   }
 };
