@@ -1,8 +1,9 @@
+import { addLineToSquare, checkCondition } from "./logic.js";
 import { changeTurnStyle, notifEndOfGame, colorLine } from "./render.js";
 let blueScore = 0;
 let redScore = 0;
-let own = ""
 let turn = "red";
+let isTurn = true;
 let lineCondition = [];
 
 export const rowCount = 6;
@@ -15,13 +16,19 @@ const initializeArray = () => {
 };
 initializeArray();
 
+export const getIsTurn = () => {
+  return isTurn;
+};
+
+export const setIsTurn = () => {
+  isTurn = !isTurn;
+};
+
 export const setOwn = (string) => {
-  own = string;
-  turn = own;
-}
-export const getOwn = () => {
-  return own
-}
+  turn = string;
+  if (turn == "red") isTurn = true;
+  else isTurn = false;
+};
 
 export const getColoredLine = () => {};
 export const getBlueScore = () => {
@@ -53,7 +60,6 @@ export const getOpponent = () => {
 export const addCondition = (i, j) => {
   if (squaresCondition[i][j] >= 1) squaresCondition[i][j] += 1;
   else if (squaresCondition[i][j] != 1) squaresCondition[i][j] = 1;
-  // notifChange();
 };
 export const getCondition = () => {
   return squaresCondition;
@@ -67,14 +73,12 @@ export const checkEndOfGame = () => {
 };
 
 export const decodeData = (data) => {
-  console.log("decoding...")
-  let temp = data.split(",")
+  setIsTurn();
+  let temp = data.split(",");
   for (let i = 0; i < temp.length; i++) {
-    lineCondition[i+1] = temp[i]
+    lineCondition[i + 1] = temp[i];
   }
-  console.log(lineCondition)
   getLineCondition();
-
 };
 export const codeData = () => {
   let code = "";
@@ -93,27 +97,31 @@ export const addLineCondition = (line) => {
   lineCondition[index] = 1;
 };
 export const getLineCondition = () => {
-  console.log("getting line condition ...")
   for (let i = 1; i <= lineCondition.length; i++) {
-    if(lineCondition[i] == 1){
-      colorLine(getLineFromIndex(i), getOpponent())
-
-    } else console.log("nabood ke!")
-    
+    if (lineCondition[i] == 1) {
+      if (getLineFromIndex(i).style.backgroundColor != "red" && getLineFromIndex(i).style.backgroundColor != "blue") {
+        console.log(getLineFromIndex(i));
+        colorLine(getLineFromIndex(i), getOpponent());
+        console.log("from opponent");
+        addLineToSquare(getLineFromIndex(i));
+        checkCondition();
+      }
+    }
   }
-}
+};
 
 export const getLineFromIndex = (index) => {
-  console.log("getting line from index ...")
-  const elements = document.getElementById("paper").childNodes
+  const elements = document.getElementById("paper").childNodes;
   for (let k = 0; k < elements.length; k++) {
     const j = elements[k].getAttribute("j");
     const i = elements[k].getAttribute("i");
-    const kind = elements[k].getAttribute("class")
+    const kind = elements[k].getAttribute("class");
 
-    if((index == Math.floor(i / 2) * 11 + j / 2 && kind == "xline") || (index == (i - 1) * 5 + Math.floor(j / 2) + i / 2 && kind == "yline")){
-      console.log(elements[k])
-      return elements[k]
+    if (
+      (index == Math.floor(i / 2) * 11 + j / 2 && kind == "xline") ||
+      (index == (i - 1) * 5 + Math.floor(j / 2) + i / 2 && kind == "yline")
+    ) {
+      return elements[k];
     }
   }
-}
+};

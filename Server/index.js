@@ -23,6 +23,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("change", change);
     console.log(change);
   });
+  socket.on("gift", (gift) => {
+    socket.broadcast.emit("gift", gift)
+  })
 });
 
 http.listen(3000, () => {

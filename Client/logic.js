@@ -3,14 +3,17 @@ import {
   getCondition,
   rowCount,
   columnCount,
+  getIsTurn,
 } from "./data.js";
 import { colorBox, updateScore } from "./render.js";
+import { notifGift } from "./router.js";
 
 let gift = false;
 
 const spaces = document.getElementsByClassName("space");
 
 export const addLineToSquare = (line) => {
+  console.log("adding line to square ...");
   const j = line.getAttribute("j");
   const i = line.getAttribute("i");
   if (line.className == "yline") {
@@ -27,13 +30,14 @@ export const checkCondition = () => {
   for (let i = 0; i < condition.length; i++)
     for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] == 4) {
+        console.log("there");
         colorBox(i, j);
         condition[i][j] += 1;
         updateScore();
         gift = true;
       }
-  // if (!gift) ;
-  // gift = false;
+  if (gift) notifGift();
+  gift = false;
 };
 export const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {

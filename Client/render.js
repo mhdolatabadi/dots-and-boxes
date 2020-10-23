@@ -9,6 +9,8 @@ import {
   getOpponent,
   checkEndOfGame,
   addLineCondition,
+  getIsTurn,
+  setIsTurn,
 } from "./data.js";
 import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
 import { coding } from "./router.js";
@@ -20,29 +22,28 @@ const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 
 export const colorLine = (line, color) => {
-  console.log("coloring line ...")
   if (
     line.style.backgroundColor !== "red" &&
     line.style.backgroundColor !== "blue"
-  ) 
+  )
     line.style.backgroundColor = color;
-}
-
+};
 
 const addEventToLines = (array, event) => {
-  console.log("setting event listener...");
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
-        colorLine(array[i], getTurn())
+      if (getIsTurn()) {
         addLineToSquare(array[i]);
+        colorLine(array[i], getTurn());
         checkCondition();
         checkEndOfGame();
-        addLineCondition(array[i])
+        addLineCondition(array[i]);
         coding();
-      
+      }
     });
   }
 };
+
 export const render = () => {
   createElements();
   stylePaperBy("row");
@@ -99,15 +100,15 @@ export const updateScore = () => {
 };
 export const changeTurnStyle = () => {
   document.getElementById(getOpponent()).style.border = "none";
-  if(getTurn() === "red"){
+  if (getTurn() === "red") {
     document.getElementById(getTurn()).style.borderRight =
-    "solid" + " " + getTurn() + " " + " 5px";
+      "solid" + " " + getTurn() + " " + " 5px";
   } else {
     document.getElementById(getTurn()).style.borderLeft =
-    "solid" + " " + getTurn() + " " + " 5px";
+      "solid" + " " + getTurn() + " " + " 5px";
   }
-  
-  document.getElementById("titr").style.border = "none"
+
+  document.getElementById("titr").style.border = "none";
   document.getElementById("titr").style.backgroundColor = "dark" + getTurn();
   document.getElementById("titr").style.color = "white";
 };
@@ -119,8 +120,13 @@ export const notifEndOfGame = () => {
 };
 export const colorBox = (i, j) => {
   const space = findSpace(i, j);
-  if (getTurn() === "red") space.innerHTML = "ق";
-  else space.innerHTML = "آ";
-  space.style.backgroundColor = "dark" + getTurn();
+  if (getIsTurn()) {
+    space.style.backgroundColor = "dark" + getTurn();
+    if (getTurn() === "red") space.innerHTML = "ق";
+    else space.innerHTML = "آ";
+  } else {
+    if (getOpponent() === "red") space.innerHTML = "ق";
+    else space.innerHTML = "آ";
+    space.style.backgroundColor = "dark" + getOpponent();
+  }
 };
-
