@@ -139,11 +139,19 @@ export const notifEndOfGame = (winner) => {
     document.getElementById("titr").backgroundColor = "blue";
   }
 };
-export const ynotifEndOfGame = () => {
-  document.body.style.backgroundColor = "goldenrod";
-  document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
-  if (getTurn() === "red") document.getElementById("titr").innerHTML += " قرمز";
-  else document.getElementById("titr").innerHTML += "آبی";
+export const ynotifEndOfGame = (state) => {
+  if(state === "winner"){
+    document.body.style.backgroundColor = "goldenrod";
+    document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
+    if (getTurn() === "red") document.getElementById("titr").innerHTML += " قرمز";
+    else document.getElementById("titr").innerHTML += "آبی";
+
+  } else {
+    document.body.style.backgroundColor = "goldenrod";
+    document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
+    if (getOpponent() === "red") document.getElementById("titr").innerHTML += " قرمز";
+    else document.getElementById("titr").innerHTML += "آبی";
+  }
 };
 
 export const colorBox = (i, j) => {

@@ -38,6 +38,7 @@ export const setOwn = (string) => {
   document.getElementById("titr").style.backgroundColor = turn;
 };
 
+
 export const getColoredLine = () => {};
 export const getBlueScore = () => {
   return blueScore;

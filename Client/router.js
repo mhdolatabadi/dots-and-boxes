@@ -27,8 +27,10 @@ socket.on("gift", (gift) => {
 });
 
 export const resign = () => {
+  ynotifEndOfGame("loser");
   socket.emit("resign")
 };
 socket.on("resign", () => {
-  ynotifEndOfGame();
-});
+  ynotifEndOfGame("winner");
+  socket.emit("disconnect", "salam")
+}); 

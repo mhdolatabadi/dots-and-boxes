@@ -1,34 +1,42 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-let connectionCount = 0;
+let temp = "";
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
 io.on("connection", (socket) => {
-  connectionCount++;
-  if (connectionCount == 1) socket.emit("hello", "red");
-  else if (connectionCount == 2) socket.emit("hello", "blue");
+  if (temp === "") {
+    temp = socket.id;
+    socket.room = temp;
+    socket.join(temp);
+    socket.emit("hello", "red");
+  } else {
+    socket.join(temp);
+    socket.room = temp;
+    socket.emit("hello", "blue");
+    temp = "";
+  }
   socket.on("hello", (msg) => {
     console.log(msg);
   });
   console.log("a user connected");
   socket.on("disconnect", () => {
-    connectionCount--;
-    console.log("user disconnected");
+    socket.broadcast.to(socket.room).emit("resign", "salam");
+    console.log("disconnected");
   });
   socket.on("change", (change) => {
-    socket.broadcast.emit("change", change);
+    socket.broadcast.to(socket.room).emit("change", change);
     console.log(change);
   });
   socket.on("gift", (gift) => {
-    socket.broadcast.emit("gift", gift)
-  })
+    socket.broadcast.to(socket.room).emit("gift", gift);
+  });
   socket.on("resign", () => {
-    socket.broadcast.emit("resign", "salam")
-  })
+    socket.broadcast.to(socket.room).emit("resign", "salam");
+  });
 });
 
 http.listen(3000, () => {
