@@ -6,6 +6,13 @@ let turn = "red";
 let isTurn = true;
 let lineCondition = [];
 
+export const getConditionLine = () => {
+  return lineCondition
+}
+export const setConditionLine = (a) => {
+  lineCondition = a
+}
+
 export const rowCount = 6;
 export const columnCount = 6;
 
@@ -13,7 +20,7 @@ const initializeArray = () => {
   for (let i = 1; i <= 2 * rowCount * (rowCount - 1); i++) {
     lineCondition[i] = 0;
   }
-};
+}
 initializeArray();
 
 export const getIsTurn = () => {
@@ -28,6 +35,7 @@ export const setOwn = (string) => {
   turn = string;
   if (turn == "red") isTurn = true;
   else isTurn = false;
+  document.getElementById("titr").style.backgroundColor = turn;
 };
 
 export const getColoredLine = () => {};
@@ -50,6 +58,13 @@ const create2DArray = (rows) => {
 };
 let squaresCondition = create2DArray(rowCount);
 
+export const getSquaresCondition = () => {
+  return squaresCondition
+}
+export const setSquaresCondition = (a) => {
+  squaresCondition = a
+}
+
 export const getTurn = () => {
   return turn;
 };
@@ -69,8 +84,8 @@ export const setCondition = (change) => {
 };
 export const checkEndOfGame = () => {
   if (blueScore + redScore == (rowCount - 1) * (rowCount - 1))
-    return notifEndOfGame();
-};
+    return notifEndOfGame(blueScore > redScore ? blueScore : redScore);
+}; 
 
 export const decodeData = (data) => {
   setIsTurn();
@@ -100,9 +115,7 @@ export const getLineCondition = () => {
   for (let i = 1; i <= lineCondition.length; i++) {
     if (lineCondition[i] == 1) {
       if (getLineFromIndex(i).style.backgroundColor != "red" && getLineFromIndex(i).style.backgroundColor != "blue") {
-        console.log(getLineFromIndex(i));
         colorLine(getLineFromIndex(i), getOpponent());
-        console.log("from opponent");
         addLineToSquare(getLineFromIndex(i));
         checkCondition();
       }

@@ -11,9 +11,11 @@ import {
   addLineCondition,
   getIsTurn,
   setIsTurn,
+  setConditionLine,
+  setSquaresCondition,
 } from "./data.js";
 import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
-import { coding } from "./router.js";
+import { coding, resign } from "./router.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -27,6 +29,13 @@ export const colorLine = (line, color) => {
     line.style.backgroundColor !== "blue"
   )
     line.style.backgroundColor = color;
+};
+
+const addEventToResign = (event) => {
+  const resignDiv = document.getElementById("resign");
+  resignDiv.addEventListener(event, () => {
+    resign();
+  });
 };
 
 const addEventToLines = (array, event) => {
@@ -52,6 +61,8 @@ export const render = () => {
   addEventToLines(ylines, "click");
   addEventToLines(xlines, "touch");
   addEventToLines(ylines, "touch");
+  addEventToResign("click");
+  addEventToResign("touch");
 };
 const createElements = () => {
   for (let i = 1; i <= 2 * rowCount - 1; i++)
@@ -94,8 +105,13 @@ const updateScoreBoard = () => {
   document.getElementById("red").innerHTML = "قرمز: " + getRedScore();
 };
 export const updateScore = () => {
-  if (getTurn() == "red") setRedScore(getRedScore() + 1);
-  else setBlueScore(getBlueScore() + 1);
+  if (getIsTurn()) {
+    if (getTurn() == "red") setRedScore(getRedScore() + 1);
+    else setBlueScore(getBlueScore() + 1);
+  } else {
+    if (getOpponent() == "red") setRedScore(getRedScore() + 1);
+    else setBlueScore(getBlueScore() + 1);
+  }
   updateScoreBoard();
 };
 export const changeTurnStyle = () => {
@@ -112,12 +128,24 @@ export const changeTurnStyle = () => {
   document.getElementById("titr").style.backgroundColor = "dark" + getTurn();
   document.getElementById("titr").style.color = "white";
 };
-export const notifEndOfGame = () => {
+export const notifEndOfGame = (winner) => {
+  document.body.style.backgroundColor = "goldenrod";
+  document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
+  if (winner === "red") {
+    document.getElementById("titr").innerHTML += " قرمز";
+    document.getElementById("titr").backgroundColor = "red";
+  } else {
+    document.getElementById("titr").innerHTML += "آبی";
+    document.getElementById("titr").backgroundColor = "blue";
+  }
+};
+export const ynotifEndOfGame = () => {
   document.body.style.backgroundColor = "goldenrod";
   document.getElementById("titr").innerHTML = "برنده بازی" + ": ";
   if (getTurn() === "red") document.getElementById("titr").innerHTML += " قرمز";
   else document.getElementById("titr").innerHTML += "آبی";
 };
+
 export const colorBox = (i, j) => {
   const space = findSpace(i, j);
   if (getIsTurn()) {

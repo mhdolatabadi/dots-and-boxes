@@ -13,7 +13,6 @@ let gift = false;
 const spaces = document.getElementsByClassName("space");
 
 export const addLineToSquare = (line) => {
-  console.log("adding line to square ...");
   const j = line.getAttribute("j");
   const i = line.getAttribute("i");
   if (line.className == "yline") {
@@ -25,15 +24,13 @@ export const addLineToSquare = (line) => {
   }
 };
 export const checkCondition = () => {
-  console.log("checking...");
   const condition = getCondition();
   for (let i = 0; i < condition.length; i++)
     for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] == 4) {
-        console.log("there");
         colorBox(i, j);
         condition[i][j] += 1;
-        updateScore();
+        updateScore(); 
         gift = true;
       }
   if (gift) notifGift();

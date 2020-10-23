@@ -1,17 +1,14 @@
-import { codeData, decodeData, setOwn, setIsTurn} from "./data.js";
+import { codeData, decodeData, setOwn, setIsTurn, getIsTurn } from "./data.js";
+import { ynotifEndOfGame } from "./render.js";
 
 const socket = io("http://localhost:3000");
 
-console.log(socket.connected); // false
 socket.on("connect", () => {
-  console.log(socket.connected); // true
 });
 socket.on("disconnect", () => {
-  console.log(socket.connected); // false
 });
 socket.on("hello", (msg) => {
-  setOwn(msg)
-  console.log(msg)
+  setOwn(msg);
   socket.emit("hello", "understand!");
 });
 export const coding = () => {
@@ -19,15 +16,19 @@ export const coding = () => {
   socket.emit("change", codeData());
 };
 socket.on("change", (code) => {
-  decodeData(code)
+  decodeData(code);
 });
 
 export const notifGift = () => {
-  socket.emit("gift", "request")
-  setIsTurn()
-}
+  socket.emit("gift", "request");
+};
 socket.on("gift", (gift) => {
   setIsTurn();
-})
+});
 
-
+export const resign = () => {
+  socket.emit("resign")
+};
+socket.on("resign", () => {
+  ynotifEndOfGame();
+});
