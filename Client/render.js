@@ -8,8 +8,10 @@ import {
   setRedScore,
   getOpponent,
   checkEndOfGame,
+  addLineCondition,
 } from "./data.js";
 import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
+import { coding } from "./router.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -17,12 +19,13 @@ const paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 
-export const colorLine = (line) => {
+export const colorLine = (line, color) => {
+  console.log("coloring line ...")
   if (
     line.style.backgroundColor !== "red" &&
     line.style.backgroundColor !== "blue"
   ) 
-    line.style.backgroundColor = getTurn();
+    line.style.backgroundColor = color;
 }
 
 
@@ -30,10 +33,12 @@ const addEventToLines = (array, event) => {
   console.log("setting event listener...");
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
-        colorLine(array[i])
+        colorLine(array[i], getTurn())
         addLineToSquare(array[i]);
         checkCondition();
         checkEndOfGame();
+        addLineCondition(array[i])
+        coding();
       
     });
   }
@@ -118,3 +123,4 @@ export const colorBox = (i, j) => {
   else space.innerHTML = "آ";
   space.style.backgroundColor = "dark" + getTurn();
 };
+

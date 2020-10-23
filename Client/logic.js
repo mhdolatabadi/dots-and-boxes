@@ -3,7 +3,6 @@ import {
   getCondition,
   rowCount,
   columnCount,
-  changeTurn,
 } from "./data.js";
 import { colorBox, updateScore } from "./render.js";
 
@@ -33,8 +32,8 @@ export const checkCondition = () => {
         updateScore();
         gift = true;
       }
-  if (!gift) changeTurn();
-  gift = false;
+  // if (!gift) ;
+  // gift = false;
 };
 export const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {

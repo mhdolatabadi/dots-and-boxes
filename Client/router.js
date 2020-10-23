@@ -1,4 +1,4 @@
-import { getCondition, setCondition } from "./data.js";
+import { codeData, decodeData, setOwn} from "./data.js";
 
 const socket = io("http://localhost:3000");
 
@@ -10,22 +10,15 @@ socket.on("disconnect", () => {
   console.log(socket.connected); // false
 });
 socket.on("hello", (msg) => {
-  console.log(msg);
-  socket.emit("hello", "yes i can", 1, 2, "abc");
+  console.log(msg)
+  setOwn(msg)
+  socket.emit("hello", "understand!");
 });
-export const notifXlineChange = () => {
-  socket.emit("xline", getCondition());
+export const coding = () => {
+  socket.emit("change", codeData());
 };
-socket.on("xline", (change) => {
-  setCondition(change);
-  console.log(change);
-});
-export const notifYlineChange = () => {
-  socket.emit("yline", getCondition());
-};
-socket.on("yline", (change) => {
-  setCondition(change);
-  console.log(change);
+socket.on("change", (code) => {
+  console.log(code)
+  decodeData(code)
 });
 
-console.log("server isn't up!");
