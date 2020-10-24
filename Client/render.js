@@ -10,9 +10,6 @@ import {
   checkEndOfGame,
   addLineCondition,
   getIsTurn,
-  setIsTurn,
-  setConditionLine,
-  setSquaresCondition,
 } from "./data.js";
 import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
 import { coding, resign } from "./router.js";

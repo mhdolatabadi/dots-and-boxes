@@ -1,7 +1,8 @@
 import { codeData, decodeData, setOwn, setIsTurn, getIsTurn } from "./data.js";
 import { ynotifEndOfGame } from "./render.js";
+const config = require("./config")
 
-const socket = io("http://localhost:3000");
+const socket = io(config.host);
 
 socket.on("connect", () => {
 });
