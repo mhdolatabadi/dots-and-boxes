@@ -1,16 +1,22 @@
 import { codeData, decodeData, setOwn, setIsTurn, getIsTurn } from "./data.js";
-import { ynotifEndOfGame } from "./render.js";
+import { ynotifEndOfGame, showError } from "./render.js";
+import {roomId} from "./index.js"
 const config = require("./config")
 
 const socket = io(config.host);
 
-socket.on("connect", () => {
-});
-socket.on("disconnect", () => {
-});
-socket.on("hello", (msg) => {
-  setOwn(msg);
-  socket.emit("hello", "understand!");
+
+socket.on("turn", (turn) => {
+  setOwn(turn);
+})
+
+socket.on("error", (err) => {
+  showError()
+})
+
+socket.on("handshake", (turn) => {
+  setOwn(turn);
+  socket.emit("handshake", roomId());
 });
 export const coding = () => {
   setIsTurn();

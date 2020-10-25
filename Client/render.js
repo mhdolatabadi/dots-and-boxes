@@ -163,3 +163,7 @@ export const colorBox = (i, j) => {
     space.style.backgroundColor = "dark" + getOpponent();
   }
 };
+
+export const showError = () => {
+  
+}
