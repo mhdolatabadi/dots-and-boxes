@@ -12,7 +12,7 @@ import {
   getIsTurn,
 } from "./data.js";
 import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
-import { coding, resign } from "./router.js";
+import { coding, resign, getRole } from "./router.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -35,9 +35,31 @@ const addEventToResign = (event) => {
   });
 };
 
+const removeEventToResign = (event) => {
+  const resignDiv = document.getElementById("resign");
+  resignDiv.removeEventListener(event, () => {
+    resign();
+  });
+};
+
 const addEventToLines = (array, event) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
+      if (getIsTurn() && getRole() !== "subscriber") {
+        addLineToSquare(array[i]);
+        colorLine(array[i], getTurn());
+        checkCondition();
+        checkEndOfGame();
+        addLineCondition(array[i]);
+        coding();
+      }
+    });
+  }
+};
+
+const removeEventToLines = (array, event) => {
+  for (let i = 0; i < array.length; i++) {
+    array[i].removeEventListener(event, () => {
       if (getIsTurn()) {
         addLineToSquare(array[i]);
         colorLine(array[i], getTurn());
@@ -165,5 +187,11 @@ export const colorBox = (i, j) => {
 };
 
 export const showError = () => {
-  
+  document.getElementById("titr").innerHTML = "تماشاچی"
+  // removeEventToLines(xlines, "click");
+  // removeEventToLines(ylines, "click");
+  // removeEventToLines(xlines, "touch");
+  // removeEventToLines(ylines, "touch");
+  // removeEventToResign("click");
+  // removeEventToResign("touch");
 }

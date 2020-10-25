@@ -13,7 +13,9 @@ io.on("connection", (socket) => {
   socket.emit("handshake", "welcome! give me your room id!")
   socket.on("handshake", (roomId) => {
     if (rooms[roomId] === 2) {
-      socket.emit("error", "full");
+      socket.emit("role", "subscriber");
+      socket.join(roomId)
+      socket.role = "subscriber"
     } else if (rooms[roomId] === 1) {
       socket.emit("turn", "blue");
       rooms[roomId] = 2;
@@ -27,8 +29,10 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("disconnect", () => {
-    socket.broadcast.to(socket.room).emit("resign", "opponent resigned");
-    rooms[socket.room] -= 1;
+    if(socket.role !== "subscriber"){
+      socket.broadcast.to(socket.room).emit("resign", "opponent resigned");
+      rooms[socket.room] -= 1;
+    }
   });
   socket.on("change", (change) => {
     socket.broadcast.to(socket.room).emit("change", change);
@@ -42,5 +46,4 @@ io.on("connection", (socket) => {
 });
 
 http.listen(config.port, () => {
-  console.log("listening on *:3000");
 });

@@ -31,12 +31,24 @@ export const setIsTurn = () => {
   isTurn = !isTurn;
 };
 
-export const setOwn = (string) => {
+export const falseTurn = () => {
+  isTurn = false;
+}
+
+export const setTurn = (string) => {
   turn = string;
   if (turn == "red") isTurn = true;
   else isTurn = false;
   document.getElementById("titr").style.backgroundColor = turn;
 };
+
+export const changeTurn = () => {
+  if(turn === "red"){
+    turn = "blue"
+  } else {
+    turn = "red"
+  }
+}
 
 
 export const getColoredLine = () => {};

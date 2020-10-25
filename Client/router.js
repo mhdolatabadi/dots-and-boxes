@@ -1,29 +1,46 @@
-import { codeData, decodeData, setOwn, setIsTurn, getIsTurn } from "./data.js";
+import {
+  codeData,
+  decodeData,
+  setTurn,
+  setIsTurn,
+  changeTurn,
+} from "./data.js";
 import { ynotifEndOfGame, showError } from "./render.js";
-import {roomId} from "./index.js"
+import { roomId } from "./index.js";
 const config = require("./config")
 
 const socket = io(config.host);
+let role = "";
 
+export const getRole = () => {
+  return role;
+}
 
 socket.on("turn", (turn) => {
-  setOwn(turn);
-})
+  setTurn(turn);
+});
 
-socket.on("error", (err) => {
-  showError()
-})
+socket.on("role", (err) => {
+  role = err;
+  showError();
+});
 
 socket.on("handshake", (turn) => {
-  setOwn(turn);
+  setTurn(turn);
   socket.emit("handshake", roomId());
 });
 export const coding = () => {
-  setIsTurn();
-  socket.emit("change", codeData());
+  if(role !== "subscriber"){
+    setIsTurn();
+    socket.emit("change", codeData());
+
+  }
 };
 socket.on("change", (code) => {
   decodeData(code);
+  if (role === "subscriber"){
+    changeTurn();
+  } 
 });
 
 export const notifGift = () => {
@@ -35,9 +52,9 @@ socket.on("gift", (gift) => {
 
 export const resign = () => {
   ynotifEndOfGame("loser");
-  socket.emit("resign")
+  socket.emit("resign");
 };
 socket.on("resign", () => {
   ynotifEndOfGame("winner");
-  socket.emit("disconnect", "salam")
-}); 
+  socket.emit("disconnect", "salam");
+});
