@@ -4,20 +4,40 @@ import {
   setTurn,
   setIsTurn,
   changeTurn,
+  setIsWait,
 } from "./data.js";
-import { ynotifEndOfGame, showError } from "./render.js";
+import { ynotifEndOfGame, showError, waiting, unwaiting } from "./render.js";
 import { roomId } from "./index.js";
-const config = require("./config")
 
-const socket = io(config.host);
+const socket = io("http://localhost:3000");
 let role = "";
+
 
 export const getRole = () => {
   return role;
-}
+};
 
 socket.on("turn", (turn) => {
   setTurn(turn);
+});
+
+socket.on("watch", (changes) => {
+  for (let i = 0; i < changes.length; i++) {
+    decodeData(changes[i]);
+    changeTurn()
+  }
+})
+
+socket.on("wait", (state) => {
+  if (role !== "subscriber") {
+    if (state === "wait") {
+      waiting();
+      setIsWait();
+    } else {
+      unwaiting();
+      setIsWait();
+    }
+  }
 });
 
 socket.on("role", (err) => {
@@ -30,17 +50,16 @@ socket.on("handshake", (turn) => {
   socket.emit("handshake", roomId());
 });
 export const coding = () => {
-  if(role !== "subscriber"){
+  if (role !== "subscriber") {
     setIsTurn();
     socket.emit("change", codeData());
-
   }
 };
 socket.on("change", (code) => {
   decodeData(code);
-  if (role === "subscriber"){
+  if (role === "subscriber") {
     changeTurn();
-  } 
+  }
 });
 
 export const notifGift = () => {

@@ -4,7 +4,16 @@ let blueScore = 0;
 let redScore = 0;
 let turn = "red";
 let isTurn = true;
+let isWait = false;
 let lineCondition = [];
+
+export const getIsWait = () => {
+  return isWait;
+}
+
+export const setIsWait = () => {
+  isWait = !isWait
+}
 
 export const getConditionLine = () => {
   return lineCondition
