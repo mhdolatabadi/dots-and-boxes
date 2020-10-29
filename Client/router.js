@@ -9,7 +9,7 @@ import {
 import { ynotifEndOfGame, showError, waiting, unwaiting } from "./render.js";
 import { roomId } from "./index.js";
 
-const socket = io("http://localhost:3000");
+const socket = io("https://noghteh-bazi.wapp.weblite.me/");
 let role = "";
 
 

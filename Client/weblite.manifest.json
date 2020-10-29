@@ -5,9 +5,9 @@
     "searchable": true,
     "fullscreen": true,
     "inline": false,
-    "serveIndexes": {
+    "servIndexes": {
     "main": "index",
     "fullscreen": "index"
     },
-    "version": "0.0.1"
+    "version": "0.0.8"
 }
