@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
     if(socket.role !== "subscriber"){
       socket.broadcast.to(socket.room).emit("resign", "opponent resigned");
       rooms[socket.room] -= 1;
-      changeLog[roomId] = []
+      changeLog[socket.room] = []
     }
   });
   socket.on("change", (change) => {
