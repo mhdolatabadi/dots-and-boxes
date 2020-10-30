@@ -14,17 +14,15 @@ if (W !== undefined) {
 
 export const roomId = () => {
   if (W !== undefined) return W.wapp.getWisId();
-  else
-  return id;
+  else return id;
 };
 export const getUserFirstName = () => {
-  if (W !== undefined) return  W.user.getFirstname();
-  else return "akbar"
-}
+  if (W !== undefined) return W.user.getFirstname();
+  else return "akbar";
+};
 export const getUserId = () => {
-  if(W !== undefined) return W.user.getUserId()
-  // return userId++
-}
-
+  if (W !== undefined) return W.user.getId();
+  return userId++;
+};
 
 render();

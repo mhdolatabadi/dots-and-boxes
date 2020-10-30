@@ -37,6 +37,7 @@ io.on("connection", (socket) => {
         if (checkUser(userId, roomId)) {
           socket.join(roomId);
           socket.broadcast.to(roomId).emit("wait", "play");
+          socket.emit("watch", changeLog[roomId]);
           socket.on("wait", (turn) => {
             socket.emit("turn", turn);
           });
