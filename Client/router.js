@@ -10,6 +10,8 @@ import { ynotifEndOfGame, showError, waiting, unwaiting } from "./render.js";
 import { roomId } from "./index.js";
 
 const socket = io("https://noghteh-bazi.wapp.weblite.me/");
+// const socket = io("https://localhost:3000");
+
 let role = "";
 
 
@@ -46,7 +48,6 @@ socket.on("role", (err) => {
 });
 
 socket.on("handshake", (turn) => {
-  setTurn(turn);
   socket.emit("handshake", roomId());
 });
 export const coding = () => {

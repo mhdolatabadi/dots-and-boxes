@@ -20,9 +20,10 @@ body {
   display: grid;
   grid-template-areas:
     "titr titr"
+    "info info"
     "paper paper"
     "blue-score red-score"
-    "resign resign";
+    "buttons buttons";
   grid-template-columns: 1fr 1fr;
   box-shadow: 15px 10px 20px 0 #00000073;
   border-radius: 50px 50px 50px 50px;
@@ -44,60 +45,81 @@ body {
   align-items: center;
   color: white;
   grid-area: titr;
-  font-size: 50px;
+  font-size: 40px;
   height: 80px;
   text-align: center;
-  background-image: linear-gradient(to left, red ,blue);
+  background-color: rgb(63, 63, 63);
   border-radius: 50px 50px 0 0;
   margin-bottom: 5px;
+  background-image: linear-gradient(to left, red ,blue);
+
 }
 
 .score {
   text-align: center;
   text-shadow: thistle;
   color: white;
-  font-size: 40px;
-  height: 70px;
-  padding: 5px;
+  font-size: 20px;
+  padding: auto;
+}
+#info-container{
+  display: flex;
+  grid-area: info;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+}
+#own{
+  height: 40px;
+  /* width: 40px; */
+  font-size: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: auto;
+
+  border-radius: 80%;
+  /* margin: auto; */
 }
 
 #blue {
   grid-area: blue-score;
-  background-color: blue;
   padding: auto;
-  box-shadow: 0 5px rgb(0, 0, 180);
-  /* border-radius: 0 0  0 20px ; */
+  background-color: rgb(0, 0, 100);
+  box-shadow: 0 9px rgb(0, 0, 100);
 }
 #red {
   grid-area: red-score;
   background-color: red;
   padding: auto;
-  box-shadow: 0 9px rgb(180, 0, 0);
-  /* border-radius: 0 0 20px 0; */
+  box-shadow: 0 9px rgb(200, 0, 0);
 }
-#resign{
-  grid-area: resign;
-  background-color: #dab700;
+
+#button-container{
+  grid-area: buttons;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to left, red ,blue);
+  border-radius: 0 0 50px 50px;
+  margin-top: 6px;
+
+}
+.button{
   color: white;
   text-align: center;
   font-size: 40px;
-  height: 70px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 100%;
   margin-top: 5px;
-  display: flex;
+  margin: auto;
   justify-content: center;
   align-items: center;
-  border-radius: 0 0 20px 20px;
-  box-shadow: 0 9px #a58a00;
 }
-#resign:hover {
-  background-color: #cbaa00;
-}
-#resign:active {
-  background-color: #cbaa00;
-  transform: translateY(4px);
-  box-shadow: 0 5px #a58a00;
+.button:hover {
+  font-size: 50px;
 }
 .grid-item {
   width: 100%;
@@ -139,7 +161,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 300%;
+  font-size: 180%;
   color: white;
   text-align: center;
   height: 90%;

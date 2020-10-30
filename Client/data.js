@@ -1,26 +1,64 @@
+import { getUserFirstName } from "./index.js";
 import { addLineToSquare, checkCondition } from "./logic.js";
-import { changeTurnStyle, notifEndOfGame, colorLine } from "./render.js";
-let blueScore = 0;
-let redScore = 0;
+import { showTurn, notifEndOfGame, colorLine } from "./render.js";
+let opponentScore = 0;
+let score = 0;
 let turn = "red";
 let isTurn = true;
 let isWait = false;
 let lineCondition = [];
+let name = undefined;
+let opponentName = undefined;
+let end = false;
+
+export const getTurn = () => {
+  return turn;
+};
+
+export const getEnd = () => {
+  return end;
+};
+
+export const setEnd = (state) => {
+  end = state;
+};
+
+export const getName = () => {
+  if (name == undefined) {
+    if (turn === "red") return "قرمز";
+    else return "آبی";
+  } else return name;
+};
+
+export const getOpponentName = () => {
+  if (opponentName == undefined) {
+    if (turn === "blue") return "قرمز";
+    else return "آبی";
+  } else return opponentName;
+};
+
+export const setName = (input) => {
+  name = input;
+};
+
+export const setOpponentName = (input) => {
+  opponentName = input;
+};
 
 export const getIsWait = () => {
   return isWait;
-}
+};
 
 export const setIsWait = () => {
-  isWait = !isWait
-}
+  isWait = !isWait;
+};
 
 export const getConditionLine = () => {
-  return lineCondition
-}
+  return lineCondition;
+};
 export const setConditionLine = (a) => {
-  lineCondition = a
-}
+  lineCondition = a;
+};
 
 export const rowCount = 6;
 export const columnCount = 6;
@@ -29,7 +67,7 @@ const initializeArray = () => {
   for (let i = 1; i <= 2 * rowCount * (rowCount - 1); i++) {
     lineCondition[i] = 0;
   }
-}
+};
 initializeArray();
 
 export const getIsTurn = () => {
@@ -38,40 +76,48 @@ export const getIsTurn = () => {
 
 export const setIsTurn = () => {
   isTurn = !isTurn;
+  showTurn()
 };
 
 export const falseTurn = () => {
   isTurn = false;
-}
-
-export const setTurn = (string) => {
-  turn = string;
-  if (turn == "red") isTurn = true;
-  else isTurn = false;
-  document.getElementById("titr").style.backgroundColor = turn;
 };
+
+export const setTurn = (input) => {
+  turn = input;
+  initializeTurn()
+};
+
+const initializeTurn = () => {
+  if (getTurn() === "red") isTurn = true;
+  else isTurn = false;
+  name = getUserFirstName();
+  document.getElementById(getTurn()).innerHTML = getName() + ":" + "0";
+  document.getElementById(getOpponent()).innerHTML =
+    getOpponentName() + ":" + "0";
+}
 
 export const changeTurn = () => {
-  if(turn === "red"){
-    turn = "blue"
+  if (turn === "red") {
+    turn = "blue";
   } else {
-    turn = "red"
+    turn = "red";
   }
-}
-
+  showTurn();
+};
 
 export const getColoredLine = () => {};
-export const getBlueScore = () => {
-  return blueScore;
+export const getOpponentScore = () => {
+  return opponentScore;
 };
-export const getRedScore = () => {
-  return redScore;
+export const getScore = () => {
+  return score;
 };
-export const setBlueScore = (score) => {
-  blueScore = score;
+export const setOpponentScore = (score) => {
+  opponentScore = score;
 };
-export const setRedScore = (score) => {
-  redScore = score;
+export const setScore = (newScore) => {
+  score = newScore;
 };
 const create2DArray = (rows) => {
   let arr = [];
@@ -81,15 +127,13 @@ const create2DArray = (rows) => {
 let squaresCondition = create2DArray(rowCount);
 
 export const getSquaresCondition = () => {
-  return squaresCondition
-}
-export const setSquaresCondition = (a) => {
-  squaresCondition = a
-}
-
-export const getTurn = () => {
-  return turn;
+  return squaresCondition;
 };
+export const setSquaresCondition = (a) => {
+  squaresCondition = a;
+};
+
+
 export const getOpponent = () => {
   if (turn === "red") return "blue";
   else return "red";
@@ -105,9 +149,12 @@ export const setCondition = (change) => {
   squaresCondition = change;
 };
 export const checkEndOfGame = () => {
-  if (blueScore + redScore == (rowCount - 1) * (rowCount - 1))
-    return notifEndOfGame(blueScore > redScore ? blueScore : redScore);
-}; 
+  if (opponentScore + score == (rowCount - 1) * (rowCount - 1)){
+    setEnd(true)
+    if (opponentScore > score) return notifEndOfGame(getOpponent());
+    else return notifEndOfGame(getTurn());
+  }
+};
 
 export const decodeData = (data) => {
   setIsTurn();
@@ -136,10 +183,15 @@ export const addLineCondition = (line) => {
 export const getLineCondition = () => {
   for (let i = 1; i <= lineCondition.length; i++) {
     if (lineCondition[i] == 1) {
-      if (getLineFromIndex(i).style.backgroundColor != "red" && getLineFromIndex(i).style.backgroundColor != "blue") {
+      if (
+        getLineFromIndex(i).style.backgroundColor != "red" &&
+        getLineFromIndex(i).style.backgroundColor != "blue"
+      ) {
         colorLine(getLineFromIndex(i), getOpponent());
         addLineToSquare(getLineFromIndex(i));
         checkCondition();
+        checkEndOfGame();
+
       }
     }
   }

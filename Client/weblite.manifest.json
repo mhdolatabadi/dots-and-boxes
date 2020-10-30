@@ -3,11 +3,10 @@
     "id": "5f945d356cb1bf0d609c860a",
     "instantiable": true,
     "searchable": true,
-    "fullscreen": true,
+    "fullscreen": false,
     "inline": false,
     "servIndexes": {
-    "main": "index",
-    "fullscreen": "index"
+    "main": "index"
     },
-    "version": "0.0.8"
+    "version": "0.2.4"
 }
