@@ -32,7 +32,7 @@ export const colorLine = (line, color) => {
 const addEventToResign = (event) => {
   const resignDiv = document.getElementById("resign");
   resignDiv.addEventListener(event, () => {
-    if (getRole() !== "subscriber" && !getIsWait()) resign();
+    if (getRole() !== "subscriber" && !getIsWait() && !getEnd()) resign();
   });
 };
 
@@ -168,16 +168,6 @@ export const notifEndOfGame = (winner) => {
   } else {
     document.getElementById("titr").innerHTML = "بازنده";
     document.getElementById("titr").backgroundColor = getOpponent();
-  }
-  setEnd(true)
-};
-export const ynotifEndOfGame = (state) => {
-  if (state === "winner") {
-    document.body.style.backgroundColor = "goldenrod";
-    document.getElementById("titr").innerHTML = "برنده";
-  } else {
-    document.body.style.backgroundColor = "goldenrod";
-    document.getElementById("titr").innerHTML = "بازنده";
   }
   setEnd(true)
 };

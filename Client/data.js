@@ -1,6 +1,7 @@
 import { getUserFirstName } from "./index.js";
 import { addLineToSquare, checkCondition } from "./logic.js";
 import { showTurn, notifEndOfGame, colorLine } from "./render.js";
+import { getRole } from "./router.js";
 let opponentScore = 0;
 let score = 0;
 let turn = "red";
@@ -43,6 +44,7 @@ export const setName = (input) => {
 
 export const setOpponentName = (input) => {
   opponentName = input;
+  initializeTurn()
 };
 
 export const getIsWait = () => {
@@ -76,7 +78,7 @@ export const getIsTurn = () => {
 
 export const setIsTurn = () => {
   isTurn = !isTurn;
-  showTurn()
+  showTurn();
 };
 
 export const falseTurn = () => {
@@ -85,7 +87,7 @@ export const falseTurn = () => {
 
 export const setTurn = (input) => {
   turn = input;
-  initializeTurn()
+  initializeTurn();
 };
 
 const initializeTurn = () => {
@@ -95,7 +97,7 @@ const initializeTurn = () => {
   document.getElementById(getTurn()).innerHTML = getName() + ":" + "0";
   document.getElementById(getOpponent()).innerHTML =
     getOpponentName() + ":" + "0";
-}
+};
 
 export const changeTurn = () => {
   if (turn === "red") {
@@ -133,7 +135,6 @@ export const setSquaresCondition = (a) => {
   squaresCondition = a;
 };
 
-
 export const getOpponent = () => {
   if (turn === "red") return "blue";
   else return "red";
@@ -149,8 +150,8 @@ export const setCondition = (change) => {
   squaresCondition = change;
 };
 export const checkEndOfGame = () => {
-  if (opponentScore + score == (rowCount - 1) * (rowCount - 1)){
-    setEnd(true)
+  if (opponentScore + score == (rowCount - 1) * (rowCount - 1)) {
+    setEnd(true);
     if (opponentScore > score) return notifEndOfGame(getOpponent());
     else return notifEndOfGame(getTurn());
   }
@@ -187,11 +188,12 @@ export const getLineCondition = () => {
         getLineFromIndex(i).style.backgroundColor != "red" &&
         getLineFromIndex(i).style.backgroundColor != "blue"
       ) {
-        colorLine(getLineFromIndex(i), getOpponent());
+        if (getRole() !== "subscriber")
+          colorLine(getLineFromIndex(i), getOpponent());
+        else colorLine(getLineFromIndex(i), getTurn());
         addLineToSquare(getLineFromIndex(i));
         checkCondition();
         checkEndOfGame();
-
       }
     }
   }

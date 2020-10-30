@@ -5,15 +5,23 @@ import {
   setIsTurn,
   changeTurn,
   setIsWait,
+  getOpponent,
+  getTurn,
+  setOpponentName,
 } from "./data.js";
-import { ynotifEndOfGame, showError, waiting, unwaiting } from "./render.js";
-import { roomId } from "./index.js";
+import {
+  notifEndOfGame,
+  showError,
+  waiting,
+  unwaiting,
+  render,
+} from "./render.js";
+import { getUserFirstName, getUserId, roomId } from "./index.js";
 
-const socket = io("https://noghteh-bazi.wapp.weblite.me/");
-// const socket = io("https://localhost:3000");
+// const socket = io("https://noghteh-bazi.wapp.weblite.me/");
+const socket = io("http://localhost:3000");
 
 let role = "";
-
 
 export const getRole = () => {
   return role;
@@ -24,11 +32,13 @@ socket.on("turn", (turn) => {
 });
 
 socket.on("watch", (changes) => {
-  for (let i = 0; i < changes.length; i++) {
-    decodeData(changes[i]);
-    changeTurn()
+  if (changes.length > 0) {
+    for (let i = 0; i < changes.length; i++) {
+      decodeData(changes[i]);
+      changeTurn();
+    }
   }
-})
+});
 
 socket.on("wait", (state) => {
   if (role !== "subscriber") {
@@ -36,10 +46,21 @@ socket.on("wait", (state) => {
       waiting();
       setIsWait();
     } else {
+      socket.emit("wait", getOpponent());
       unwaiting();
       setIsWait();
     }
   }
+});
+
+socket.on("greeting", () => {
+  console.log("greeting");
+  socket.emit("greeting", getUserFirstName());
+});
+
+socket.on("name", (name) => {
+  console.log("naming");
+  if (role !== "subscriber") setOpponentName(name);
 });
 
 socket.on("role", (err) => {
@@ -48,33 +69,36 @@ socket.on("role", (err) => {
 });
 
 socket.on("handshake", (turn) => {
-  socket.emit("handshake", roomId());
+  socket.emit("handshake", roomId(), getUserId());
 });
 export const coding = () => {
   if (role !== "subscriber") {
     setIsTurn();
-    socket.emit("change", codeData());
+    socket.emit("change", codeData(), getTurn());
   }
 };
-socket.on("change", (code) => {
+socket.on("change", (code, color) => {
+  if (role === "subscriber") {
+    setTurn(color);
+  }
   decodeData(code);
+});
+
+export const notifGift = () => {
+  if (role !== "subscriber") socket.emit("gift", "request");
+};
+socket.on("gift", (gift) => {
+  setIsTurn();
   if (role === "subscriber") {
     changeTurn();
   }
 });
 
-export const notifGift = () => {
-  socket.emit("gift", "request");
-};
-socket.on("gift", (gift) => {
-  setIsTurn();
-});
-
 export const resign = () => {
-  ynotifEndOfGame("loser");
+  notifEndOfGame(getOpponent());
   socket.emit("resign");
 };
 socket.on("resign", () => {
-  ynotifEndOfGame("winner");
+  notifEndOfGame(getTurn());
   socket.emit("disconnect", "salam");
 });
