@@ -1,1 +1,0 @@
-const rootContainer = document.getElementById("root-container")
