@@ -1,4 +1,4 @@
-import { render } from "./render.js";
+import { render } from "./gameRender.js";
 
 let id = 12;
 let userId = 0;
@@ -18,7 +18,7 @@ export const roomId = () => {
 };
 export const getUserFirstName = () => {
   if (W !== undefined) return W.user.getFirstname();
-  else return "akbar";
+  else return "اکبر";
 };
 export const getUserId = () => {
   if (W !== undefined) return W.user.getId();

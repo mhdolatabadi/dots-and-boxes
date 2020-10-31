@@ -15,7 +15,7 @@ import {
   waiting,
   unwaiting,
   render,
-} from "./render.js";
+} from "./gameRender.js";
 import { getUserFirstName, getUserId, roomId } from "./index.js";
 
 const socket = io("https://noghteh-bazi.wapp.weblite.me/");
@@ -32,6 +32,7 @@ socket.on("turn", (turn) => {
 });
 
 socket.on("watch", (changes) => {
+  console.log("watching...")
   if (changes.length > 0) {
     for (let i = 0; i < changes.length; i++) {
       decodeData(changes[i]);

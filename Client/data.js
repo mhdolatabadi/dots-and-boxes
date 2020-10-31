@@ -1,6 +1,6 @@
 import { getUserFirstName } from "./index.js";
 import { addLineToSquare, checkCondition } from "./logic.js";
-import { showTurn, notifEndOfGame, colorLine } from "./render.js";
+import { showTurn, notifEndOfGame, colorLine } from "./gameRender.js";
 import { getRole } from "./router.js";
 let opponentScore = 0;
 let score = 0;

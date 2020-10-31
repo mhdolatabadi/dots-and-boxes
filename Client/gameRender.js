@@ -21,7 +21,7 @@ import { coding, resign, getRole } from "./router.js";
 
 const oddScale = 1;
 const evenScale = 4;
-const paper = document.getElementById("paper");
+let paper = document.getElementById("paper");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 
@@ -70,13 +70,41 @@ export const render = () => {
   addEventToResign("touch");
 };
 const createElements = () => {
+  const rootContainer = document.getElementById("root-container")
+  const header = document.createElement("div")
+  header.setAttribute("id", "titr")
+  header.innerHTML = "نقطه‌بازی"
+  const firstPaper = document.createElement("div")
+  firstPaper.setAttribute("id", "paper")
+  const red = document.createElement("div")
+  red.setAttribute("class", "score")
+  red.setAttribute("id", "red")
+  red.innerHTML = "قرمز: 0"
+  const blue = document.createElement("div")
+  blue.setAttribute("class", "score")
+  blue.setAttribute("id", "blue")
+  blue.innerHTML = "آبی: 0"
+  const buttonContainer = document.createElement("div")
+  buttonContainer.setAttribute("id", "button-container")
+  const resign = document.createElement("div")
+  resign.setAttribute("id", "resign")
+  resign.setAttribute("class", "button")
+  resign.innerHTML = "🙌"
+  buttonContainer.appendChild(resign)
+  rootContainer.appendChild(header)
+  rootContainer.appendChild(firstPaper)
+  rootContainer.appendChild(red)
+  rootContainer.appendChild(blue)
+  rootContainer.appendChild(buttonContainer)
+  paper = firstPaper
+
   for (let i = 1; i <= 2 * rowCount - 1; i++)
     for (let j = 1; j <= 2 * columnCount - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
       div.setAttribute("i", i);
       div.setAttribute("j", j);
-      paper.appendChild(div);
+      firstPaper.appendChild(div);
       alignStyle(div, i, j);
     }
 };

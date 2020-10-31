@@ -5,7 +5,7 @@ import {
   columnCount,
   getIsTurn,
 } from "./data.js";
-import { colorBox, updateScore } from "./render.js";
+import { colorBox, updateScore } from "./gameRender.js";
 import { notifGift } from "./router.js";
 
 let gift = false;
