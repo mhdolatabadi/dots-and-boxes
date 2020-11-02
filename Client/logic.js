@@ -1,9 +1,7 @@
 import {
   addCondition,
   getCondition,
-  rowCount,
-  columnCount,
-  getIsTurn,
+  get
 } from "./data.js";
 import { colorBox, updateScore } from "./gameRender.js";
 import { notifGift } from "./router.js";
@@ -17,10 +15,10 @@ export const addLineToSquare = (line) => {
   const i = line.getAttribute("i");
   if (line.className == "yline") {
     if (j != 1) addCondition(i / 2, Math.floor(j / 2));
-    if (j != 2 * rowCount - 1) addCondition(i / 2, Math.ceil(j / 2));
+    if (j != 2 * get(row) - 1) addCondition(i / 2, Math.ceil(j / 2));
   } else if (line.className == "xline") {
     if (i != 1) addCondition(Math.floor(i / 2), j / 2);
-    if (i != 2 * columnCount - 1) addCondition(Math.ceil(i / 2), j / 2);
+    if (i != 2 * get(column) - 1) addCondition(Math.ceil(i / 2), j / 2);
   }
 };
 export const checkCondition = () => {
@@ -41,5 +39,13 @@ export const findSpace = (i, j) => {
     const x = spaces[k].getAttribute("i");
     const y = spaces[k].getAttribute("j");
     if (i == x / 2 && j == y / 2) return spaces[k];
+  }
+};
+
+export const checkEnd = () => {
+  if (opponentScore + score == (rowCount - 1) * (rowCount - 1)) {
+    set(end, true);
+    if (opponentScore > score) return notifEndOfGame(get(opponentColor));
+    else return notifEndOfGame(get(color));
   }
 };

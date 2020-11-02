@@ -1,22 +1,5 @@
-import {
-  getTurn,
-  rowCount,
-  columnCount,
-  getOpponentScore,
-  setOpponentScore,
-  getScore,
-  setScore,
-  getOpponent,
-  checkEndOfGame,
-  addLineCondition,
-  getIsTurn,
-  getIsWait,
-  getName,
-  getEnd,
-  getOpponentName,
-  setEnd,
-} from "./data.js";
-import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
+import { addLineCondition, getOpponentName, get } from "./data.js";
+import { addLineToSquare, checkCondition, findSpace, checkEnd} from "./logic.js";
 import { coding, resign, getRole } from "./router.js";
 
 const oddScale = 1;
@@ -32,7 +15,7 @@ export const colorLine = (line, color) => {
 const addEventToResign = (event) => {
   const resignDiv = document.getElementById("resign");
   resignDiv.addEventListener(event, () => {
-    if (getRole() !== "subscriber" && !getIsWait() && !getEnd()) resign();
+    if (getRole() !== "subscriber" && !get(waiting) && !get(end)) resign();
   });
 };
 
@@ -40,18 +23,18 @@ const addEventToLines = (array, event) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
       if (
-        getIsTurn() &&
+        get(permission) &&
         getRole() !== "subscriber" &&
-        !getIsWait() &&
-        !getEnd() &&
+        !get(waiting) &&
+        !get(end) &&
         array[i].style.backgroundColor !== "red" &&
         array[i].style.backgroundColor !== "blue"
       ) {
         addLineToSquare(array[i]);
-        colorLine(array[i], getTurn());
+        colorLine(array[i], get(color));
         checkCondition();
         addLineCondition(array[i]);
-        checkEndOfGame();
+        checkEnd();
         coding();
       }
     });
@@ -70,36 +53,36 @@ export const render = () => {
   addEventToResign("touch");
 };
 const createElements = () => {
-  const rootContainer = document.getElementById("root-container")
-  const header = document.createElement("div")
-  header.setAttribute("id", "titr")
-  header.innerHTML = "نقطه‌بازی"
-  const firstPaper = document.createElement("div")
-  firstPaper.setAttribute("id", "paper")
-  const red = document.createElement("div")
-  red.setAttribute("class", "score")
-  red.setAttribute("id", "red")
-  red.innerHTML = "قرمز: 0"
-  const blue = document.createElement("div")
-  blue.setAttribute("class", "score")
-  blue.setAttribute("id", "blue")
-  blue.innerHTML = "آبی: 0"
-  const buttonContainer = document.createElement("div")
-  buttonContainer.setAttribute("id", "button-container")
-  const resign = document.createElement("div")
-  resign.setAttribute("id", "resign")
-  resign.setAttribute("class", "button")
-  resign.innerHTML = "🙌"
-  buttonContainer.appendChild(resign)
-  rootContainer.appendChild(header)
-  rootContainer.appendChild(firstPaper)
-  rootContainer.appendChild(red)
-  rootContainer.appendChild(blue)
-  rootContainer.appendChild(buttonContainer)
-  paper = firstPaper
+  const rootContainer = document.getElementById("root-container");
+  const header = document.createElement("div");
+  header.setAttribute("id", "titr");
+  header.innerHTML = "نقطه‌بازی";
+  const firstPaper = document.createElement("div");
+  firstPaper.setAttribute("id", "paper");
+  const red = document.createElement("div");
+  red.setAttribute("class", "score");
+  red.setAttribute("id", "red");
+  red.innerHTML = "قرمز: 0";
+  const blue = document.createElement("div");
+  blue.setAttribute("class", "score");
+  blue.setAttribute("id", "blue");
+  blue.innerHTML = "آبی: 0";
+  const buttonContainer = document.createElement("div");
+  buttonContainer.setAttribute("id", "button-container");
+  const resign = document.createElement("div");
+  resign.setAttribute("id", "resign");
+  resign.setAttribute("class", "button");
+  resign.innerHTML = "🙌";
+  buttonContainer.appendChild(resign);
+  rootContainer.appendChild(header);
+  rootContainer.appendChild(firstPaper);
+  rootContainer.appendChild(red);
+  rootContainer.appendChild(blue);
+  rootContainer.appendChild(buttonContainer);
+  paper = firstPaper;
 
-  for (let i = 1; i <= 2 * rowCount - 1; i++)
-    for (let j = 1; j <= 2 * columnCount - 1; j++) {
+  for (let i = 1; i <= 2 * get(row) - 1; i++)
+    for (let j = 1; j <= 2 * get(column) - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
       div.setAttribute("i", i);
@@ -110,7 +93,7 @@ const createElements = () => {
 };
 const stylePaperBy = (orientation) => {
   let template = "";
-  for (let k = 0; k < 2 * rowCount - 1; k++) {
+  for (let k = 0; k < 2 * get(row) - 1; k++) {
     if (k % 2 === 0) template += oddScale + "fr ";
     else template += evenScale + "fr ";
   }
@@ -137,52 +120,53 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
-  document.getElementById(getTurn()).innerHTML = getName() + ": " + getScore();
-  document.getElementById(getOpponent()).innerHTML =
-    getOpponentName() + ": " + getOpponentScore();
+  document.getElementById(get(color)).innerHTML = get(name) + ": " + get(score);
+  document.getElementById(get(opponentColor)).innerHTML =
+    get(opponentName) + ": " + get(opponentScote);
 };
 
 export const updateScore = () => {
-  if (getIsTurn()) setScore(getScore() + 1);
-  else setOpponentScore(getOpponentScore() + 1);
+  if (get(permission)) set(score, get(score) + 1);
+  else set(opponentScore, get(opponentScote) + 1);
   updateScoreBoard();
 };
 
 export const showTurn = () => {
-  if (getIsTurn()) {
-    if (getTurn() === "red") {
-      document.getElementById(getTurn()).style.backgroundColor = "red";
-      document.getElementById(getTurn()).style.boxShadow =
+  if (get(permission)) {
+    if (get(color) === "red") {
+      document.getElementById(get(color)).style.backgroundColor = "red";
+      document.getElementById(get(color)).style.boxShadow =
         "0 9px rgb(200, 0, 0)";
-      document.getElementById(getOpponent()).style.backgroundColor =
+      document.getElementById(get(opponentColor)).style.backgroundColor =
         "rgb(0, 0, 100)";
-      document.getElementById(getOpponent()).style.boxShadow =
+      document.getElementById(get(opponentColor)).style.boxShadow =
         "0 9px rgb(0, 0, 100)";
     } else {
-      document.getElementById(getTurn()).style.backgroundColor = "blue";
-      document.getElementById(getTurn()).style.boxShadow =
+      document.getElementById(get(color)).style.backgroundColor = "blue";
+      document.getElementById(get(color)).style.boxShadow =
         "0 9px rgb(0, 0, 200)";
-      document.getElementById(getOpponent()).style.backgroundColor =
+      document.getElementById(get(opponentColor)).style.backgroundColor =
         "rgb(100, 0, 0)";
-      document.getElementById(getOpponent()).style.boxShadow =
+      document.getElementById(get(opponentColor)).style.boxShadow =
         "0 9px rgb(100, 0, 0)";
     }
   } else {
-    if (getTurn() === "red") {
-      document.getElementById(getTurn()).style.backgroundColor =
+    if (get(color) === "red") {
+      document.getElementById(get(color)).style.backgroundColor =
         "rgb(100, 0, 0)";
-      document.getElementById(getTurn()).style.boxShadow =
+      document.getElementById(get(color)).style.boxShadow =
         "0 9px rgb(100, 0, 0)";
-      document.getElementById(getOpponent()).style.backgroundColor = "blue";
-      document.getElementById(getOpponent()).style.boxShadow =
+      document.getElementById(get(opponentColor)).style.backgroundColor =
+        "blue";
+      document.getElementById(get(opponentColor)).style.boxShadow =
         "0 9px rgb(0, 0, 200)";
     } else {
-      document.getElementById(getOpponent()).style.backgroundColor = "red";
-      document.getElementById(getOpponent()).style.boxShadow =
+      document.getElementById(get(opponentColor)).style.backgroundColor = "red";
+      document.getElementById(get(opponentColor)).style.boxShadow =
         "0 9px rgb(200, 0, 0)";
-      document.getElementById(getTurn()).style.backgroundColor =
+      document.getElementById(get(color)).style.backgroundColor =
         "rgb(0, 0, 100)";
-      document.getElementById(getTurn()).style.boxShadow =
+      document.getElementById(get(color)).style.boxShadow =
         "0 9px rgb(0, 0, 100)";
     }
   }
@@ -190,26 +174,26 @@ export const showTurn = () => {
 
 export const notifEndOfGame = (winner) => {
   document.body.style.backgroundColor = "goldenrod";
-  if (winner === getTurn()) {
+  if (winner === get(color)) {
     document.getElementById("titr").innerHTML = "برنده";
-    document.getElementById("titr").backgroundColor = getTurn();
+    document.getElementById("titr").backgroundColor = get(color);
   } else {
     document.getElementById("titr").innerHTML = "بازنده";
-    document.getElementById("titr").backgroundColor = getOpponent();
+    document.getElementById("titr").backgroundColor = get(opponentColor);
   }
-  setEnd(true)
+  set(end, true);
 };
 
 export const colorBox = (i, j) => {
   const space = findSpace(i, j);
-  if (getIsTurn()) {
-    space.style.backgroundColor = "dark" + getTurn();
-    if (getTurn() === "red") space.innerHTML = "ق";
+  if (get(permission)) {
+    space.style.backgroundColor = "dark" + get(color);
+    if (get(color) === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
   } else {
-    if (getOpponent() === "red") space.innerHTML = "ق";
+    if (get(opponentColor) === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
-    space.style.backgroundColor = "dark" + getOpponent();
+    space.style.backgroundColor = "dark" + get(opponentColor);
   }
 };
 

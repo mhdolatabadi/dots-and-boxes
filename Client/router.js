@@ -1,13 +1,10 @@
 import {
   codeData,
   decodeData,
-  setTurn,
   setIsTurn,
   changeTurn,
-  setIsWait,
-  getOpponent,
-  getTurn,
-  setOpponentName,
+  get,
+  set
 } from "./data.js";
 import {
   notifEndOfGame,
@@ -28,7 +25,7 @@ export const getRole = () => {
 };
 
 socket.on("turn", (turn) => {
-  setTurn(turn);
+  set(color, turn);
 });
 
 socket.on("watch", (changes) => {
@@ -45,11 +42,11 @@ socket.on("wait", (state) => {
   if (role !== "subscriber") {
     if (state === "wait") {
       waiting();
-      setIsWait();
+      set(waiting, true);
     } else {
-      socket.emit("wait", getOpponent());
+      socket.emit("wait", get(opponentColor));
       unwaiting();
-      setIsWait();
+      set(waiting, false);
     }
   }
 });
@@ -61,7 +58,7 @@ socket.on("greeting", () => {
 
 socket.on("name", (name) => {
   console.log("naming");
-  if (role !== "subscriber") setOpponentName(name);
+  if (role !== "subscriber") set(opponentName, name);
 });
 
 socket.on("role", (err) => {
@@ -75,12 +72,12 @@ socket.on("handshake", (turn) => {
 export const coding = () => {
   if (role !== "subscriber") {
     setIsTurn();
-    socket.emit("change", codeData(), getTurn());
+    socket.emit("change", codeData(), get(color));
   }
 };
-socket.on("change", (code, color) => {
+socket.on("change", (code, colori) => {
   if (role === "subscriber") {
-    setTurn(color);
+    set(color, colori);
   }
   decodeData(code);
 });
@@ -96,10 +93,10 @@ socket.on("gift", (gift) => {
 });
 
 export const resign = () => {
-  notifEndOfGame(getOpponent());
+  notifEndOfGame(get(opponentColor));
   socket.emit("resign");
 };
 socket.on("resign", () => {
-  notifEndOfGame(getTurn());
+  notifEndOfGame(get(color));
   socket.emit("disconnect", "salam");
 });
