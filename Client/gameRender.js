@@ -1,6 +1,14 @@
-import { addLineCondition, getOpponentName, get } from "./data.js";
-import { addLineToSquare, checkCondition, findSpace, checkEnd} from "./logic.js";
-import { coding, resign, getRole } from "./router.js";
+import { get, set } from "./data.js";
+import {
+  addLineToSquare,
+  checkCondition,
+  findSpace,
+  checkEnd,
+  markLine,
+} from "./logic.js";
+import { coding, resign } from "./router.js";
+import { getUserFirstName } from "./index.js";
+
 
 const oddScale = 1;
 const evenScale = 4;
@@ -15,7 +23,8 @@ export const colorLine = (line, color) => {
 const addEventToResign = (event) => {
   const resignDiv = document.getElementById("resign");
   resignDiv.addEventListener(event, () => {
-    if (getRole() !== "subscriber" && !get(waiting) && !get(end)) resign();
+    if (get("role") !== "subscriber" && !get("waiting") && !get("end"))
+      resign();
   });
 };
 
@@ -23,17 +32,17 @@ const addEventToLines = (array, event) => {
   for (let i = 0; i < array.length; i++) {
     array[i].addEventListener(event, () => {
       if (
-        get(permission) &&
-        getRole() !== "subscriber" &&
-        !get(waiting) &&
-        !get(end) &&
+        get("permission") &&
+        get("role") !== "subscriber" &&
+        !get("waiting") &&
+        !get("end") &&
         array[i].style.backgroundColor !== "red" &&
         array[i].style.backgroundColor !== "blue"
       ) {
         addLineToSquare(array[i]);
-        colorLine(array[i], get(color));
+        colorLine(array[i], get("color"));
         checkCondition();
-        addLineCondition(array[i]);
+        markLine(array[i]);
         checkEnd();
         coding();
       }
@@ -81,8 +90,8 @@ const createElements = () => {
   rootContainer.appendChild(buttonContainer);
   paper = firstPaper;
 
-  for (let i = 1; i <= 2 * get(row) - 1; i++)
-    for (let j = 1; j <= 2 * get(column) - 1; j++) {
+  for (let i = 1; i <= 2 * get("row") - 1; i++)
+    for (let j = 1; j <= 2 * get("column") - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
       div.setAttribute("i", i);
@@ -93,7 +102,7 @@ const createElements = () => {
 };
 const stylePaperBy = (orientation) => {
   let template = "";
-  for (let k = 0; k < 2 * get(row) - 1; k++) {
+  for (let k = 0; k < 2 * get("row") - 1; k++) {
     if (k % 2 === 0) template += oddScale + "fr ";
     else template += evenScale + "fr ";
   }
@@ -120,80 +129,67 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
-  document.getElementById(get(color)).innerHTML = get(name) + ": " + get(score);
-  document.getElementById(get(opponentColor)).innerHTML =
-    get(opponentName) + ": " + get(opponentScote);
+  document.getElementById(get("color")).innerHTML =
+    get("name") + ": " + get("score");
+  document.getElementById(get("opponentColor")).innerHTML =
+    get("opponentName") + ": " + get("opponentScore");
 };
 
 export const updateScore = () => {
-  if (get(permission)) set(score, get(score) + 1);
-  else set(opponentScore, get(opponentScote) + 1);
+  if (get("permission")) set("score", get("score") + 1);
+  else set("opponentScore", get("opponentScore") + 1);
   updateScoreBoard();
 };
 
 export const showTurn = () => {
-  if (get(permission)) {
-    if (get(color) === "red") {
-      document.getElementById(get(color)).style.backgroundColor = "red";
-      document.getElementById(get(color)).style.boxShadow =
-        "0 9px rgb(200, 0, 0)";
-      document.getElementById(get(opponentColor)).style.backgroundColor =
-        "rgb(0, 0, 100)";
-      document.getElementById(get(opponentColor)).style.boxShadow =
-        "0 9px rgb(0, 0, 100)";
+  if (get("permission")) {
+    document.getElementById(get("color")).style.backgroundColor = get("color");
+    if (get("color") === "red") {
+      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(200, 0, 0)";
+      document.getElementById(get("opponentColor")).style.backgroundColor = "rgb(0, 0, 100)";
+      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(0, 0, 100)";
     } else {
-      document.getElementById(get(color)).style.backgroundColor = "blue";
-      document.getElementById(get(color)).style.boxShadow =
-        "0 9px rgb(0, 0, 200)";
-      document.getElementById(get(opponentColor)).style.backgroundColor =
-        "rgb(100, 0, 0)";
-      document.getElementById(get(opponentColor)).style.boxShadow =
-        "0 9px rgb(100, 0, 0)";
+      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(0, 0, 200)";
+      document.getElementById(get("opponentColor")).style.backgroundColor = "rgb(100, 0, 0)";
+      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(100, 0, 0)";
     }
   } else {
-    if (get(color) === "red") {
-      document.getElementById(get(color)).style.backgroundColor =
-        "rgb(100, 0, 0)";
-      document.getElementById(get(color)).style.boxShadow =
-        "0 9px rgb(100, 0, 0)";
-      document.getElementById(get(opponentColor)).style.backgroundColor =
-        "blue";
-      document.getElementById(get(opponentColor)).style.boxShadow =
-        "0 9px rgb(0, 0, 200)";
+    if (get("color") === "red") {
+      document.getElementById(get("color")).style.backgroundColor = "rgb(100, 0, 0)";
+      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(100, 0, 0)";
+      document.getElementById(get("opponentColor")).style.backgroundColor = "blue";
+      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(0, 0, 200)";
     } else {
-      document.getElementById(get(opponentColor)).style.backgroundColor = "red";
-      document.getElementById(get(opponentColor)).style.boxShadow =
-        "0 9px rgb(200, 0, 0)";
-      document.getElementById(get(color)).style.backgroundColor =
-        "rgb(0, 0, 100)";
-      document.getElementById(get(color)).style.boxShadow =
-        "0 9px rgb(0, 0, 100)";
+      document.getElementById(get("opponentColor")).style.backgroundColor = "red";
+      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(200, 0, 0)";
+      document.getElementById(get("color")).style.backgroundColor = "rgb(0, 0, 100)";
+      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(0, 0, 100)";
     }
   }
 };
 
 export const notifEndOfGame = (winner) => {
   document.body.style.backgroundColor = "goldenrod";
-  if (winner === get(color)) {
+  if (winner === get("color")) {
     document.getElementById("titr").innerHTML = "برنده";
-    document.getElementById("titr").backgroundColor = get(color);
+    document.getElementById("titr").backgroundColor = get("color");
   } else {
     document.getElementById("titr").innerHTML = "بازنده";
-    document.getElementById("titr").backgroundColor = get(opponentColor);
+    document.getElementById("titr").backgroundColor = get("opponentColor");
   }
-  set(end, true);
+  set("end", true);
 };
 
 export const colorBox = (i, j) => {
   const space = findSpace(i, j);
-  if (get(permission)) {
-    space.style.backgroundColor = "dark" + get(color);
-    if (get(color) === "red") space.innerHTML = "ق";
+  if (get("permission")) {
+    space.style.backgroundColor = "dark" + get("color");
+    if (get("color") === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
   } else {
-    if (get(opponentColor) === "red") space.innerHTML = "ق";
+    if (get("opponentColor") === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
-    space.style.backgroundColor = "dark" + get(opponentColor);
+    space.style.backgroundColor = "dark" + get("opponentColor");
   }
 };
 
@@ -206,4 +202,13 @@ export const waiting = () => {
 
 export const unwaiting = () => {
   document.getElementById("titr").innerHTML = "نقطه‌بازی";
+};
+
+export const initializeTurn = () => {
+  if (get("color") === "red") set("permission", true);
+  else set("permission", false);
+  set("name", getUserFirstName());
+  document.getElementById(get("color")).innerHTML = get("name") + ":" + "0";
+  document.getElementById(get("opponentColor")).innerHTML =
+    get("opponentName") + ":" + "0";
 };

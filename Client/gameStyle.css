@@ -27,7 +27,6 @@ body {
   grid-template-columns: 1fr 1fr;
   box-shadow: 15px 10px 20px 0 #00000073;
   border-radius: 50px 50px 50px 50px;
-
 }
 #paper {
   grid-area: paper;
@@ -51,8 +50,7 @@ body {
   background-color: rgb(63, 63, 63);
   border-radius: 50px 50px 0 0;
   margin-bottom: 5px;
-  background-image: linear-gradient(to left, red ,blue);
-
+  background-image: linear-gradient(to left, red, blue);
 }
 
 .score {
@@ -62,7 +60,7 @@ body {
   font-size: 20px;
   padding: auto;
 }
-#info-container{
+#info-container {
   display: flex;
   grid-area: info;
   height: 50px;
@@ -70,7 +68,7 @@ body {
   align-items: center;
   background-color: none;
 }
-#own{
+#own {
   height: 40px;
   /* width: 40px; */
   font-size: 20px;
@@ -96,18 +94,17 @@ body {
   box-shadow: 0 9px rgb(200, 0, 0);
 }
 
-#button-container{
+#button-container {
   grid-area: buttons;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(to left, red ,blue);
+  background-image: linear-gradient(to left, red, blue);
   border-radius: 0 0 50px 50px;
   margin-top: 6px;
-
 }
-.button{
+.button {
   color: white;
   text-align: center;
   font-size: 40px;

@@ -1,5 +1,6 @@
 import { render } from "./gameRender.js";
 
+
 let id = 12;
 let userId = 0;
 
@@ -24,5 +25,5 @@ export const getUserId = () => {
   if (W !== undefined) return W.user.getId();
   return userId++;
 };
+render()
 
-render();
