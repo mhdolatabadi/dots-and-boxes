@@ -40,17 +40,19 @@ export const reset = () => {
   render();
   showTurn();
 };
-const initializeArray = () => {
-  for (let i = 1; i <= 2 * get("row") * (get("row") - 1); i++) {
-    get("table").lines[i] = 0;
-  }
+const initializeArray = (array, type, length) => {
+  if (type == "lines")
+    for (let i = 1; i <= length; i++) get("table").lines[i] = 0;
+  else if (type == "squares")
+    for (let i = 0; i < length; i++)
+      for (let j = 0; j < length; j++) array[i][j] = 0;
 };
 
-initializeArray();
-get("table").squares = create2DArray(get("row"))
+initializeArray(get("table").squares, "squares", get("table").squares.length);
+initializeArray(get("table").lines, "lines", 2 * get("row") * (get("row") - 1));
 
+get("table").squares = create2DArray(get("row"));
 
 export const addCondition = (i, j) => {
   if (get("table").squares[i][j] >= 1) get("table").squares[i][j] += 1;
-  else if (get("table").squares[i][j] != 1) get("table").squares[i][j] = 1;
 };

@@ -6,7 +6,7 @@ import {
   checkEnd,
   markLine,
 } from "./logic.js";
-import { coding, resign } from "./router.js";
+import { resign } from "./router.js";
 import { getUserFirstName } from "./index.js";
 
 const oddScale = 1;
@@ -34,7 +34,7 @@ const lineInitializer = (array, event) => {
   for (let i = 0; i < array.length; i++)
     array[i].addEventListener(event, () => {
       hitLine(array[i], get("color"));
-      coding(array[i]);
+      send(array[i]);
     });
 };
 

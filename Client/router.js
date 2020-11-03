@@ -1,5 +1,5 @@
 import { get, set } from "./data.js";
-import { decodeData } from "./logic.js";
+import { recieve } from "./logic.js";
 import { initializeTurn, showMessage } from "./gameRender.js";
 import { getUserFirstName, getUserId, roomId } from "./index.js";
 
@@ -49,7 +49,7 @@ socket.on("role", (role) => {
 });
 
 
-export const coding = (line) => {
+export const send = (line) => {
   const i = line.getAttribute("i")
   const j = line.getAttribute("j")
   const type = line.getAttribute("class")
@@ -66,7 +66,7 @@ socket.on("change", (line, turn) => {
   console.log(line)
   if (get("opponentColor") === turn) {
     set("permission", true);
-    decodeData(line, turn);
+    recieve(line, turn);
   }
 });
 

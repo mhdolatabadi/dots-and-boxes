@@ -48,7 +48,7 @@ export const checkEnd = () => {
   }
 };
 
-export const decodeData = (message, color) => {
+export const recieve = (message, color) => {
   hitLine(findLine(message), color);
 };
 
