@@ -19,7 +19,7 @@ body {
   margin: auto;
   display: grid;
   grid-template-areas:
-    "titr titr"
+    "header header"
     "info info"
     "paper paper"
     "blue-score red-score"
@@ -38,12 +38,12 @@ body {
   background-color: rgb(46, 46, 46);
 }
 
-#titr {
+#header {
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
-  grid-area: titr;
+  grid-area: header;
   font-size: 40px;
   height: 80px;
   text-align: center;
@@ -89,9 +89,19 @@ body {
 }
 #red {
   grid-area: red-score;
-  background-color: red;
   padding: auto;
-  box-shadow: 0 9px rgb(200, 0, 0);
+  background-color: rgb(100, 0, 0);
+  box-shadow: 0 9px rgb(100, 0, 0);
+  
+}
+
+.active-blue{
+  background-color: blue !important;
+  box-shadow: 0 9px rgb(0, 0, 200) !important;
+}
+.active-red{
+  background-color: red !important;
+  box-shadow: 0 9px rgb(200, 0, 0) !important;
 }
 
 #button-container {

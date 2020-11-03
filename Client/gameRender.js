@@ -9,18 +9,55 @@ import {
 import { coding, resign } from "./router.js";
 import { getUserFirstName } from "./index.js";
 
-
 const oddScale = 1;
 const evenScale = 4;
-let paper = document.getElementById("paper");
+const paper = document.getElementById("paper");
+const header = document.getElementById("header");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
+const myElement = document.getElementById(get("color"));
+const oppElement = document.getElementById(get("opponentColor"));
 
-export const colorLine = (line, color) => {
-  line.style.backgroundColor = color;
+export const render = () => {
+  createElements();
+  stylePaperBy("row");
+  stylePaperBy("column");
+  lineInitializer(xlines, "click");
+  lineInitializer(ylines, "click");
+  lineInitializer(xlines, "touch");
+  lineInitializer(ylines, "touch");
+  resignInitializer("click");
+  resignInitializer("touch");
 };
 
-const addEventToResign = (event) => {
+const lineInitializer = (array, event) => {
+  for (let i = 0; i < array.length; i++)
+    array[i].addEventListener(event, () => {
+      hitLine(array[i], get("color"));
+      coding(array[i]);
+    });
+};
+
+export const canHit = (line) => {
+  return (
+    get("permission") &&
+    get("role") !== "subscriber" &&
+    !get("waiting") &&
+    !get("end")
+  );
+};
+
+export const hitLine = (line, color) => {
+  if (canHit(line)) {
+    addLineToSquare(line);
+    colorLine(line, color);
+    markLine(line);
+    checkCondition();
+    checkEnd();
+  }
+};
+
+const resignInitializer = (event) => {
   const resignDiv = document.getElementById("resign");
   resignDiv.addEventListener(event, () => {
     if (get("role") !== "subscriber" && !get("waiting") && !get("end"))
@@ -28,84 +65,26 @@ const addEventToResign = (event) => {
   });
 };
 
-const addEventToLines = (array, event) => {
-  for (let i = 0; i < array.length; i++) {
-    array[i].addEventListener(event, () => {
-      if (
-        get("permission") &&
-        get("role") !== "subscriber" &&
-        !get("waiting") &&
-        !get("end") &&
-        array[i].style.backgroundColor !== "red" &&
-        array[i].style.backgroundColor !== "blue"
-      ) {
-        addLineToSquare(array[i]);
-        colorLine(array[i], get("color"));
-        checkCondition();
-        markLine(array[i]);
-        checkEnd();
-        coding();
-      }
-    });
-  }
+export const colorLine = (line, color) => {
+  line.style.backgroundColor = color;
 };
 
-export const render = () => {
-  createElements();
-  stylePaperBy("row");
-  stylePaperBy("column");
-  addEventToLines(xlines, "click");
-  addEventToLines(ylines, "click");
-  addEventToLines(xlines, "touch");
-  addEventToLines(ylines, "touch");
-  addEventToResign("click");
-  addEventToResign("touch");
-};
 const createElements = () => {
-  const rootContainer = document.getElementById("root-container");
-  const header = document.createElement("div");
-  header.setAttribute("id", "titr");
-  header.innerHTML = "نقطه‌بازی";
-  const firstPaper = document.createElement("div");
-  firstPaper.setAttribute("id", "paper");
-  const red = document.createElement("div");
-  red.setAttribute("class", "score");
-  red.setAttribute("id", "red");
-  red.innerHTML = "قرمز: 0";
-  const blue = document.createElement("div");
-  blue.setAttribute("class", "score");
-  blue.setAttribute("id", "blue");
-  blue.innerHTML = "آبی: 0";
-  const buttonContainer = document.createElement("div");
-  buttonContainer.setAttribute("id", "button-container");
-  const resign = document.createElement("div");
-  resign.setAttribute("id", "resign");
-  resign.setAttribute("class", "button");
-  resign.innerHTML = "🙌";
-  buttonContainer.appendChild(resign);
-  rootContainer.appendChild(header);
-  rootContainer.appendChild(firstPaper);
-  rootContainer.appendChild(red);
-  rootContainer.appendChild(blue);
-  rootContainer.appendChild(buttonContainer);
-  paper = firstPaper;
-
   for (let i = 1; i <= 2 * get("row") - 1; i++)
     for (let j = 1; j <= 2 * get("column") - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
       div.setAttribute("i", i);
       div.setAttribute("j", j);
-      firstPaper.appendChild(div);
+      paper.appendChild(div);
       alignStyle(div, i, j);
     }
 };
 const stylePaperBy = (orientation) => {
   let template = "";
-  for (let k = 0; k < 2 * get("row") - 1; k++) {
+  for (let k = 0; k < 2 * get("row") - 1; k++)
     if (k % 2 === 0) template += oddScale + "fr ";
     else template += evenScale + "fr ";
-  }
   if (orientation === "row") paper.style.gridTemplateRows = template;
   else if (orientation === "column") paper.style.gridTemplateColumns = template;
 };
@@ -129,10 +108,8 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
-  document.getElementById(get("color")).innerHTML =
-    get("name") + ": " + get("score");
-  document.getElementById(get("opponentColor")).innerHTML =
-    get("opponentName") + ": " + get("opponentScore");
+  myElement.innerHTML = get("name") + ": " + get("score");
+  oppElement.innerHTML = get("opponentName") + ": " + get("opponentScore");
 };
 
 export const updateScore = () => {
@@ -142,73 +119,50 @@ export const updateScore = () => {
 };
 
 export const showTurn = () => {
-  if (get("permission")) {
-    document.getElementById(get("color")).style.backgroundColor = get("color");
-    if (get("color") === "red") {
-      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(200, 0, 0)";
-      document.getElementById(get("opponentColor")).style.backgroundColor = "rgb(0, 0, 100)";
-      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(0, 0, 100)";
-    } else {
-      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(0, 0, 200)";
-      document.getElementById(get("opponentColor")).style.backgroundColor = "rgb(100, 0, 0)";
-      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(100, 0, 0)";
-    }
-  } else {
-    if (get("color") === "red") {
-      document.getElementById(get("color")).style.backgroundColor = "rgb(100, 0, 0)";
-      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(100, 0, 0)";
-      document.getElementById(get("opponentColor")).style.backgroundColor = "blue";
-      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(0, 0, 200)";
-    } else {
-      document.getElementById(get("opponentColor")).style.backgroundColor = "red";
-      document.getElementById(get("opponentColor")).style.boxShadow = "0 9px rgb(200, 0, 0)";
-      document.getElementById(get("color")).style.backgroundColor = "rgb(0, 0, 100)";
-      document.getElementById(get("color")).style.boxShadow = "0 9px rgb(0, 0, 100)";
-    }
-  }
+  const isMyTurn = get("permission");
+  const myColor = get("color");
+  const oppColor = get("opponentColor");
+  myElement.classList.toggle(`active-${myColor}`, isMyTurn);
+  oppElement.classList.toggle(`active-${oppColor}`, !isMyTurn);
 };
 
-export const notifEndOfGame = (winner) => {
+export const showEnd = (winner) => {
+  const myColor = get("color");
   document.body.style.backgroundColor = "goldenrod";
-  if (winner === get("color")) {
-    document.getElementById("titr").innerHTML = "برنده";
-    document.getElementById("titr").backgroundColor = get("color");
-  } else {
-    document.getElementById("titr").innerHTML = "بازنده";
-    document.getElementById("titr").backgroundColor = get("opponentColor");
-  }
+  if (winner === myColor) showMessage("برنده");
+  else showMessage("بازنده");
   set("end", true);
 };
 
 export const colorBox = (i, j) => {
+  const myColor = get("color");
+  const oppColor = get("opponentColor");
   const space = findSpace(i, j);
   if (get("permission")) {
-    space.style.backgroundColor = "dark" + get("color");
-    if (get("color") === "red") space.innerHTML = "ق";
+    space.style.backgroundColor = "dark" + myColor;
+    if (myColor === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
   } else {
-    if (get("opponentColor") === "red") space.innerHTML = "ق";
+    if (oppColor === "red") space.innerHTML = "ق";
     else space.innerHTML = "آ";
-    space.style.backgroundColor = "dark" + get("opponentColor");
+    space.style.backgroundColor = "dark" + oppColor;
   }
 };
 
-export const showError = () => {
-  document.getElementById("titr").innerHTML = "تماشاچی";
-};
-export const waiting = () => {
-  document.getElementById("titr").innerHTML = "در انتظار حریف";
-};
-
-export const unwaiting = () => {
-  document.getElementById("titr").innerHTML = "نقطه‌بازی";
+export const showMessage = (message) => {
+  header.innerHTML = message;
 };
 
 export const initializeTurn = () => {
-  if (get("color") === "red") set("permission", true);
-  else set("permission", false);
+  const myColor = get("color");
+  if (myColor === "red") {
+    set("permission", true);
+    set("opponentColor", "blue");
+  } else {
+    set("permission", false);
+    set("opponentColor", "red");
+  }
   set("name", getUserFirstName());
-  document.getElementById(get("color")).innerHTML = get("name") + ":" + "0";
-  document.getElementById(get("opponentColor")).innerHTML =
-    get("opponentName") + ":" + "0";
+  myElement.innerHTML = get("name") + " : " + "0";
+  oppElement.innerHTML = get("opponentName") + " : " + "0";
 };

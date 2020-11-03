@@ -1,7 +1,7 @@
 import { render } from "./gameRender.js";
 
 
-let id = 12;
+let id = 21;
 let userId = 0;
 
 const W = window.W;

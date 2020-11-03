@@ -1,6 +1,6 @@
 import { addCondition, get, set } from "./data.js";
-import { colorBox, updateScore, colorLine } from "./gameRender.js";
-import { notifGift } from "./router.js";
+import { colorBox, updateScore, showEnd, hitLine } from "./gameRender.js";
+import { requestGift } from "./router.js";
 
 const spaces = document.getElementsByClassName("space");
 
@@ -16,16 +16,16 @@ export const addLineToSquare = (line) => {
   }
 };
 export const checkCondition = () => {
-  const condition = get("tabel").squares
+  const condition = get("table").squares;
   for (let i = 0; i < condition.length; i++)
     for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] == 4) {
         colorBox(i, j);
         condition[i][j] += 1;
         updateScore();
-        set("gift", true)
+        set("gift", true);
       }
-  if (get("gift")) notifGift();
+  if (get("gift")) requestGift();
   set("gift", false);
 };
 export const findSpace = (i, j) => {
@@ -37,29 +37,21 @@ export const findSpace = (i, j) => {
 };
 
 export const checkEnd = () => {
-  if (opponentScore + score == (rowCount - 1) * (rowCount - 1)) {
+  if (
+    get("opponentScore") + get("score") ==
+    (get("row") - 1) * (get("row") - 1)
+  ) {
     set("end", true);
-    if (opponentScore > score) return notifEndOfGame(get("opponentColor"));
-    else return notifEndOfGame(get("color"));
+    if (get("opponentScore") > get("score"))
+      return showEnd(get("opponentColor"));
+    else return showEnd(get("color"));
   }
 };
 
-export const decodeData = (data) => {
-  let temp = data.split(",");
-  for (let i = 0; i < temp.length; i++) {
-    get("table").lines[i + 1] = temp[i];
-  }
-  getLineCondition();
+export const decodeData = (message, color) => {
+  hitLine(findLine(message), color);
 };
 
-export const codeData = () => {
-  let code = "";
-  for (let i = 1; i < get("table").lines.length; i++) {
-    code += get("table").lines[i];
-    if (i !== get("table").lines.length - 1) code += ",";
-  }
-  return code;
-};
 export const markLine = (line) => {
   let index;
   const j = line.getAttribute("j");
@@ -68,36 +60,18 @@ export const markLine = (line) => {
   else index = (i - 1) * 5 + Math.floor(j / 2) + i / 2;
   get("table").lines[index] = 1;
 };
-export const getLineCondition = () => {
-  for (let i = 1; i <= get("table").lines.length; i++) {
-    if (get("table").lines[i] == 1) {
-      if (
-        getLineFromIndex(i).style.backgroundColor != "red" &&
-        getLineFromIndex(i).style.backgroundColor != "blue"
-      ) {
-        if (get("role") !== "subscriber")
-        colorLine(getLineFromIndex(i), get("opponentColor"));
-        else colorLine(getLineFromIndex(i), get("color"));
-        addLineToSquare(getLineFromIndex(i));
-        checkCondition();
-        checkEnd();
-      }
-    }
-  }
-};
 
-export const getLineFromIndex = (index) => {
+export const findLine = (message) => {
+  const i = message.x;
+  const j = message.y;
+  const type = message.kind;
   const elements = document.getElementById("paper").childNodes;
   for (let k = 0; k < elements.length; k++) {
-    const j = elements[k].getAttribute("j");
-    const i = elements[k].getAttribute("i");
-    const kind = elements[k].getAttribute("class");
-
     if (
-      (index == Math.floor(i / 2) * 11 + j / 2 && kind == "xline") ||
-      (index == (i - 1) * 5 + Math.floor(j / 2) + i / 2 && kind == "yline")
-    ) {
+      i === elements[k].getAttribute("i") &&
+      j === elements[k].getAttribute("j") &&
+      type === elements[k].getAttribute("class")
+    )
       return elements[k];
-    }
   }
 };

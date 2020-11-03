@@ -1,5 +1,10 @@
 import { showTurn, render } from "./gameRender.js";
 
+const create2DArray = (rows) => {
+  let arr = [];
+  for (let i = 0; i < rows; i++) arr[i] = [];
+  return arr;
+};
 
 const dataCreator = (rowCount, columnCount) => ({
   score: 0,
@@ -14,7 +19,7 @@ const dataCreator = (rowCount, columnCount) => ({
   opponentColor: "blue",
   end: false,
   permission: false,
-  waiting: true,
+  waiting: false,
   gift: false,
   table: {
     lines: [],
@@ -42,12 +47,10 @@ const initializeArray = () => {
 };
 
 initializeArray();
-const create2DArray = (rows) => {
-  let arr = [];
-  for (let i = 0; i < rows; i++) arr[i] = [];
-  return arr;
-};
+get("table").squares = create2DArray(get("row"))
+
+
 export const addCondition = (i, j) => {
-  if ( get("table").squares[i][j] >= 1) get("table").squares[i][j] += 1;
+  if (get("table").squares[i][j] >= 1) get("table").squares[i][j] += 1;
   else if (get("table").squares[i][j] != 1) get("table").squares[i][j] = 1;
 };

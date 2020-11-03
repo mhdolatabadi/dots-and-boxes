@@ -1,7 +1,7 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const config = require("./src/setup/config")
+// const config = require("./src/setup/config")
 let rooms = [];
 let users = [];
 let changeLog = [];
@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
         socket.room = roomId;
         break;
     }
-    console.log(rooms[socket.room]);
     if (rooms[socket.room] === 2) {
       io.to(socket.room).emit("greeting", "salam");
     }
@@ -81,15 +80,18 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("change", (change, color) => {
+    console.log(change)
     changeLog[socket.room].push(change);
     socket.broadcast.to(socket.room).emit("change", change, color);
   });
+
   socket.on("gift", (gift) => {
     socket.broadcast.to(socket.room).emit("gift", gift);
   });
+
   socket.on("resign", () => {
     socket.broadcast.to(socket.room).emit("resign", "salam");
   });
 });
 
-http.listen(config.port, () => {});
+http.listen(3000, () => {});
