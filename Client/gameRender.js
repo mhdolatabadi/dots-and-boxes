@@ -6,7 +6,7 @@ import {
   checkEnd,
   markLine,
 } from "./logic.js";
-import { resign } from "./router.js";
+import { resign, send, requestGift } from "./router.js";
 import { getUserFirstName } from "./index.js";
 
 const oddScale = 1;
@@ -15,8 +15,6 @@ const paper = document.getElementById("paper");
 const header = document.getElementById("header");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
-const myElement = document.getElementById(get("color"));
-const oppElement = document.getElementById(get("opponentColor"));
 
 export const render = () => {
   createElements();
@@ -34,13 +32,15 @@ const lineInitializer = (array, event) => {
   for (let i = 0; i < array.length; i++)
     array[i].addEventListener(event, () => {
       hitLine(array[i], get("color"));
-      send(array[i]);
+      if (get("permission")) send(array[i]);
+      if (get("gift")) requestGift();
+      set("gift", false);
     });
 };
 
-export const canHit = (line) => {
+export const canHit = (line, color) => {
   return (
-    get("permission") &&
+    (get("permission") || color === get("opponentColor")) &&
     get("role") !== "subscriber" &&
     !get("waiting") &&
     !get("end")
@@ -48,7 +48,7 @@ export const canHit = (line) => {
 };
 
 export const hitLine = (line, color) => {
-  if (canHit(line)) {
+  if (canHit(line, color)) {
     addLineToSquare(line);
     colorLine(line, color);
     markLine(line);
@@ -108,6 +108,8 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
+  const myElement = document.getElementById(get("color"));
+  const oppElement = document.getElementById(get("opponentColor"));
   myElement.innerHTML = get("name") + ": " + get("score");
   oppElement.innerHTML = get("opponentName") + ": " + get("opponentScore");
 };
@@ -122,8 +124,12 @@ export const showTurn = () => {
   const isMyTurn = get("permission");
   const myColor = get("color");
   const oppColor = get("opponentColor");
+  const myElement = document.getElementById(get("color"));
+  const oppElement = document.getElementById(get("opponentColor"));
   myElement.classList.toggle(`active-${myColor}`, isMyTurn);
   oppElement.classList.toggle(`active-${oppColor}`, !isMyTurn);
+  myElement.innerHTML = get("name") + " : " + "0";
+  oppElement.innerHTML = get("opponentName") + " : " + "0";
 };
 
 export const showEnd = (winner) => {
@@ -163,6 +169,5 @@ export const initializeTurn = () => {
     set("opponentColor", "red");
   }
   set("name", getUserFirstName());
-  myElement.innerHTML = get("name") + " : " + "0";
-  oppElement.innerHTML = get("opponentName") + " : " + "0";
+  
 };

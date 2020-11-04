@@ -33,7 +33,6 @@ export const get = (key) => data[key];
 
 export const set = (key, value) => {
   data[key] = value;
-  render();
   showTurn();
 };
 export const reset = () => {
@@ -48,11 +47,12 @@ const initializeArray = (array, type, length) => {
       for (let j = 0; j < length; j++) array[i][j] = 0;
 };
 
+get("table").squares = create2DArray(get("row"));
 initializeArray(get("table").squares, "squares", get("table").squares.length);
 initializeArray(get("table").lines, "lines", 2 * get("row") * (get("row") - 1));
 
-get("table").squares = create2DArray(get("row"));
 
 export const addCondition = (i, j) => {
-  if (get("table").squares[i][j] >= 1) get("table").squares[i][j] += 1;
+  get("table").squares[i][j] = get("table").squares[i][j] + 1
+
 };

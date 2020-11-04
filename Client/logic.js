@@ -1,6 +1,5 @@
 import { addCondition, get, set } from "./data.js";
 import { colorBox, updateScore, showEnd, hitLine } from "./gameRender.js";
-import { requestGift } from "./router.js";
 
 const spaces = document.getElementsByClassName("space");
 
@@ -23,10 +22,9 @@ export const checkCondition = () => {
         colorBox(i, j);
         condition[i][j] += 1;
         updateScore();
-        set("gift", true);
+        if (get("permission")) set("gift", true);
+        
       }
-  if (get("gift")) requestGift();
-  set("gift", false);
 };
 export const findSpace = (i, j) => {
   for (let k = 0; k < spaces.length; k++) {
