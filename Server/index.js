@@ -1,7 +1,7 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const config = require("./src/setup/config")
+// const config = require("./src/setup/config")
 let rooms = [];
 let users = [];
 let changeLog = [];
@@ -92,4 +92,4 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(config.port, () => {});
+http.listen(/*config.port*/3000, () => {});
