@@ -1,7 +1,7 @@
 import { render } from "./gameRender.js";
 
 
-let id = 21;
+let id = 22;
 let userId = 0;
 
 const W = window.W;
@@ -23,6 +23,7 @@ export const getUserFirstName = () => {
 };
 export const getUserId = () => {
   if (W !== undefined) return W.user.getId();
+  console.log(userId)
   return userId++;
 };
 render()
