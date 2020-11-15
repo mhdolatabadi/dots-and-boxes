@@ -1,4 +1,5 @@
 import { render } from "./gameRender.js";
+import { v4 as uuidv4 } from 'uuid';
 
 
 let id = 23;
@@ -24,7 +25,7 @@ export const getUserFirstName = () => {
 export const getUserId = () => {
   if (W !== undefined) return W.user.getId();
   console.log(userId)
-  return userId++;
+  return uuidv4()
 };
 render()
 

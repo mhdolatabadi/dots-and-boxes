@@ -9,6 +9,7 @@ const roomCreator = (roomId) => ({
   subscribers: [],
   history: [],
   turn: "red",
+  end: false,
 });
 
 const userCreator = (userId, userSocket) => ({
@@ -24,17 +25,15 @@ const userCreator = (userId, userSocket) => ({
 });
 
 const findRoom = (roomId) => {
-  for (let i = 0; i < rooms.length; i++) {
+  for (let i = 0; i < rooms.length; i++)
     if (rooms[i].id === roomId) return rooms[i];
-  }
   return false;
 };
 
 const getRoom = (roomId) => {
   const foundRoom = findRoom(roomId);
-  if (foundRoom !== false) {
-    return foundRoom;
-  } else {
+  if (foundRoom !== false) return foundRoom;
+  else {
     const room = roomCreator(roomId);
     rooms.push(room);
     return room;
@@ -53,42 +52,49 @@ const findUser = (userId, room) => {
 };
 
 const hostFirstUser = (room, user, socket) => {
-  room.users.push(user);
-  socket.join(room.id);
   user.room = room;
-  socket.emit("color", "red");
   user.color = "red";
   user.isTurn = true;
-  room.turn = "red";
-  socket.emit("wait", "wait");
   user.role = "player";
   user.connection = true;
+  room.turn = "red";
+  room.users.push(user);
+  socket.emit("color", "red");
+  socket.emit("wait", "wait");
+  socket.join(room.id);
 };
 
 const hostSecondUser = (room, user, socket) => {
-  if (room.users[0].color === "red") {
-    user.color = "blue";
-    socket.emit("color", "blue");
-  } else {
-    user.color = "red";
-    socket.emit("color", "red");
+  if (findUser(user.id, room) === false || findUser(user.id, room).connection === false) {
+    if (room.users[0].color === "red") {
+      user.color = "blue";
+      socket.emit("color", "blue");
+    } else {
+      user.color = "red";
+      socket.emit("color", "red");
+    }
+    if (room.turn !== user.color) user.isTurn = false;
+    else user.isTurn = true;
+    user.room = room;
+    user.role = "player";
+    user.connection = true;
+    user.socket = socket;
+    room.users.push(user);
+    socket.join(room.id);
+    socket.broadcast.to(room.id).emit("wait", "play");
+    io.to(room.id).emit("introduce", "hello");
   }
-  user.room = room;
-  user.role = "player";
-  room.users.push(user);
-  socket.join(room.id);
-  io.to(room.id).emit("introduce", "hello");
-  socket.broadcast.to(room.id).emit("wait", "play");
-  user.connection = true;
 };
 
 const hostSubscriber = (room, user, socket) => {
   user.role = "subscriber";
-  socket.emit("role", "subscriber");
   user.room = room;
+  user.socket = socket;
   room.subscribers.push(user);
+  socket.emit("role", "subscriber");
   socket.join(room.id);
   socket.emit("watch", room.history);
+  console.log(room.history)
 };
 
 const directToRoom = (roomId, userId, socket) => {
@@ -102,7 +108,7 @@ const directToRoom = (roomId, userId, socket) => {
       hostSecondUser(room, user, socket);
       break;
     default:
-      if (!findUser(userId, room)) hostSecondUser(room, user, socket);
+      if (findUser(userId, room) !== false) hostSecondUser(room, user, socket);
       else hostSubscriber(room, user, socket);
       break;
   }
@@ -111,9 +117,9 @@ const directToRoom = (roomId, userId, socket) => {
 const getUserBySocket = (socket) => {
   for (let i = 0; i < rooms.length; i++) {
     for (let j = 0; j < rooms[i].users.length; j++)
-      if (rooms[i].users[j].socket == socket) return rooms[i].users[j];
+      if (rooms[i].users[j].socket === socket) return rooms[i].users[j];
     for (let j = 0; j < rooms[i].subscribers.length; j++)
-      if (rooms[i].subscribers[j].socket == socket)
+      if (rooms[i].subscribers[j].socket === socket)
         return rooms[i].subscribers[j];
   }
 };
@@ -121,9 +127,9 @@ const getUserBySocket = (socket) => {
 const getRoomBySocket = (socket) => {
   for (let i = 0; i < rooms.length; i++) {
     for (let j = 0; j < rooms[i].users.length; j++)
-      if (rooms[i].users[j].socket == socket) return rooms[i];
+      if (rooms[i].users[j].socket === socket) return rooms[i];
     for (let j = 0; j < rooms[i].subscribers.length; j++)
-      if (rooms[i].subscribers[j].socket == socket) return rooms[i];
+      if (rooms[i].subscribers[j].socket === socket) return rooms[i];
   }
 };
 
@@ -142,22 +148,15 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    user = getUserBySocket(socket);
-    room = getRoomBySocket(socket);
-    user.connection = false;
-    room.users.pop(user);
-    for (let i = 0; i < room.users.length; i++) {
-      let decision = 0;
-      if (!room.users[i].connection) decision++;
-      if (decision === room.users.length) room = "";
-    }
-    if (user.role !== "subscriber") {
+    const user = getUserBySocket(socket);
+    const room = getRoomBySocket(socket);
+    if (findUser(user.id, room) !== false) user.connection = false;
+    if (user.role !== "subscriber" && !room.end)
       socket.broadcast.to(room.id).emit("wait", "wait");
-    }
   });
   socket.on("change", (change, color) => {
-    user = getUserBySocket(socket);
-    room = getRoomBySocket(socket);
+    const user = getUserBySocket(socket);
+    const room = getRoomBySocket(socket);
     console.log(change);
     if (user.isTurn) {
       if (user.color === "red") room.turn = "blue";
@@ -173,8 +172,8 @@ io.on("connection", (socket) => {
 
   socket.on("gift", (gift) => {
     console.log("gift request has recieved");
-    room = getRoomBySocket(socket);
-    user = getUserBySocket(socket);
+    const room = getRoomBySocket(socket);
+    const user = getUserBySocket(socket);
     if (!user.isTurn) {
       if (user.color === "red") room.turn = "blue";
       else room.turn = "red";
@@ -186,8 +185,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("resign", () => {
-    room = getRoomBySocket(socket);
+    const room = getRoomBySocket(socket);
+    room.end = true;
     socket.broadcast.to(room.id).emit("resign", "salam");
+  });
+
+  socket.on("end", () => {
+    const room = getRoomBySocket(socket);
+    room.end = true;
   });
 });
 

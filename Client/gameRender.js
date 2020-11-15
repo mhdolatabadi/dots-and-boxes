@@ -6,7 +6,7 @@ import {
   checkEnd,
   markLine,
 } from "./logic.js";
-import { resign, send, requestGift } from "./router.js";
+import { resign, send, requestGift, notifyEnd } from "./router.js";
 import { getUserFirstName } from "./index.js";
 
 const oddScale = 1;
@@ -133,6 +133,7 @@ export const showTurn = () => {
 };
 
 export const showEnd = (winner) => {
+  notifyEnd();
   const myColor = get("color");
   document.body.style.backgroundColor = "goldenrod";
   if (winner === myColor) showMessage("برنده");
