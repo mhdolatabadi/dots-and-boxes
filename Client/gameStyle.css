@@ -12,23 +12,18 @@ body {
   height: 100vh;
   margin: 0;
   background-color: gray;
-  /* background-color: rgb(60, 0, 255); */
-  /* background-image: linear-gradient(to bottom, rgb(60, 0, 255), rgb(255, 154, 171)); */
-
-
-
   display: flex;
+  flex-direction: column;
 }
 
 #root-container {
   margin: auto;
   display: grid;
   grid-template-areas:
-    "header header"
-    "info info"
-    "paper paper"
-    "blue-score red-score"
-    "buttons buttons";
+    'header header'
+    'paper paper'
+    'blue-score red-score'
+    'buttons buttons';
   grid-template-columns: 1fr 1fr;
   box-shadow: 15px 10px 20px 0 #00000073;
   border-radius: 50px 50px 50px 50px;
@@ -37,9 +32,6 @@ body {
   grid-area: paper;
   padding: 30px;
   display: grid;
-  /* margin: 0 auto; */
-  margin-bottom: 5px;
-
   width: 65vmin;
   height: 65vmin;
   background-color: rgb(46, 46, 46);
@@ -50,18 +42,15 @@ body {
   justify-content: center;
   align-items: center;
   color: black;
-  /* color: white; */
   grid-area: header;
   font-size: 40px;
   height: 80px;
   text-align: center;
-  /* border: black solid; */
   border-radius: 50px 50px 0 0;
   margin-bottom: 5px;
   background-color: orange;
-  /* background-color: rgb(60, 0, 255); */
+  margin-bottom: 9px;
   
-  /* background-image: linear-gradient(to left, red, blue); */
 }
 
 .score {
@@ -69,7 +58,7 @@ body {
   text-shadow: thistle;
   color: white;
   font-size: 20px;
-  padding: auto;
+
 }
 #info-container {
   display: flex;
@@ -81,15 +70,13 @@ body {
 }
 #own {
   height: 40px;
-  /* width: 40px; */
   font-size: 20px;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: auto;
-
+  margin-bottom: 9px;
   border-radius: 80%;
-  /* margin: auto; */
 }
 
 #blue {
@@ -103,14 +90,13 @@ body {
   padding: auto;
   background-color: rgb(100, 0, 0);
   box-shadow: 0 9px rgb(100, 0, 0);
-  
 }
 
-.active-blue{
+.active-blue {
   background-color: rgb(0, 0, 235) !important;
   box-shadow: 0 9px rgb(0, 0, 180) !important;
 }
-.active-red{
+.active-red {
   background-color: red !important;
   box-shadow: 0 9px rgb(200, 0, 0) !important;
 }
@@ -121,28 +107,35 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-image: linear-gradient(to left, red, blue); */
   background-color: orange;
   border-radius: 0 0 50px 50px;
   margin-top: 6px;
 }
+#buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  grid-area: area;
+}
+
 .button {
   color: black;
-  background-color: rgb(233, 113, 0);
-  text-align: center;
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
-  /* border-radius: 20%; */
-  border-radius: 10px;
-  box-shadow: 4px 3px 5px 0 #00000073;
-  padding: 5px;
-  margin-top: 5px;
-  margin: auto;
+
+  margin: 5px;
+  padding: 10px;
+  border-radius: 20px;
+  border-bottom: solid orangered;
+  border-left: solid orangered;
+
+  display: flex;
   justify-content: center;
   align-items: center;
+
 }
-.button:hover {
-  font-size: 30px;
+.button:hover{
+  font-size: 25px;
 }
 .grid-item {
   width: 100%;

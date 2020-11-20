@@ -162,6 +162,7 @@ export const showMessage = (message) => {
 };
 
 export const initializeTurn = () => {
+  console.log("initializeTurn")
   const myColor = get("color");
   if (myColor === "red") {
     set("permission", true);
