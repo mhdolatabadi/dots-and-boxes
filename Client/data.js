@@ -7,6 +7,8 @@ const create2DArray = (rows) => {
 };
 
 const dataCreator = (rowCount, columnCount) => ({
+  roomId: undefined,
+  userId: undefined,
   score: 0,
   opponentScore: 0,
   row: rowCount,

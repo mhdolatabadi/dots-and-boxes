@@ -5,6 +5,8 @@ import {
   findSpace,
   checkEnd,
   markLine,
+  checkah,
+  getNumberOfLine,
 } from "./logic.js";
 import { resign, send, requestGift, notifyEnd } from "./router.js";
 import { getUserFirstName } from "./index.js";
@@ -32,7 +34,6 @@ const lineInitializer = (array, event) => {
   for (let i = 0; i < array.length; i++)
     array[i].addEventListener(event, () => {
       hitLine(array[i], get("color"));
-      if (get("permission")) send(array[i]);
       if (get("gift")) requestGift();
       set("gift", false);
     });
@@ -43,17 +44,25 @@ export const canHit = (line, color) => {
     (get("permission") || color === get("opponentColor")) &&
     get("role") !== "subscriber" &&
     !get("waiting") &&
-    !get("end")
+    !get("end") &&
+    get("table").lines[getNumberOfLine(line)] !== 1
   );
+};
+
+export const helpLine = (line, color) => {
+  colorLine(line, color);
+  addLineToSquare(line);
+  markLine(line);
+  checkCondition(color);
+  checkEnd();
 };
 
 export const hitLine = (line, color) => {
   if (canHit(line, color)) {
-    addLineToSquare(line);
-    colorLine(line, color);
-    markLine(line);
-    checkCondition();
-    checkEnd();
+    helpLine(line, checkah());
+    send(line);
+    set("permission", false);
+    console.log(get("gift"));
   }
 };
 
@@ -135,25 +144,17 @@ export const showTurn = () => {
 export const showEnd = (winner) => {
   notifyEnd();
   const myColor = get("color");
-  document.body.style.backgroundColor = "goldenrod";
+  document.body.style.backgroundColor = "dark" + winner;
   if (winner === myColor) showMessage("برنده");
   else showMessage("بازنده");
   set("end", true);
 };
 
-export const colorBox = (i, j) => {
-  const myColor = get("color");
-  const oppColor = get("opponentColor");
+export const colorBox = (i, j, color) => {
   const space = findSpace(i, j);
-  if (get("permission")) {
-    space.style.backgroundColor = "dark" + myColor;
-    if (myColor === "red") space.innerHTML = "ق";
-    else space.innerHTML = "آ";
-  } else {
-    if (oppColor === "red") space.innerHTML = "ق";
-    else space.innerHTML = "آ";
-    space.style.backgroundColor = "dark" + oppColor;
-  }
+  space.style.backgroundColor = "dark" + color;
+  if (color === "red") space.innerHTML = "ق";
+  else space.innerHTML = "آ";
 };
 
 export const showMessage = (message) => {
@@ -170,5 +171,4 @@ export const initializeTurn = () => {
     set("opponentColor", "red");
   }
   set("name", getUserFirstName());
-  
 };

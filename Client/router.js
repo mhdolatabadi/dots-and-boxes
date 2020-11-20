@@ -1,6 +1,6 @@
 import { get, set } from "./data.js";
 import { recieve } from "./logic.js";
-import { initializeTurn, showMessage,showEnd } from "./gameRender.js";
+import { initializeTurn, showMessage, showEnd } from "./gameRender.js";
 import { getUserFirstName, getUserId, roomId } from "./index.js";
 
 // const socket = io("https://noghteh-bazi.wapp.weblite.me/");
@@ -20,10 +20,10 @@ socket.on("wait", (type) => {
     showMessage("در انتظار حریف");
     set("waiting", true);
   } else {
-    socket.emit("wait", get("opponentColor"));
     showMessage("نقطه‌بازی");
     set("waiting", false);
-    socket.emit("name");
+    socket.emit("wait", get("userId"), get("roomId"), get("opponentColor"));
+    socket.emit("name", get("userId"), get("roomId"));
   }
 });
 
@@ -36,7 +36,7 @@ socket.on("watch", (history) => {
 });
 
 socket.on("introduce", () => {
-  socket.emit("introduce", getUserFirstName());
+  socket.emit("introduce", get("userId"), get("roomId"), getUserFirstName());
 });
 
 socket.on("name", (name) => {
@@ -46,11 +46,19 @@ socket.on("name", (name) => {
 socket.on("role", (role) => {
   set("role", role);
   showMessage("تماشاچی");
+  socket.emit("getname", get("roomId"));
+});
+
+socket.on("getname", (redName, blueName) => {
+  if (get("role") === "subscriber") {
+    set("name", redName);
+    set("opponentName", blueName);
+  }
 });
 
 export const notifyEnd = () => {
-  socket.emit("end", "end");
-}
+  socket.emit("end", get("userId"), get("roomId"));
+};
 
 export const send = (line) => {
   const i = line.getAttribute("i");
@@ -61,30 +69,34 @@ export const send = (line) => {
     y: j,
     kind: type,
   };
-  set("permission", false);
-  socket.emit("change", message, get("color"));
+  socket.emit("change", get("userId"), get("roomId"), message, get("color"));
 };
 
 socket.on("change", (line, turn) => {
-  if (get("opponentColor") === turn) {
-    recieve(line, turn);
-    set("permission", true);
+  if (get("role") === "subscriber") {
+    set("opponentColor", turn);
+    if (turn === "red") set("color", "blue");
+    else set("color", "red");
   }
+  if (get("opponentColor") === turn) set("permission", true);
+  recieve(line, turn);
 });
 
 export const requestGift = () => {
-  socket.emit("gift", "request");
+  socket.emit("gift", get("userId"), get("roomId"));
 };
 socket.on("gift", () => {
-  console.log(get("permission"));
   set("permission", !get("permission"));
 });
 
 export const resign = () => {
   showEnd(get("opponentColor"));
-  socket.emit("resign");
+  socket.emit("resign", get("userId"), get("roomId"));
 };
 socket.on("resign", () => {
   showEnd(get("color"));
-  socket.emit("disconnect", "salam");
+  socket.emit("disconnect", get("userId"), get("roomId"));
 });
+socket.on('permission', (permission) => {
+  set('permission', permission)
+})

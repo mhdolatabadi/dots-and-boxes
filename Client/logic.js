@@ -1,5 +1,11 @@
 import { addCondition, get, set } from "./data.js";
-import { colorBox, updateScore, showEnd, hitLine } from "./gameRender.js";
+import {
+  colorBox,
+  updateScore,
+  showEnd,
+  hitLine,
+  helpLine,
+} from "./gameRender.js";
 
 const spaces = document.getElementsByClassName("space");
 
@@ -14,16 +20,24 @@ export const addLineToSquare = (line) => {
     if (i != 2 * get("column") - 1) addCondition(Math.ceil(i / 2), j / 2);
   }
 };
-export const checkCondition = () => {
+
+export const checkah = () => {
+  if (get("permission")) return get("color");
+  else return get("opponentColor");
+};
+
+export const checkCondition = (color) => {
+  console.log('check condition')
   const condition = get("table").squares;
   for (let i = 0; i < condition.length; i++)
     for (let j = 0; j < condition[i].length; j++)
-      if (condition[i][j] == 4) {
-        colorBox(i, j);
-        condition[i][j] += 1;
+      if (condition[i][j] === 4) {
+        console.log("giiiiiiiiiiiffffffffffffffffttttttttttttt")
+        colorBox(i, j, color);
+        condition[i][j] = 100000
         updateScore();
-        if (get("permission")) set("gift", true);
-        
+        console.log('permission', get('permission'))
+        if (get("permission") && get('color') === color) set("gift", true);
       }
 };
 export const findSpace = (i, j) => {
@@ -47,15 +61,20 @@ export const checkEnd = () => {
 };
 
 export const recieve = (message, color) => {
-  hitLine(findLine(message), color);
+  helpLine(findLine(message), color);
 };
 
-export const markLine = (line) => {
+export const getNumberOfLine = (line) => {
   let index;
   const j = line.getAttribute("j");
   const i = line.getAttribute("i");
   if (i % 2 == 1) index = Math.floor(i / 2) * 11 + j / 2;
   else index = (i - 1) * 5 + Math.floor(j / 2) + i / 2;
+  return index;
+}
+
+export const markLine = (line) => {
+  const index = getNumberOfLine(line)
   get("table").lines[index] = 1;
 };
 
