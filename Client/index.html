@@ -6,16 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dots and Boxes</title>
     <link rel="stylesheet" href="./gameStyle.css">
+<<<<<<< HEAD
     <link rel="stylesheet" href="./lobbyStyle.css">
     </link>
     <link rel="shortcut icon" href="">
+=======
+    <!-- <link rel="stylesheet" href="./lobbyStyle.css"> -->
+    <!-- <link rel="shortcut icon" href=""> -->
+>>>>>>> improve-structure
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="./index.js" type="module"></script>
 
 </head>
 
 <body>
-    <div id="root-container"></div>
+    <div id="root-container">
+        <div id="header">نقطه‌بازی</div>
+        <!-- <div id="info-container"></div> -->
+        <div id="paper"></div>
+        <div class="score" id="blue"><span>آبی: 0</span></div>
+        <div class="score" id="red"><span>قرمز: 0</span></div>
+        <div id="button-container">
+            <div id="resign" class="button" title="تسلیم">
+                🏳
+            </div>
+            <!-- <div id="like" class="button">
+                🔊
+            </div>
+            <div id="dislike" class="button">
+                👎
+            </div> -->
+        </div>
+
+    </div>
 </body>
 
 </html>

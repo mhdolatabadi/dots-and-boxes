@@ -1,95 +1,190 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+<<<<<<< HEAD
 // const config = require("./src/setup/config")
+=======
+
+>>>>>>> improve-structure
 let rooms = [];
 let users = [];
-let changeLog = [];
+const createRoom = (roomId) => ({
+  id: roomId,
+  users: [],
+  subscribers: [],
+  history: [],
+  turn: "red",
+  end: false,
+});
 
-const checkUser = (userId, roomId) => {
-  for (let i = 0; i < users[roomId].length; i++) {
-    if (users[roomId][i] === userId) {
-      return true;
-    }
-  }
+const createUser = (userId) => ({
+  id: userId,
+  name: "",
+  score: "",
+  room: "",
+  color: "",
+  isTurn: false,
+  role: "",
+  connection: false,
+});
+
+const find = (id, array) => {
+  for (let i = 0; i < array.length; i++)
+    if (array[i].id === id) return array[i];
   return false;
 };
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
+const getElement = (id, array, creator) => {
+  const found = find(id, array);
+  if (found) return found;
+  else {
+    const element = creator(id);
+    array.push(element);
+    return element;
+  }
+};
+
+const get = (id, type) => {
+  if (type === "room") return getElement(id, rooms, createRoom);
+  else if (type === "user") return getElement(id, users, createUser);
+};
+
+const configUser = (user, room, color, isTurn, role, connection) => {
+  user.room = room;
+  user.color = "red";
+  user.isTurn = true;
+  user.role = "player";
+  user.connection = true;
+};
+
+const changeTurn = (room, color) => {
+  if (color === "red") room.turn = "blue";
+  else if (color === "blue") room.turn = "red";
+};
+
+const hostFirstUser = (room, user, socket) => {
+  configUser(user, room, "red", true, "player", "true");
+  room.turn = "red";
+  room.users.push(user);
+  socket.emit("color", "red");
+  socket.emit("wait", "wait");
+  socket.join(room.id);
+};
+
+const hostSecondUser = (room, user, socket) => {
+  configUser(user, room, undefined, undefined, "player", true);
+  console.log(room.users)
+  const secondUser = (room.users[0].id === user.id ? room.users[1] : room.users[0])
+  if (secondUser.color === "red") user.color = "blue";
+  else user.color = "red";
+  if (room.turn !== user.color) user.isTurn = false;
+  else user.isTurn = true;
+  room.users.push(user)
+  socket.emit("color", user.color);
+  socket.emit('permission', user.isTurn)
+  socket.emit("watch", room.history);
+  socket.join(room.id);
+  socket.broadcast.to(room.id).emit("wait", "play");
+  io.to(room.id).emit("introduce", "hello");
+};
+
+const hostSubscriber = (room, user, socket) => {
+  configUser(user, room, undefined, undefined, "subscriber", true);
+  room.subscribers.push(user);
+  socket.join(room.id);
+  socket.emit("role", "subscriber");
+  socket.emit("watch", room.history);
+};
+
+const directToRoom = (roomId, userId, socket) => {
+  const room = get(roomId, "room");
+  const user = get(userId, "user");
+  switch (room.users.length) {
+    case 0:
+      hostFirstUser(room, user, socket);
+      break;
+    case 1:
+      hostSecondUser(room, user, socket);
+      break;
+    default:
+      if (find(userId, room.users) !== false)
+        hostSecondUser(room, user, socket);
+      else hostSubscriber(room, user, socket);
+      break;
+  }
+};
 
 io.on("connection", (socket) => {
   socket.emit("handshake", "welcome! give me your room id!");
   socket.on("handshake", (roomId, userId) => {
-    users[roomId] = [];
-    switch (rooms[roomId]) {
-      case 1:
-        rooms[roomId] = 2;
-        users[roomId].push(userId);
-        socket.emit("turn", "blue");
-        socket.join(roomId);
-        socket.broadcast.to(roomId).emit("wait", "play");
-        socket.room = roomId;
-        break;
-      case 2:
-        console.log(checkUser(userId, roomId));
-        if (checkUser(userId, roomId)) {
-          socket.join(roomId);
-          socket.broadcast.to(roomId).emit("wait", "play");
-          socket.emit("watch", changeLog[roomId]);
-          socket.on("wait", (turn) => {
-            socket.emit("turn", turn);
-          });
-          socket.room = roomId;
-        } else {
-          socket.emit("role", "subscriber");
-          socket.join(roomId);
-          socket.emit("watch", changeLog[roomId]);
-          socket.role = "subscriber";
-        }
-        break;
-      default:
-        changeLog[roomId] = [];
-        rooms[roomId] = 1;
-        users[roomId].push(userId);
-        socket.emit("turn", "red");
-        socket.emit("wait", "wait");
-        socket.join(roomId);
-        socket.color = "red";
-        socket.room = roomId;
-        break;
-    }
-    console.log(rooms[socket.room]);
-    if (rooms[socket.room] === 2) {
-      io.to(socket.room).emit("greeting", "salam");
-    }
+    console.log(userId);
+    directToRoom(roomId, userId, socket);
+  });
+  console.log("a user connected");
+
+  socket.on("introduce", (userId, roomId, name) => {
+    const user = get(userId, "user");
+    const room = get(roomId, "room");
+    user.name = name;
+    socket.broadcast.to(room.id).emit("name", name);
   });
 
-  socket.on("greeting", (name) => {
-    socket.to(socket.room).emit("name", name);
+  socket.on("disconnect", (userId, roomId) => {
+    const user = get(userId, "user");
+    const room = get(roomId, "room");
+    if (user.role !== "subscriber" && !room.end)
+      socket.broadcast.to(room.id).emit("wait", "wait");
   });
 
-  socket.on("disconnect", () => {
-    if (socket.role !== "subscriber") {
-      socket.broadcast.to(socket.room).emit("wait", "wait");
-      rooms[socket.room]--;
-      if (rooms[socket.room] === 0) {
-        changeLog[socket.room] = [];
-        users[socket.room] = [];
-      }
+  const check = (room, user) => {
+    if (user.isTurn && room.turn === user.color) {
+      changeTurn(room, user.color);
+      for (let i = 0; i < room.users.length; i++)
+        room.users[i].isTurn = !room.users[i].isTurn;
     }
+  };
+  socket.on("change", (userId, roomId, change, color) => {
+    const user = get(userId, "user");
+    const room = get(roomId, "room");
+    change.color = user.color;
+    check(room, user);
+    room.history.push(change);
+    socket.broadcast.to(room.id).emit("change", change, color);
   });
-  socket.on("change", (change, color) => {
-    changeLog[socket.room].push(change);
-    socket.broadcast.to(socket.room).emit("change", change, color);
+
+  socket.on("gift", (userId, roomId) => {
+    const user = get(userId, "user");
+    const room = get(roomId, "room");
+    check(room, user);
+    io.to(room.id).emit("gift");
   });
-  socket.on("gift", (gift) => {
-    socket.broadcast.to(socket.room).emit("gift", gift);
+
+  socket.on("resign", (userId, roomId) => {
+    const room = get(roomId, "room");
+    room.end = true;
+    socket.broadcast.to(room.id).emit("resign", "salam");
   });
-  socket.on("resign", () => {
-    socket.broadcast.to(socket.room).emit("resign", "salam");
+
+  socket.on("end", (userId, roomId) => {
+    const room = get(roomId, "room");
+    room.end = true;
+  });
+
+  socket.on("getname", (roomId) => {
+    const room = get(roomId, "room");
+    let redName;
+    let blueName;
+    for (let i = 0; i < room.users.length; i++) {
+      const element = room.users[i];
+      if (element.color === "red") redName = element.name;
+      else blueName = element.name;
+    }
+    socket.emit("getname", redName, blueName);
   });
 });
 
+<<<<<<< HEAD
 http.listen(/*config.port*/3000, () => {});
+=======
+http.listen(3000, () => {});
+>>>>>>> improve-structure

@@ -1,105 +1,102 @@
-import {
-  codeData,
-  decodeData,
-  setTurn,
-  setIsTurn,
-  changeTurn,
-  setIsWait,
-  getOpponent,
-  getTurn,
-  setOpponentName,
-} from "./data.js";
-import {
-  notifEndOfGame,
-  showError,
-  waiting,
-  unwaiting,
-  render,
-} from "./gameRender.js";
+import { get, set } from "./data.js";
+import { recieve } from "./logic.js";
+import { initializeTurn, showMessage, showEnd } from "./gameRender.js";
 import { getUserFirstName, getUserId, roomId } from "./index.js";
 
-const socket = io("https://noghteh-bazi.wapp.weblite.me/");
-// const socket = io("http://localhost:3000");
+// const socket = io("https://noghteh-bazi.wapp.weblite.me/");
+const socket = io("http://localhost:3000");
 
-let role = "";
-
-export const getRole = () => {
-  return role;
-};
-
-socket.on("turn", (turn) => {
-  setTurn(turn);
+socket.on("handshake", () => {
+  socket.emit("handshake", roomId(), getUserId());
 });
 
-socket.on("watch", (changes) => {
-  console.log("watching...")
-  if (changes.length > 0) {
-    for (let i = 0; i < changes.length; i++) {
-      decodeData(changes[i]);
-      changeTurn();
+socket.on("color", (turn) => {
+  set("color", turn);
+  initializeTurn();
+});
+
+socket.on("wait", (type) => {
+  if (type === "wait") {
+    showMessage("در انتظار حریف");
+    set("waiting", true);
+  } else {
+    showMessage("نقطه‌بازی");
+    set("waiting", false);
+    socket.emit("wait", get("userId"), get("roomId"), get("opponentColor"));
+    socket.emit("name", get("userId"), get("roomId"));
+  }
+});
+
+socket.on("watch", (history) => {
+  if (history.length > 0) {
+    for (let i = 0; i < history.length; i++) {
+      recieve(history[i], history[i].color);
     }
   }
 });
 
-socket.on("wait", (state) => {
-  if (role !== "subscriber") {
-    if (state === "wait") {
-      waiting();
-      setIsWait();
-    } else {
-      socket.emit("wait", getOpponent());
-      unwaiting();
-      setIsWait();
-    }
-  }
-});
-
-socket.on("greeting", () => {
-  console.log("greeting");
-  socket.emit("greeting", getUserFirstName());
+socket.on("introduce", () => {
+  socket.emit("introduce", get("userId"), get("roomId"), getUserFirstName());
 });
 
 socket.on("name", (name) => {
-  console.log("naming");
-  if (role !== "subscriber") setOpponentName(name);
+  set("opponentName", name);
 });
 
-socket.on("role", (err) => {
-  role = err;
-  showError();
+socket.on("role", (role) => {
+  set("role", role);
+  showMessage("تماشاچی");
+  socket.emit("getname", get("roomId"));
 });
 
-socket.on("handshake", (turn) => {
-  socket.emit("handshake", roomId(), getUserId());
-});
-export const coding = () => {
-  if (role !== "subscriber") {
-    setIsTurn();
-    socket.emit("change", codeData(), getTurn());
+socket.on("getname", (redName, blueName) => {
+  if (get("role") === "subscriber") {
+    set("name", redName);
+    set("opponentName", blueName);
   }
+});
+
+export const notifyEnd = () => {
+  socket.emit("end", get("userId"), get("roomId"));
 };
-socket.on("change", (code, color) => {
-  if (role === "subscriber") {
-    setTurn(color);
+
+export const send = (line) => {
+  const i = line.getAttribute("i");
+  const j = line.getAttribute("j");
+  const type = line.getAttribute("class");
+  const message = {
+    x: i,
+    y: j,
+    kind: type,
+  };
+  socket.emit("change", get("userId"), get("roomId"), message, get("color"));
+};
+
+socket.on("change", (line, turn) => {
+  if (get("role") === "subscriber") {
+    set("opponentColor", turn);
+    if (turn === "red") set("color", "blue");
+    else set("color", "red");
   }
-  decodeData(code);
+  if (get("opponentColor") === turn) set("permission", true);
+  recieve(line, turn);
 });
 
-export const notifGift = () => {
-  if (role !== "subscriber") socket.emit("gift", "request");
+export const requestGift = () => {
+  socket.emit("gift", get("userId"), get("roomId"));
 };
-socket.on("gift", (gift) => {
-  setIsTurn();
-  if (role === "subscriber") {
-    changeTurn();
-  }
+socket.on("gift", () => {
+  set("permission", !get("permission"));
 });
 
 export const resign = () => {
-  notifEndOfGame(getOpponent());
-  socket.emit("resign");
+  showEnd(get("opponentColor"));
+  socket.emit("resign", get("userId"), get("roomId"));
 };
 socket.on("resign", () => {
-  notifEndOfGame(getTurn());
-  socket.emit("disconnect", "salam");
+  showEnd(get("color"));
+  socket.emit("disconnect", get("userId"), get("roomId"));
 });
+socket.on('permission', (permission) => {
+  set('permission', permission)
+})

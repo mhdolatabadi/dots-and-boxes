@@ -1,7 +1,16 @@
+import { set } from "./data.js";
 import { render } from "./gameRender.js";
 
+<<<<<<< HEAD
 let id = 30;
 let userId = 0;
+=======
+const room = "lsweWzeVd5sskh90nLK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw";
+
+const createId = () => {
+  return "_" + Math.random().toString(36).substr(2, 9);
+};
+>>>>>>> improve-structure
 
 const W = window.W;
 if (W !== undefined) {
@@ -14,7 +23,8 @@ if (W !== undefined) {
 
 export const roomId = () => {
   if (W !== undefined) return W.wapp.getWisId();
-  else return id;
+  set('roomId', room)
+  return room;
 };
 export const getUserFirstName = () => {
   if (W !== undefined) return W.user.getFirstname();
@@ -22,7 +32,10 @@ export const getUserFirstName = () => {
 };
 export const getUserId = () => {
   if (W !== undefined) return W.user.getId();
-  return userId++;
-};
+  // const id = createId();
+  const id = prompt('get number');
 
+  set("userId", id);
+  return id;
+};
 render();

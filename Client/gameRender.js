@@ -1,119 +1,99 @@
+import { get, set } from "./data.js";
 import {
-  getTurn,
-  rowCount,
-  columnCount,
-  getOpponentScore,
-  setOpponentScore,
-  getScore,
-  setScore,
-  getOpponent,
-  checkEndOfGame,
-  addLineCondition,
-  getIsTurn,
-  getIsWait,
-  getName,
-  getEnd,
-  getOpponentName,
-  setEnd,
-} from "./data.js";
-import { addLineToSquare, checkCondition, findSpace } from "./logic.js";
-import { coding, resign, getRole } from "./router.js";
+  addLineToSquare,
+  checkCondition,
+  findSpace,
+  checkEnd,
+  markLine,
+  checkah,
+  getNumberOfLine,
+} from "./logic.js";
+import { resign, send, requestGift, notifyEnd } from "./router.js";
+import { getUserFirstName } from "./index.js";
 
 const oddScale = 1;
 const evenScale = 4;
-let paper = document.getElementById("paper");
+const paper = document.getElementById("paper");
+const header = document.getElementById("header");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
-
-export const colorLine = (line, color) => {
-  line.style.backgroundColor = color;
-};
-
-const addEventToResign = (event) => {
-  const resignDiv = document.getElementById("resign");
-  resignDiv.addEventListener(event, () => {
-    if (getRole() !== "subscriber" && !getIsWait() && !getEnd()) resign();
-  });
-};
-
-const addEventToLines = (array, event) => {
-  for (let i = 0; i < array.length; i++) {
-    array[i].addEventListener(event, () => {
-      if (
-        getIsTurn() &&
-        getRole() !== "subscriber" &&
-        !getIsWait() &&
-        !getEnd() &&
-        array[i].style.backgroundColor !== "red" &&
-        array[i].style.backgroundColor !== "blue"
-      ) {
-        addLineToSquare(array[i]);
-        colorLine(array[i], getTurn());
-        checkCondition();
-        addLineCondition(array[i]);
-        checkEndOfGame();
-        coding();
-      }
-    });
-  }
-};
 
 export const render = () => {
   createElements();
   stylePaperBy("row");
   stylePaperBy("column");
-  addEventToLines(xlines, "click");
-  addEventToLines(ylines, "click");
-  addEventToLines(xlines, "touch");
-  addEventToLines(ylines, "touch");
-  addEventToResign("click");
-  addEventToResign("touch");
+  lineInitializer(xlines, "click");
+  lineInitializer(ylines, "click");
+  lineInitializer(xlines, "touch");
+  lineInitializer(ylines, "touch");
+  resignInitializer("click");
+  resignInitializer("touch");
 };
-const createElements = () => {
-  const rootContainer = document.getElementById("root-container")
-  const header = document.createElement("div")
-  header.setAttribute("id", "titr")
-  header.innerHTML = "نقطه‌بازی"
-  const firstPaper = document.createElement("div")
-  firstPaper.setAttribute("id", "paper")
-  const red = document.createElement("div")
-  red.setAttribute("class", "score")
-  red.setAttribute("id", "red")
-  red.innerHTML = "قرمز: 0"
-  const blue = document.createElement("div")
-  blue.setAttribute("class", "score")
-  blue.setAttribute("id", "blue")
-  blue.innerHTML = "آبی: 0"
-  const buttonContainer = document.createElement("div")
-  buttonContainer.setAttribute("id", "button-container")
-  const resign = document.createElement("div")
-  resign.setAttribute("id", "resign")
-  resign.setAttribute("class", "button")
-  resign.innerHTML = "🙌"
-  buttonContainer.appendChild(resign)
-  rootContainer.appendChild(header)
-  rootContainer.appendChild(firstPaper)
-  rootContainer.appendChild(red)
-  rootContainer.appendChild(blue)
-  rootContainer.appendChild(buttonContainer)
-  paper = firstPaper
 
-  for (let i = 1; i <= 2 * rowCount - 1; i++)
-    for (let j = 1; j <= 2 * columnCount - 1; j++) {
+const lineInitializer = (array, event) => {
+  for (let i = 0; i < array.length; i++)
+    array[i].addEventListener(event, () => {
+      hitLine(array[i], get("color"));
+      if (get("gift")) requestGift();
+      set("gift", false);
+    });
+};
+
+export const canHit = (line, color) => {
+  return (
+    (get("permission") || color === get("opponentColor")) &&
+    get("role") !== "subscriber" &&
+    !get("waiting") &&
+    !get("end") &&
+    get("table").lines[getNumberOfLine(line)] !== 1
+  );
+};
+
+export const helpLine = (line, color) => {
+  colorLine(line, color);
+  addLineToSquare(line);
+  markLine(line);
+  checkCondition(color);
+  checkEnd();
+};
+
+export const hitLine = (line, color) => {
+  if (canHit(line, color)) {
+    helpLine(line, checkah());
+    send(line);
+    set("permission", false);
+    console.log(get("gift"));
+  }
+};
+
+const resignInitializer = (event) => {
+  const resignDiv = document.getElementById("resign");
+  resignDiv.addEventListener(event, () => {
+    if (get("role") !== "subscriber" && !get("waiting") && !get("end"))
+      resign();
+  });
+};
+
+export const colorLine = (line, color) => {
+  line.style.backgroundColor = color;
+};
+
+const createElements = () => {
+  for (let i = 1; i <= 2 * get("row") - 1; i++)
+    for (let j = 1; j <= 2 * get("column") - 1; j++) {
       const div = document.createElement("div");
       div.setAttribute("class", "grid-item");
       div.setAttribute("i", i);
       div.setAttribute("j", j);
-      firstPaper.appendChild(div);
+      paper.appendChild(div);
       alignStyle(div, i, j);
     }
 };
 const stylePaperBy = (orientation) => {
   let template = "";
-  for (let k = 0; k < 2 * rowCount - 1; k++) {
+  for (let k = 0; k < 2 * get("row") - 1; k++)
     if (k % 2 === 0) template += oddScale + "fr ";
     else template += evenScale + "fr ";
-  }
   if (orientation === "row") paper.style.gridTemplateRows = template;
   else if (orientation === "column") paper.style.gridTemplateColumns = template;
 };
@@ -137,89 +117,58 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
-  document.getElementById(getTurn()).innerHTML = getName() + ": " + getScore();
-  document.getElementById(getOpponent()).innerHTML =
-    getOpponentName() + ": " + getOpponentScore();
+  const myElement = document.getElementById(get("color"));
+  const oppElement = document.getElementById(get("opponentColor"));
+  myElement.innerHTML = get("name") + ": " + get("score");
+  oppElement.innerHTML = get("opponentName") + ": " + get("opponentScore");
 };
 
 export const updateScore = () => {
-  if (getIsTurn()) setScore(getScore() + 1);
-  else setOpponentScore(getOpponentScore() + 1);
+  if (get("permission")) set("score", get("score") + 1);
+  else set("opponentScore", get("opponentScore") + 1);
   updateScoreBoard();
 };
 
 export const showTurn = () => {
-  if (getIsTurn()) {
-    if (getTurn() === "red") {
-      document.getElementById(getTurn()).style.backgroundColor = "red";
-      document.getElementById(getTurn()).style.boxShadow =
-        "0 9px rgb(200, 0, 0)";
-      document.getElementById(getOpponent()).style.backgroundColor =
-        "rgb(0, 0, 100)";
-      document.getElementById(getOpponent()).style.boxShadow =
-        "0 9px rgb(0, 0, 100)";
-    } else {
-      document.getElementById(getTurn()).style.backgroundColor = "blue";
-      document.getElementById(getTurn()).style.boxShadow =
-        "0 9px rgb(0, 0, 200)";
-      document.getElementById(getOpponent()).style.backgroundColor =
-        "rgb(100, 0, 0)";
-      document.getElementById(getOpponent()).style.boxShadow =
-        "0 9px rgb(100, 0, 0)";
-    }
-  } else {
-    if (getTurn() === "red") {
-      document.getElementById(getTurn()).style.backgroundColor =
-        "rgb(100, 0, 0)";
-      document.getElementById(getTurn()).style.boxShadow =
-        "0 9px rgb(100, 0, 0)";
-      document.getElementById(getOpponent()).style.backgroundColor = "blue";
-      document.getElementById(getOpponent()).style.boxShadow =
-        "0 9px rgb(0, 0, 200)";
-    } else {
-      document.getElementById(getOpponent()).style.backgroundColor = "red";
-      document.getElementById(getOpponent()).style.boxShadow =
-        "0 9px rgb(200, 0, 0)";
-      document.getElementById(getTurn()).style.backgroundColor =
-        "rgb(0, 0, 100)";
-      document.getElementById(getTurn()).style.boxShadow =
-        "0 9px rgb(0, 0, 100)";
-    }
-  }
+  const isMyTurn = get("permission");
+  const myColor = get("color");
+  const oppColor = get("opponentColor");
+  const myElement = document.getElementById(get("color"));
+  const oppElement = document.getElementById(get("opponentColor"));
+  myElement.classList.toggle(`active-${myColor}`, isMyTurn);
+  oppElement.classList.toggle(`active-${oppColor}`, !isMyTurn);
+  myElement.innerHTML = get("name") + " : " + "0";
+  oppElement.innerHTML = get("opponentName") + " : " + "0";
 };
 
-export const notifEndOfGame = (winner) => {
-  document.body.style.backgroundColor = "goldenrod";
-  if (winner === getTurn()) {
-    document.getElementById("titr").innerHTML = "برنده";
-    document.getElementById("titr").backgroundColor = getTurn();
-  } else {
-    document.getElementById("titr").innerHTML = "بازنده";
-    document.getElementById("titr").backgroundColor = getOpponent();
-  }
-  setEnd(true)
+export const showEnd = (winner) => {
+  notifyEnd();
+  const myColor = get("color");
+  document.body.style.backgroundColor = "dark" + winner;
+  if (winner === myColor) showMessage("برنده");
+  else showMessage("بازنده");
+  set("end", true);
 };
 
-export const colorBox = (i, j) => {
+export const colorBox = (i, j, color) => {
   const space = findSpace(i, j);
-  if (getIsTurn()) {
-    space.style.backgroundColor = "dark" + getTurn();
-    if (getTurn() === "red") space.innerHTML = "ق";
-    else space.innerHTML = "آ";
+  space.style.backgroundColor = "dark" + color;
+  if (color === "red") space.innerHTML = "ق";
+  else space.innerHTML = "آ";
+};
+
+export const showMessage = (message) => {
+  header.innerHTML = message;
+};
+
+export const initializeTurn = () => {
+  const myColor = get("color");
+  if (myColor === "red") {
+    set("permission", true);
+    set("opponentColor", "blue");
   } else {
-    if (getOpponent() === "red") space.innerHTML = "ق";
-    else space.innerHTML = "آ";
-    space.style.backgroundColor = "dark" + getOpponent();
+    set("permission", false);
+    set("opponentColor", "red");
   }
-};
-
-export const showError = () => {
-  document.getElementById("titr").innerHTML = "تماشاچی";
-};
-export const waiting = () => {
-  document.getElementById("titr").innerHTML = "در انتظار حریف";
-};
-
-export const unwaiting = () => {
-  document.getElementById("titr").innerHTML = "نقطه‌بازی";
+  set("name", getUserFirstName());
 };
