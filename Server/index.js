@@ -1,11 +1,6 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-<<<<<<< HEAD
-// const config = require("./src/setup/config")
-=======
-
->>>>>>> improve-structure
 let rooms = [];
 let users = [];
 const createRoom = (roomId) => ({
@@ -183,8 +178,4 @@ io.on("connection", (socket) => {
   });
 });
 
-<<<<<<< HEAD
 http.listen(/*config.port*/3000, () => {});
-=======
-http.listen(3000, () => {});
->>>>>>> improve-structure
