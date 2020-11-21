@@ -30,16 +30,18 @@ export const render = () => {
   resignInitializer("touch");
   changeLanguage("click");
   changeLanguage("touch");
-  showInfo("touch");
-  showInfo("click");
+  show("touch", "header", "info-container");
+  show("click", "header", "info-container");
+  // show("touch", 'button-container', 'message');
+  // show("click", 'button-container', 'message');
 };
 
-const showInfo = (event) => {
-  const header = document.getElementById("header");
-  const infos = document.getElementById("info-container");
-  header.addEventListener(event, () => {
-    if (infos.style.display === "flex") infos.style.display = "none";
-    else infos.style.display = "flex";
+const show = (event, helper, element) => {
+  const key = document.getElementById(helper);
+  const value = document.getElementById(element);
+  key.addEventListener(event, () => {
+    if (value.style.display === "flex") value.style.display = "none";
+    else value.style.display = "flex";
   });
 };
 
@@ -63,6 +65,8 @@ export const canHit = (line, color) => {
 };
 
 export const helpLine = (line, color) => {
+  // const audio = new Audio("./assets/line2.mp3");
+  // audio.play();
   colorLine(line, color);
   addLineToSquare(line);
   markLine(line);
