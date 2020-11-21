@@ -30,6 +30,17 @@ export const render = () => {
   resignInitializer("touch");
   changeLanguage("click");
   changeLanguage("touch");
+  showInfo("touch");
+  showInfo("click");
+};
+
+const showInfo = (event) => {
+  const header = document.getElementById("header");
+  const infos = document.getElementById("info-container");
+  header.addEventListener(event, () => {
+    if (infos.style.display === "flex") infos.style.display = "none";
+    else infos.style.display = "flex";
+  });
 };
 
 const lineInitializer = (array, event) => {
@@ -178,7 +189,8 @@ export const getMesaageOfLanguge = (type) => {
         document.getElementById("resign").innerHTML = messages.english.resign;
         break;
       case "language":
-        document.getElementById("language").innerHTML = messages.english.language;
+        document.getElementById("language").innerHTML =
+          messages.english.language;
         break;
     }
   } else if (get("language") === "persian") {
@@ -199,14 +211,15 @@ export const getMesaageOfLanguge = (type) => {
         document.getElementById("resign").innerHTML = messages.persian.resign;
         break;
       case "language":
-        document.getElementById("language").innerHTML = messages.persian.language;
+        document.getElementById("language").innerHTML =
+          messages.persian.language;
         break;
     }
   }
 };
 
 export const showMessage = (message) => {
-  getMesaageOfLanguge(messages)
+  getMesaageOfLanguge(messages);
 };
 
 export const initializeTurn = () => {
@@ -224,21 +237,23 @@ export const initializeTurn = () => {
 
 export const changeLanguage = (event) => {
   const language = document.getElementById("language");
-  language.addEventListener(event, () => {
-    if (get("language") === "persian") {
-      document.getElementById("header").innerHTML = messages.english.header;
-      document.getElementById("resign").innerHTML =
-        messages.english.resignButton;
-      document.getElementById("language").innerHTML =
-        messages.english.languageButton;
-      set("language", "english");
-    } else {
-      document.getElementById("header").innerHTML = messages.persian.header;
-      document.getElementById("resign").innerHTML =
-        messages.persian.resignButton;
-      document.getElementById("language").innerHTML =
-        messages.persian.languageButton;
-      set("language", "persian");
-    }
-  });
+  if (language !== null) {
+    language.addEventListener(event, () => {
+      if (get("language") === "persian") {
+        document.getElementById("header").innerHTML = messages.english.header;
+        document.getElementById("resign").innerHTML =
+          messages.english.resignButton;
+        document.getElementById("language").innerHTML =
+          messages.english.languageButton;
+        set("language", "english");
+      } else {
+        document.getElementById("header").innerHTML = messages.persian.header;
+        document.getElementById("resign").innerHTML =
+          messages.persian.resignButton;
+        document.getElementById("language").innerHTML =
+          messages.persian.languageButton;
+        set("language", "persian");
+      }
+    });
+  }
 };
