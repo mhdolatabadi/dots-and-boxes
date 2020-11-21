@@ -1,4 +1,4 @@
-import { showTurn, render } from "./gameRender.js";
+import { showTurn, render, showEnd } from "./gameRender.js";
 
 const create2DArray = (rows) => {
   let arr = [];
@@ -36,6 +36,7 @@ export const get = (key) => data[key];
 
 export const set = (key, value) => {
   data[key] = value;
+  showTurn();
 };
 export const reset = () => {
   render();

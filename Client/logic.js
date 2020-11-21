@@ -27,14 +27,13 @@ export const checkah = () => {
 };
 
 export const checkCondition = (color) => {
-  console.log('check condition')
   const condition = get("table").squares;
   for (let i = 0; i < condition.length; i++)
     for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] === 4) {
         colorBox(i, j, color);
         condition[i][j] = 100000
-        updateScore();
+        updateScore(color);
         if (get("permission") && get('color') === color) set("gift", true);
       }
 };

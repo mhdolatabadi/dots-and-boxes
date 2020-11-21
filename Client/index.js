@@ -29,7 +29,6 @@ export const getUserFirstName = () => {
 export const getUserId = () => {
   if (W !== undefined) {
     const id = W.user.getId()
-    console.log(id)
     set("userId", id);
     return id;
   } else {
