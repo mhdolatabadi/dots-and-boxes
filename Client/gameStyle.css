@@ -47,10 +47,7 @@ body {
   height: 80px;
   text-align: center;
   border-radius: 50px 50px 0 0;
-  margin-bottom: 5px;
   background-color: orange;
-  margin-bottom: 9px;
-  
 }
 
 .score {
@@ -58,7 +55,6 @@ body {
   text-shadow: thistle;
   color: white;
   font-size: 20px;
-
 }
 #info-container {
   display: flex;
@@ -125,9 +121,9 @@ body {
 
   margin: 5px;
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 30px;
   border-bottom: solid orangered;
-  border-left: solid orangered;
+  border-top: solid orangered; 
 
   display: flex;
   justify-content: center;

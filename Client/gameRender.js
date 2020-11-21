@@ -1,4 +1,4 @@
-import { get, set } from "./data.js";
+import { get, set, messages } from "./data.js";
 import {
   addLineToSquare,
   checkCondition,
@@ -28,6 +28,8 @@ export const render = () => {
   lineInitializer(ylines, "touch");
   resignInitializer("click");
   resignInitializer("touch");
+  changeLanguage("click");
+  changeLanguage("touch");
 };
 
 const lineInitializer = (array, event) => {
@@ -145,8 +147,8 @@ export const showEnd = (winner) => {
   notifyEnd();
   const myColor = get("color");
   document.body.style.backgroundColor = "dark" + winner;
-  if (winner === myColor) showMessage("برنده");
-  else showMessage("بازنده");
+  if (winner === myColor) showMessage("winner");
+  else showMessage("loser");
   set("end", true);
 };
 
@@ -157,12 +159,58 @@ export const colorBox = (i, j, color) => {
   else space.innerHTML = "آ";
 };
 
+export const getMesaageOfLanguge = (type) => {
+  if (get("language") === "english") {
+    switch (type) {
+      case "waiting":
+        document.getElementById("header").innerHTML = messages.english.waiting;
+        break;
+      case "header":
+        document.getElementById("header").innerHTML = messages.english.header;
+        break;
+      case "winner":
+        document.getElementById("header").innerHTML = messages.english.winner;
+        break;
+      case "loser":
+        document.getElementById("header").innerHTML = messages.english.loser;
+        break;
+      case "resign":
+        document.getElementById("resign").innerHTML = messages.english.resign;
+        break;
+      case "language":
+        document.getElementById("language").innerHTML = messages.english.language;
+        break;
+    }
+  } else if (get("language") === "persian") {
+    switch (type) {
+      case "waiting":
+        document.getElementById("header").innerHTML = messages.persian.waiting;
+        break;
+      case "header":
+        document.getElementById("header").innerHTML = messages.persian.header;
+        break;
+      case "winner":
+        document.getElementById("header").innerHTML = messages.persian.winner;
+        break;
+      case "loser":
+        document.getElementById("header").innerHTML = messages.persian.loser;
+        break;
+      case "resign":
+        document.getElementById("resign").innerHTML = messages.persian.resign;
+        break;
+      case "language":
+        document.getElementById("language").innerHTML = messages.persian.language;
+        break;
+    }
+  }
+};
+
 export const showMessage = (message) => {
-  header.innerHTML = message;
+  getMesaageOfLanguge(messages)
 };
 
 export const initializeTurn = () => {
-  console.log("initializeTurn")
+  console.log("initializeTurn");
   const myColor = get("color");
   if (myColor === "red") {
     set("permission", true);
@@ -172,4 +220,25 @@ export const initializeTurn = () => {
     set("opponentColor", "red");
   }
   set("name", getUserFirstName());
+};
+
+export const changeLanguage = (event) => {
+  const language = document.getElementById("language");
+  language.addEventListener(event, () => {
+    if (get("language") === "persian") {
+      document.getElementById("header").innerHTML = messages.english.header;
+      document.getElementById("resign").innerHTML =
+        messages.english.resignButton;
+      document.getElementById("language").innerHTML =
+        messages.english.languageButton;
+      set("language", "english");
+    } else {
+      document.getElementById("header").innerHTML = messages.persian.header;
+      document.getElementById("resign").innerHTML =
+        messages.persian.resignButton;
+      document.getElementById("language").innerHTML =
+        messages.persian.languageButton;
+      set("language", "persian");
+    }
+  });
 };

@@ -14,8 +14,9 @@ if (W !== undefined) {
 
 export const roomId = () => {
   if (W !== undefined){
-    set('roomId', W.wapp.getWisId())
-    return W.wapp.getWisId();
+    const roomId = W.wapp.getWisId() 
+    set('roomId', roomId)
+    return roomId;
   } else{
     set('roomId', room)
     return room;

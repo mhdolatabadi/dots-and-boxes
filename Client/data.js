@@ -23,6 +23,7 @@ const dataCreator = (rowCount, columnCount) => ({
   permission: false,
   waiting: false,
   gift: false,
+  language: "persian",
   table: {
     lines: [],
     squares: [],
@@ -53,8 +54,25 @@ get("table").squares = create2DArray(get("row"));
 initializeArray(get("table").squares, "squares", get("table").squares.length);
 initializeArray(get("table").lines, "lines", 2 * get("row") * (get("row") - 1));
 
-
 export const addCondition = (i, j) => {
-  get("table").squares[i][j] = get("table").squares[i][j] + 1
+  get("table").squares[i][j] = get("table").squares[i][j] + 1;
+};
 
+export const messages = {
+  english: {
+    waiting: "waiting for opponent...",
+    languageButton: "english",
+    resignButton: "resign",
+    header: "Dots and Boxes",
+    winner: "winner",
+    loser: "loser",
+  },
+  persian: {
+    waiting: "در انتظار حریف...",
+    languageButton: "فارسی",
+    resignButton: "تسلیم",
+    header: "نقطه‌بازی",
+    winner: "برنده",
+    loser: "بازنده",
+  },
 };
