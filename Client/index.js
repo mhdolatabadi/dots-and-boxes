@@ -1,7 +1,7 @@
 import { set } from "./data.js";
 import { render } from "./gameRender.js";
 
-const room = "lsweWzeVd5sskh9sd0nLnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw";
+const room = "lsweWzenVd53sskh9s1d0nLnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw";
 
 const W = window.W;
 if (W !== undefined) {
@@ -24,7 +24,7 @@ export const roomId = () => {
 };
 export const getUserFirstName = () => {
   if (W !== undefined) return W.user.getFirstname();
-  else return "اکبر";
+  else return "شما";
 };
 export const getUserId = () => {
   if (W !== undefined) {

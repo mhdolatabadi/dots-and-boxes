@@ -47,10 +47,10 @@ const get = (id, type) => {
 
 const configUser = (user, room, color, isTurn, role, connection) => {
   user.room = room;
-  user.color = "red";
-  user.isTurn = true;
-  user.role = "player";
-  user.connection = true;
+  user.color = color;
+  user.isTurn = isTurn;
+  user.role = role;
+  user.connection = connection;
 };
 
 const changeTurn = (room, color) => {
@@ -69,7 +69,6 @@ const hostFirstUser = (room, user, socket) => {
 
 const hostSecondUser = (room, user, socket) => {
   configUser(user, room, undefined, undefined, "player", true);
-  console.log(room.users)
   const secondUser = (room.users[0].id === user.id ? room.users[1] : room.users[0])
   if (secondUser.color === "red") user.color = "blue";
   else user.color = "red";
@@ -100,6 +99,7 @@ const directToRoom = (roomId, userId, socket) => {
       hostFirstUser(room, user, socket);
       break;
     case 1:
+      console.log("here")
       hostSecondUser(room, user, socket);
       break;
     default:

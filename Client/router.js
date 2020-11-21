@@ -1,10 +1,10 @@
 import { get, set } from "./data.js";
 import { recieve } from "./logic.js";
-import { initializeTurn, showMessage, showEnd } from "./gameRender.js";
+import { initializeTurn, showMessage, showEnd, showTurn } from "./gameRender.js";
 import { getUserFirstName, getUserId, roomId } from "./index.js";
 
-const socket = io("https://noghteh-bazi.wapp.weblite.me/");
-// const socket = io("http://localhost:3000");
+// const socket = io("https://noghteh-bazi.wapp.weblite.me/");
+const socket = io("http://localhost:3000");
 
 socket.on("handshake", () => {
   socket.emit("handshake", roomId(), getUserId());
@@ -41,6 +41,7 @@ socket.on("introduce", () => {
 
 socket.on("name", (name) => {
   set("opponentName", name);
+  showTurn();
 });
 
 socket.on("role", (role) => {
@@ -54,6 +55,8 @@ socket.on("getname", (redName, blueName) => {
     set("name", redName);
     set("opponentName", blueName);
   }
+  showTurn();
+
 });
 
 export const notifyEnd = () => {

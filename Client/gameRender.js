@@ -134,6 +134,7 @@ const setDivStyle = (div, col, row, styleClass) => {
 };
 
 const updateScoreBoard = () => {
+  console.log("updateScoreBoard")
   const myElement = document.getElementById(get("color"));
   const oppElement = document.getElementById(get("opponentColor"));
   myElement.innerHTML = get("name") + ": " + get("score");
@@ -141,6 +142,7 @@ const updateScoreBoard = () => {
 };
 
 export const updateScore = () => {
+  console.log("updateScore")
   if (get("permission")) set("score", get("score") + 1);
   else set("opponentScore", get("opponentScore") + 1);
   updateScoreBoard();

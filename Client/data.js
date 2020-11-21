@@ -13,8 +13,8 @@ const dataCreator = (rowCount, columnCount) => ({
   opponentScore: 0,
   row: rowCount,
   column: columnCount,
-  name: undefined,
-  opponentName: undefined,
+  name: "نامشخص",
+  opponentName: "نامشخص",
   letter: undefined,
   role: undefined,
   color: "red",
@@ -36,7 +36,6 @@ export const get = (key) => data[key];
 
 export const set = (key, value) => {
   data[key] = value;
-  showTurn();
 };
 export const reset = () => {
   render();

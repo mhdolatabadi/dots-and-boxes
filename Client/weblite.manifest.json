@@ -1,12 +1,13 @@
 {
-    "name": "نقطه‌بازی",
-    "id": "5f945d356cb1bf0d609c860a",
-    "instantiable": true,
-    "searchable": true,
-    "fullscreen": false,
-    "inline": false,
-    "servIndexes": {
-    "main": "index"
-    },
-    "version": "0.4.2"
+  "name": "نقطه‌بازی",
+  "id": "5f945d356cb1bf0d609c860a",
+  "instantiable": true,
+  "searchable": true,
+  "fullscreen": true,
+  "inline": false,
+  "servIndexes": {
+    "main": "index",
+    "fullscreen": "index"
+  },
+  "version": "0.4.8"
 }
