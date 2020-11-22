@@ -70,7 +70,7 @@ export const send = (line) => {
     y: j,
     kind: type,
   };
-  socket.emit("change", get("userId"), get("roomId"), message, get("color"));
+  socket.emit("change", get("userId"), get("roomId"), message);
 };
 
 socket.on("change", (line, turn) => {

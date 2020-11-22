@@ -1,7 +1,7 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const config = require("./src/setup/config")
+const config = require("./src/setup/config");
 let rooms = [];
 let users = [];
 const createRoom = (roomId) => ({
@@ -69,14 +69,15 @@ const hostFirstUser = (room, user, socket) => {
 
 const hostSecondUser = (room, user, socket) => {
   configUser(user, room, undefined, undefined, "player", true);
-  const secondUser = (room.users[0].id === user.id ? room.users[1] : room.users[0])
+  const secondUser =
+    room.users[0].id === user.id ? room.users[1] : room.users[0];
   if (secondUser.color === "red") user.color = "blue";
   else user.color = "red";
   if (room.turn !== user.color) user.isTurn = false;
   else user.isTurn = true;
-  room.users.push(user)
+  room.users.push(user);
   socket.emit("color", user.color);
-  socket.emit('permission', user.isTurn)
+  socket.emit("permission", user.isTurn);
   socket.emit("watch", room.history);
   socket.join(room.id);
   socket.broadcast.to(room.id).emit("wait", "play");
@@ -99,7 +100,6 @@ const directToRoom = (roomId, userId, socket) => {
       hostFirstUser(room, user, socket);
       break;
     case 1:
-      console.log("here")
       hostSecondUser(room, user, socket);
       break;
     default:
@@ -108,6 +108,26 @@ const directToRoom = (roomId, userId, socket) => {
       else hostSubscriber(room, user, socket);
       break;
   }
+};
+
+const checkValidation = (room, user) => {
+  return (
+    user.isTurn &&
+    room.turn === user.color &&
+    user.connection &&
+    !room.end &&
+    user.role === "player"
+  );
+};
+
+const check = (room, user) => {
+  if (checkValidation(room, user)) {
+    changeTurn(room, user.color);
+    for (let i = 0; i < room.users.length; i++)
+      room.users[i].isTurn = !room.users[i].isTurn;
+    return true;
+  }
+  return false;
 };
 
 io.on("connection", (socket) => {
@@ -132,38 +152,30 @@ io.on("connection", (socket) => {
       socket.broadcast.to(room.id).emit("wait", "wait");
   });
 
-  const check = (room, user) => {
-    if (user.isTurn && room.turn === user.color) {
-      changeTurn(room, user.color);
-      for (let i = 0; i < room.users.length; i++)
-        room.users[i].isTurn = !room.users[i].isTurn;
-    }
-  };
-  socket.on("change", (userId, roomId, change, color) => {
+  socket.on("change", (userId, roomId, change) => {
     const user = get(userId, "user");
     const room = get(roomId, "room");
-    change.color = user.color;
-    check(room, user);
-    room.history.push(change);
-    socket.broadcast.to(room.id).emit("change", change, user.color);
+    if (check(room, user)) {
+      change.color = user.color;
+      room.history.push(change);
+      socket.broadcast.to(room.id).emit("change", change, user.color);
+    } else {
+      socket.emit("warning", "warning");
+    }
   });
 
   socket.on("gift", (userId, roomId) => {
     const user = get(userId, "user");
     const room = get(roomId, "room");
-    check(room, user);
-    io.to(room.id).emit("gift");
+    if(check(room, user)){
+      io.to(room.id).emit("gift");
+    }
   });
 
   socket.on("resign", (userId, roomId) => {
     const room = get(roomId, "room");
     room.end = true;
     socket.broadcast.to(room.id).emit("resign", "salam");
-  });
-
-  socket.on("end", (userId, roomId) => {
-    const room = get(roomId, "room");
-    room.end = true;
   });
 
   socket.on("getname", (roomId) => {

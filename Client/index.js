@@ -28,6 +28,7 @@ export const getUserFirstName = () => {
 };
 export const getUserId = () => {
   if (W !== undefined) {
+    W.initializeAsync()
     const id = W.user.getId()
     set("userId", id);
     return id;
