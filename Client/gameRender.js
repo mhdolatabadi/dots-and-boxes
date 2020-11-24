@@ -17,6 +17,8 @@ const paper = document.getElementById("paper");
 const header = document.getElementById("header");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
+const audio = new Audio("./assets/line2.mp3");
+
 
 export const render = () => {
   createElements();
@@ -65,8 +67,6 @@ export const canHit = (line, color) => {
 };
 
 export const helpLine = (line, color) => {
-  const audio = new Audio("./assets/line2.mp3");
-  audio.play();
   colorLine(line, color);
   addLineToSquare(line);
   markLine(line);
@@ -77,6 +77,7 @@ export const helpLine = (line, color) => {
 export const hitLine = (line, color) => {
   if (canHit(line, color)) {
     helpLine(line, checkah());
+    audio.play();
     send(line);
     set("permission", false);
   }
@@ -141,7 +142,8 @@ export const updateScoreBoard = () => {
 
 export const updateScore = (color) => {
   if (get("color") === color) set("score", get("score") + 1);
-  else if(get("opponentColor") === color) set("opponentScore", get("opponentScore") + 1);
+  else if (get("opponentColor") === color)
+    set("opponentScore", get("opponentScore") + 1);
   updateScoreBoard();
 };
 
@@ -222,7 +224,6 @@ export const getMesaageOfLanguge = (type) => {
 
 export const showMessage = (message) => {
   getMesaageOfLanguge(message);
-
 };
 
 export const initializeTurn = () => {

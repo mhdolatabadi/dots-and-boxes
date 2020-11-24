@@ -1,7 +1,7 @@
 import { set } from "./data.js";
 import { render } from "./gameRender.js";
 
-const room = "lsweWzenVd53sskh9s1d0nLnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw";
+const room = "lswe?.']123zenV34e.d5m36sskh9s1d0n4LnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw";
 
 const W = window.W;
 if (W !== undefined) {
