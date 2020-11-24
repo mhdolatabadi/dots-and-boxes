@@ -161,8 +161,23 @@ export const showTurn = () => {
 export const showEnd = (winner) => {
   const myColor = get("color");
   document.body.style.backgroundColor = "dark" + winner;
-  if (winner === myColor) showMessage("winner");
-  else showMessage("loser");
+  if (winner === myColor) {
+    showMessage("winner");
+    gameanalytics.GameAnalytics.addProgressionEvent(
+      gameanalytics.EGAProgressionStatus.Fail,
+      "main",
+      "main",
+      "main",
+      get("score")
+    ); 
+    gameanalytics.GameAnalytics.addProgressionEvent(
+      gameanalytics.EGAProgressionStatus.Complete,
+      "main",
+      "main",
+      "main",
+      get("opponentScore")
+    );
+  } else showMessage("loser");
   set("end", true);
 };
 
