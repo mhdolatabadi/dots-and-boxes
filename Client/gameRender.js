@@ -19,7 +19,6 @@ const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
 const audio = new Audio("./assets/line2.mp3");
 
-
 export const render = () => {
   createElements();
   stylePaperBy("row");
@@ -155,8 +154,8 @@ export const showTurn = () => {
   const oppElement = document.getElementById(get("opponentColor"));
   myElement.classList.toggle(`active-${myColor}`, isMyTurn);
   oppElement.classList.toggle(`active-${oppColor}`, !isMyTurn);
-  myElement.innerHTML = get("name") + " : " + get("score");
-  oppElement.innerHTML = get("opponentName") + " : " + get("opponentScore");
+  myElement.innerHTML = get("name") + ": " + get("score");
+  oppElement.innerHTML = get("opponentName") + ": " + get("opponentScore");
 };
 
 export const showEnd = (winner) => {
@@ -196,6 +195,10 @@ export const getMesaageOfLanguge = (type) => {
         document.getElementById("language").innerHTML =
           messages.english.language;
         break;
+      case "subscriber":
+        document.getElementById("header").innerHTML =
+          messages.english.subscriber;
+        break;
     }
   } else if (get("language") === "persian") {
     switch (type) {
@@ -217,6 +220,10 @@ export const getMesaageOfLanguge = (type) => {
       case "language":
         document.getElementById("language").innerHTML =
           messages.persian.language;
+        break;
+      case "subscriber":
+        document.getElementById("header").innerHTML =
+          messages.persian.subscriber;
         break;
     }
   }

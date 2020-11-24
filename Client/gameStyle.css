@@ -31,6 +31,7 @@ body {
   border-radius: 50px 50px 50px 50px;
 }
 #header {
+  direction: rtl;
   display: flex;
   justify-content: center;
   align-items: center;

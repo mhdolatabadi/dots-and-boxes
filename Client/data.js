@@ -66,6 +66,7 @@ export const messages = {
     header: "Dots and Boxes",
     winner: "winner",
     loser: "loser",
+    subscriber: "subscriber",
   },
   persian: {
     waiting: "در انتظار حریف...",
@@ -74,5 +75,7 @@ export const messages = {
     header: "نقطه‌بازی",
     winner: "برنده",
     loser: "بازنده",
+    subscriber: "تماشاچی",
+
   },
 };
