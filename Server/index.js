@@ -65,6 +65,7 @@ const hostFirstUser = (room, user, socket) => {
   configUser(user, room, "red", true, "player", true, socket);
   room.turn = "red";
   room.users.push(user);
+  socket.join(room.id);
   socket.emit("color", "red");
   socket.emit("wait", "wait");
 };
@@ -82,14 +83,17 @@ const hostSecondUser = (room, user, socket) => {
   socket.emit("permission", user.isTurn);
   socket.emit("watch", room.history);
   socket.broadcast.to(room.id).emit("wait", "play");
+  socket.join(room.id);
   io.to(room.id).emit("introduce", "hello");
 };
 
 const hostSubscriber = (room, user, socket) => {
   configUser(user, room, undefined, undefined, "subscriber", true, socket);
   room.subscribers.push(user);
+  socket.join(room.id);
   socket.emit("role", "subscriber", room.turn);
   socket.emit("watch", room.history);
+
 };
 
 const directToRoom = (roomId, userId, socket) => {
@@ -107,7 +111,6 @@ const directToRoom = (roomId, userId, socket) => {
       else hostSubscriber(room, user, socket);
       break;
   }
-  socket.join(room.id);
 
 };
 
