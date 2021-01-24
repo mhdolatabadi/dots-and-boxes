@@ -9,7 +9,7 @@ import {
   getNumberOfLine,
 } from "./logic.js";
 import { resign, send, requestGift } from "./router.js";
-import { getUserFirstName } from "./index.js";
+import { getUserFirstName } from "../index.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -169,7 +169,7 @@ export const showEnd = (winner) => {
       "main",
       "main",
       get("score")
-    ); 
+    );
     gameanalytics.GameAnalytics.addProgressionEvent(
       gameanalytics.EGAProgressionStatus.Complete,
       "main",

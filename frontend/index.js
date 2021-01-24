@@ -1,6 +1,6 @@
-import { set } from "./data.js";
-import { render } from "./gameRender.js";
-import { config } from "./helper/config";
+import { set } from "./src/data.js";
+import { render } from "./src/render.js";
+import { config } from "./src/helper/config";
 
 gameanalytics.GameAnalytics.configureBuild("1.0.0");
 gameanalytics.GameAnalytics.initialize(

@@ -1,4 +1,4 @@
-import { showTurn, render, showEnd } from "./gameRender.js";
+import { showTurn, render, showEnd } from "./render.js";
 import { create2DArray } from "./helper/functions/create2DArray";
 
 const dataCreator = (rowCount, columnCount) => ({

@@ -1,7 +1,13 @@
 import { get, set } from "./data.js";
 import { recieve } from "./logic.js";
-import { initializeTurn, showMessage, showEnd, showTurn, updateScoreBoard } from "./gameRender.js";
-import { getUserFirstName, getUserId, roomId } from "./index.js";
+import {
+  initializeTurn,
+  showMessage,
+  showEnd,
+  showTurn,
+  updateScoreBoard,
+} from "./gameRender.js";
+import { getUserFirstName, getUserId, roomId } from "../index.js";
 
 // const socket = io("https://noghteh-bazi.wapp.weblite.me/");
 const socket = io("http://localhost:3000");
@@ -20,7 +26,12 @@ socket.on("wait", (type) => {
     showMessage("waiting");
     set("waiting", true);
   } else {
-    gameanalytics.GameAnalytics.addProgressionEvent(gameanalytics.EGAProgressionStatus.Start, "main", "main", "main");
+    gameanalytics.GameAnalytics.addProgressionEvent(
+      gameanalytics.EGAProgressionStatus.Start,
+      "main",
+      "main",
+      "main"
+    );
     showMessage("header");
     set("waiting", false);
     socket.emit("wait", get("userId"), get("roomId"), get("opponentColor"));
@@ -37,7 +48,7 @@ socket.on("watch", (history) => {
 });
 
 socket.on("introduce", () => {
-  console.log("hello!")
+  console.log("hello!");
   socket.emit("introduce", get("userId"), get("roomId"), getUserFirstName());
 });
 
@@ -45,12 +56,11 @@ socket.on("name", (name) => {
   set("opponentName", name);
   showTurn();
   updateScoreBoard();
-
 });
 
 socket.on("role", (role, turn) => {
-  if(turn === get("color")) set("permission", true)
-  else set("permission", false)
+  if (turn === get("color")) set("permission", true);
+  else set("permission", false);
   set("role", role);
   showMessage("subscriber");
   socket.emit("getname", get("roomId"));
@@ -63,7 +73,6 @@ socket.on("getname", (redName, blueName) => {
   }
   showTurn();
   updateScoreBoard();
-
 });
 export const send = (line) => {
   const i = line.getAttribute("i");
@@ -102,10 +111,10 @@ socket.on("resign", () => {
   showEnd(get("color"));
   socket.emit("disconnect", get("userId"), get("roomId"));
 });
-socket.on('permission', (permission) => {
-  set('permission', permission)
-})
+socket.on("permission", (permission) => {
+  set("permission", permission);
+});
 
-socket.on('warning', (warning) => {
-  console.log(warning)
-})
+socket.on("warning", (warning) => {
+  console.log(warning);
+});
