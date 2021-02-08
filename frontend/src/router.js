@@ -6,11 +6,11 @@ import {
   showEnd,
   showTurn,
   updateScoreBoard,
-} from "./gameRender.js";
+} from "./render.js";
 import { getUserFirstName, getUserId, roomId } from "../index.js";
 
-// const socket = io("https://noghteh-bazi.wapp.weblite.me/");
-const socket = io("http://localhost:3000");
+const socket = io("https://noghteh-bazi.wapp.weblite.me/");
+// const socket = io("http://localhost:3000");
 
 socket.on("handshake", () => {
   socket.emit("handshake", roomId(), getUserId());
@@ -42,7 +42,7 @@ socket.on("wait", (type) => {
 socket.on("watch", (history) => {
   if (history.length > 0) {
     for (let i = 0; i < history.length; i++) {
-      recieve(history[i], history[i].color);
+      recieve(history[i], history[i].color, true);
     }
   }
 });
@@ -93,7 +93,7 @@ socket.on("change", (line, turn) => {
     else set("color", "red");
   }
   if (get("opponentColor") === turn) set("permission", true);
-  recieve(line, turn);
+  recieve(line, turn, false);
 });
 
 export const requestGift = () => {

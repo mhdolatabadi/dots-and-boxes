@@ -1,11 +1,5 @@
 import { addCondition, get, set } from "./data.js";
-import {
-  colorBox,
-  updateScore,
-  showEnd,
-  hitLine,
-  helpLine,
-} from "./gameRender.js";
+import { colorBox, updateScore, showEnd, hitLine, helpLine } from "./render.js";
 
 const spaces = document.getElementsByClassName("space");
 
@@ -57,8 +51,8 @@ export const checkEnd = () => {
   }
 };
 
-export const recieve = (message, color) => {
-  helpLine(findLine(message), color);
+export const recieve = (message, color, isWatch) => {
+  helpLine(findLine(message), color, isWatch);
 };
 
 export const getNumberOfLine = (line) => {
