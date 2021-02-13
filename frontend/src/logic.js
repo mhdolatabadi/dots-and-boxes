@@ -1,11 +1,5 @@
 import { addCondition, get, set } from "./data.js";
-import {
-  colorBox,
-  updateScore,
-  showEnd,
-  hitLine,
-  helpLine,
-} from "./gameRender.js";
+import { colorBox, updateScore, showEnd, hitLine, helpLine } from "./render.js";
 
 const spaces = document.getElementsByClassName("space");
 
@@ -32,9 +26,9 @@ export const checkCondition = (color) => {
     for (let j = 0; j < condition[i].length; j++)
       if (condition[i][j] === 4) {
         colorBox(i, j, color);
-        condition[i][j] = 100000
+        condition[i][j] = 100000;
         updateScore(color);
-        if (get("permission") && get('color') === color) set("gift", true);
+        if (get("permission") && get("color") === color) set("gift", true);
       }
 };
 export const findSpace = (i, j) => {
@@ -57,8 +51,8 @@ export const checkEnd = () => {
   }
 };
 
-export const recieve = (message, color) => {
-  helpLine(findLine(message), color);
+export const recieve = (message, color, isWatch) => {
+  helpLine(findLine(message), color, isWatch);
 };
 
 export const getNumberOfLine = (line) => {
@@ -68,10 +62,10 @@ export const getNumberOfLine = (line) => {
   if (i % 2 == 1) index = Math.floor(i / 2) * 11 + j / 2;
   else index = (i - 1) * 5 + Math.floor(j / 2) + i / 2;
   return index;
-}
+};
 
 export const markLine = (line) => {
-  const index = getNumberOfLine(line)
+  const index = getNumberOfLine(line);
   get("table").lines[index] = 1;
 };
 

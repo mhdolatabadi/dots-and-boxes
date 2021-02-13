@@ -1,10 +1,5 @@
-import { showTurn, render, showEnd } from "./gameRender.js";
-
-const create2DArray = (rows) => {
-  let arr = [];
-  for (let i = 0; i < rows; i++) arr[i] = [];
-  return arr;
-};
+import { showTurn, render, showEnd } from "./render.js";
+import create2DArray from "./helper/functions/create2DArray.js";
 
 const dataCreator = (rowCount, columnCount) => ({
   roomId: undefined,
@@ -76,6 +71,5 @@ export const messages = {
     winner: "برنده",
     loser: "بازنده",
     subscriber: "تماشاچی",
-
   },
 };

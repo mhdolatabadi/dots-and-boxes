@@ -9,7 +9,7 @@ import {
   getNumberOfLine,
 } from "./logic.js";
 import { resign, send, requestGift } from "./router.js";
-import { getUserFirstName } from "./index.js";
+import { getUserFirstName } from "../index.js";
 
 const oddScale = 1;
 const evenScale = 4;
@@ -17,7 +17,7 @@ const paper = document.getElementById("paper");
 const header = document.getElementById("header");
 const xlines = document.getElementsByClassName("xline");
 const ylines = document.getElementsByClassName("yline");
-const audio = new Audio("./assets/line2.mp3");
+const audio = new Audio("./src/assets/line2.mp3");
 
 export const render = () => {
   createElements();
@@ -65,7 +65,8 @@ export const canHit = (line, color) => {
   );
 };
 
-export const helpLine = (line, color) => {
+export const helpLine = (line, color, isWatch) => {
+  isWatch ? console.log("watching") : audio.play();
   colorLine(line, color);
   addLineToSquare(line);
   markLine(line);
@@ -76,7 +77,6 @@ export const helpLine = (line, color) => {
 export const hitLine = (line, color) => {
   if (canHit(line, color)) {
     helpLine(line, checkah());
-    audio.play();
     send(line);
     set("permission", false);
   }
@@ -169,7 +169,7 @@ export const showEnd = (winner) => {
       "main",
       "main",
       get("score")
-    ); 
+    );
     gameanalytics.GameAnalytics.addProgressionEvent(
       gameanalytics.EGAProgressionStatus.Complete,
       "main",
