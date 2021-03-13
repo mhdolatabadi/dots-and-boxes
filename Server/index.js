@@ -74,7 +74,7 @@ const hostSecondUser = (room, user, socket) => {
   configUser(user, room, undefined, undefined, "player", true, socket);
   const secondUser =
     room.users[0].id === user.id ? room.users[1] : room.users[0];
-  if (secondUser && secondUser.color === "red") user.color = "blue";
+  if (secondUser.color === "red") user.color = "blue";
   else user.color = "red";
   if (room.turn !== user.color) user.isTurn = false;
   else user.isTurn = true;
@@ -93,6 +93,7 @@ const hostSubscriber = (room, user, socket) => {
   socket.join(room.id);
   socket.emit("role", "subscriber", room.turn);
   socket.emit("watch", room.history);
+
 };
 
 const directToRoom = (roomId, userId, socket) => {
@@ -110,6 +111,7 @@ const directToRoom = (roomId, userId, socket) => {
       else hostSubscriber(room, user, socket);
       break;
   }
+
 };
 
 const checkValidation = (room, user, type) => {
