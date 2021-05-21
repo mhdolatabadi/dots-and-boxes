@@ -104,6 +104,8 @@ socket.on('message', (message) => {
 })
 
 socket.on('change', (line, turn) => {
+  const audio = new Audio('./assets/line2.mp3')
+  audio.play()
   if (get('role') === 'subscriber') {
     set('opponentColor', turn)
     if (turn === 'red') set('color', 'blue')

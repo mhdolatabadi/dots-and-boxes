@@ -141,13 +141,14 @@ body {
   grid-area: message;
   width: 100%;
   height: 40px;
+  background-color: wheat;
 }
 #send {
   background-color: orange;
   border: 2px solid wheat;
-  flex-grow: 1;
-  width: 25px;
+  width: 50px;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 #send:active {
