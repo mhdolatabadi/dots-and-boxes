@@ -9,8 +9,8 @@ import {
 } from './gameRender.js'
 import { getUserFirstName, getUserId, roomId } from './index.js'
 
-const socket = io('https://noghteh-bazi.wapp.weblite.me/')
-// const socket = io("http://localhost:3000");
+// const socket = io('https://noghteh-bazi.wapp.weblite.me/')
+const socket = io('http://localhost:3000')
 
 socket.on('handshake', () => {
   socket.emit('handshake', roomId(), getUserId())
@@ -85,6 +85,18 @@ export const send = (line) => {
   }
   socket.emit('change', get('userId'), get('roomId'), message)
 }
+
+export const sendMessage = (message) => {
+  socket.emit('message', get('roomId'), message)
+}
+
+socket.on('message', (message) => {
+  const opponentMessage = document.getElementsByClassName('opponent-message')[0]
+  console.log(opponentMessage)
+  opponentMessage.style.display = 'block'
+  opponentMessage.innerHTML = message
+  setInterval(() => (opponentMessage.style.display = 'none'), 20000)
+})
 
 socket.on('change', (line, turn) => {
   if (get('role') === 'subscriber') {

@@ -1,6 +1,6 @@
 @font-face {
   font-family: Vazir;
-  src: url("./Vazir-FD.ttf") format("truetype");
+  src: url('./Vazir-FD.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -20,12 +20,12 @@ body {
   margin: auto;
   display: grid;
   grid-template-areas:
-    "header header"
-    "info-container info-container"
-    "paper paper"
-    "blue-score red-score"
-    "message message"
-    "buttons buttons";
+    'header header'
+    'info-container info-container'
+    'paper paper'
+    'blue-score red-score'
+    'message message'
+    'buttons buttons';
   grid-template-columns: 1fr 1fr;
   box-shadow: 15px 10px 20px 0 #00000073;
   border-radius: 50px 50px 50px 50px;
@@ -79,49 +79,73 @@ body {
 
 #blue {
   grid-area: blue-score;
-  
+
   padding: auto;
-  
+
   background-color: rgb(0, 0, 80);
   box-shadow: 0 5px rgb(0, 0, 80);
+  transition: 2s;
 }
 .active-blue {
   background-color: rgb(0, 0, 235) !important;
   box-shadow: 0 5px rgb(0, 0, 180) !important;
+  transition: 2s;
 }
 
 #red {
   grid-area: red-score;
-  
+
   padding: auto;
-  
+
   background-color: rgb(100, 0, 0);
   box-shadow: 0 5px rgb(100, 0, 0);
+  transition: 2s;
 }
 
 .active-red {
   background-color: red !important;
   box-shadow: 0 5px rgb(200, 0, 0) !important;
+  transition: 2s;
 }
 
-#message {
-  grid-area: message;
+.your-message {
+  background-color: yellowgreen;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 5px;
+  border-radius: 5px 5px 0 5px;
+  transition: all 0.35s ease-in-out;
   display: none;
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
-  padding: auto;
 }
-#send{
+.opponent-message {
+  background-color: rgb(227, 255, 65);
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 5px;
+  border-radius: 5px 5px 5px 0;
+  transition: all 0.35s ease-in-out;
+  display: none;
+}
+
+#send-pannel {
+  display: flex;
+  grid-area: message;
+  margin-top: 5px;
+}
+#send {
   width: 25%;
   height: 100%;
   margin: auto;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
   background-color: orange;
   border: solid wheat;
   border-right: none;
 }
-#send:active{
+#send:active {
   background-color: rgb(255, 145, 0);
 }
 #input {
@@ -131,12 +155,17 @@ body {
   background-color: wheat;
   margin: auto;
   border: solid wheat;
+  transition: ease-in-out, width 0.35s ease-in-out;
+}
+
+#input:focus {
+  outline: none;
 }
 
 #button-container {
   /* cursor: pointer; */
   grid-area: buttons;
-  height: 70px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,6 +207,7 @@ body {
   position: relative;
   height: 60%;
   width: 90%;
+  transition: all 0.5s;
   border-radius: 15px;
   margin: auto;
 }
@@ -190,6 +220,7 @@ body {
   width: 60%;
   border-radius: 15px;
   margin: auto;
+  transition: all 0.5s;
 }
 .yline:hover {
   background-color: rgb(65, 65, 65);
@@ -201,6 +232,7 @@ body {
   border-radius: 99999999px;
   background-color: yellow;
   margin: auto;
+  box-shadow: 10px purple;
 }
 .dot:hover {
   background-color: orange;
@@ -216,4 +248,5 @@ body {
   width: 90%;
   border-radius: 15px;
   margin: auto;
+  transition: all 0.5s ease-in;
 }

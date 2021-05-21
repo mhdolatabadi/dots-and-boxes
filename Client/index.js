@@ -2,7 +2,7 @@ import { set } from './data.js'
 import { render } from './gameRender.js'
 
 const room =
-  "lswe?.']123zenV34e.d5m36sskh9s1d0n4LnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw"
+  'lsweaa123zenV34e.d5m36sskh91s1d0n4LnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw'
 
 gameanalytics.GameAnalytics.configureBuild('1.0.0')
 gameanalytics.GameAnalytics.initialize(
@@ -14,6 +14,8 @@ const W = window.W
 if (W !== undefined) {
   W.setHooks({
     wappWillStart(start) {
+      W.messages.sendMessageToCurrentChat('text', 'نقطه بازی کنیم؟')
+      W.notifications.sendToAll('نقطه‌ها منتظرتن! وصلشون نمیکنی؟')
       start()
     },
   })
