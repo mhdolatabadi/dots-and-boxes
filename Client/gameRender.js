@@ -38,6 +38,8 @@ export const render = () => {
     const yourMessage = document.getElementsByClassName('your-message')[0]
     console.log(yourMessage)
     if (input.value) {
+      const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
+      sendAudio.play()
       yourMessage.style.display = 'block'
       yourMessage.innerHTML = input.value
       sendMessage(input.value)
@@ -51,6 +53,8 @@ export const render = () => {
       const yourMessage = document.getElementsByClassName('your-message')[0]
       console.log(yourMessage)
       if (input.value) {
+        const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
+        sendAudio.play()
         yourMessage.style.display = 'block'
         yourMessage.innerHTML = input.value
         sendMessage(input.value)
@@ -58,6 +62,11 @@ export const render = () => {
         setInterval(() => (yourMessage.style.display = 'none'), 20000)
       }
     }
+  })
+  document.getElementById('button-container').addEventListener('click', () => {
+    const sendPanel = document.getElementById('send-panel')
+    sendPanel.style.display =
+      sendPanel.style.display === 'flex' ? 'none' : 'flex'
   })
 
   // show("touch", 'button-container', 'message');

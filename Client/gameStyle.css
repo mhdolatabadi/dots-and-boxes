@@ -14,6 +14,7 @@ body {
   background-color: gray;
   display: flex;
   flex-direction: column;
+  user-select: none;
 }
 
 #root-container {
@@ -85,6 +86,8 @@ body {
   background-color: rgb(0, 0, 80);
   box-shadow: 0 5px rgb(0, 0, 80);
   transition: 2s;
+
+  margin-bottom: 6px;
 }
 .active-blue {
   background-color: rgb(0, 0, 235) !important;
@@ -100,6 +103,8 @@ body {
   background-color: rgb(100, 0, 0);
   box-shadow: 0 5px rgb(100, 0, 0);
   transition: 2s;
+
+  margin-bottom: 6px;
 }
 
 .active-red {
@@ -129,33 +134,34 @@ body {
   display: none;
 }
 
-#send-pannel {
-  display: flex;
+#send-panel {
+  display: none;
   grid-area: message;
-  margin-top: 5px;
+  width: 100%;
+  height: 40px;
 }
 #send {
-  width: 25%;
-  height: 100%;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
-  display: flex;
   background-color: orange;
-  border: solid wheat;
-  border-right: none;
+  border: 2px solid wheat;
+  flex-grow: 1;
+  width: 25px;
+  cursor: pointer;
 }
+
 #send:active {
   background-color: rgb(255, 145, 0);
 }
+
+#send > img {
+  transform: scaleX(-1);
+  height: 100%;
+  width: 100%;
+}
 #input {
   direction: rtl;
-  width: 100%;
-  height: 94%;
   background-color: wheat;
-  margin: auto;
-  border: solid wheat;
-  transition: ease-in-out, width 0.35s ease-in-out;
+  border: 2px solid wheat;
+  flex-grow: 4;
 }
 
 #input:focus {
@@ -163,7 +169,6 @@ body {
 }
 
 #button-container {
-  /* cursor: pointer; */
   grid-area: buttons;
   height: 50px;
   display: flex;
@@ -171,7 +176,7 @@ body {
   justify-content: center;
   background-color: orange;
   border-radius: 0 0 50px 50px;
-  margin-top: 6px;
+  cursor: pointer;
 }
 #buttons {
   display: flex;

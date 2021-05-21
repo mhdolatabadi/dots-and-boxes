@@ -189,5 +189,4 @@ io.on('connection', (socket) => {
     socket.broadcast.to(room.id).emit('message', message)
   })
 })
-
-http.listen(config.port, () => {})
+http.listen(config.server.port, () => {})
