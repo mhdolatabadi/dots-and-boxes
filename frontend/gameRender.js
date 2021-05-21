@@ -33,18 +33,20 @@ export const render = () => {
   changeLanguage('touch')
   show('touch', 'header', 'info-container')
   show('click', 'header', 'info-container')
+  let timeout
 
   document.getElementById('send').addEventListener('click', () => {
     const yourMessage = document.getElementsByClassName('your-message')[0]
     console.log(yourMessage)
     if (input.value) {
+      clearTimeout(timeout)
       const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
       sendAudio.play()
       yourMessage.style.display = 'block'
       yourMessage.innerHTML = input.value
       sendMessage(input.value)
       input.value = ''
-      setInterval(() => (yourMessage.style.display = 'none'), 20000)
+      setTimeout(() => (yourMessage.style.display = 'none'), 20000)
     }
   })
 
@@ -53,13 +55,14 @@ export const render = () => {
       const yourMessage = document.getElementsByClassName('your-message')[0]
       console.log(yourMessage)
       if (input.value) {
+        clearTimeout(timeout)
         const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
         sendAudio.play()
         yourMessage.style.display = 'block'
         yourMessage.innerHTML = input.value
         sendMessage(input.value)
         input.value = ''
-        setInterval(() => (yourMessage.style.display = 'none'), 20000)
+        timeout = setTimeout(() => (yourMessage.style.display = 'none'), 20000)
       }
     }
   })

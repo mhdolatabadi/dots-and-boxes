@@ -90,14 +90,17 @@ export const sendMessage = (message) => {
   socket.emit('message', get('roomId'), message)
 }
 
+let timeout
+
 socket.on('message', (message) => {
+  clearTimeout(timeout)
   const opponentMessage = document.getElementsByClassName('opponent-message')[0]
   console.log(opponentMessage)
   opponentMessage.style.display = 'block'
   opponentMessage.innerHTML = message
   const sendAudio = new Audio('./assets/what-302.mp3')
   sendAudio.play()
-  setInterval(() => (opponentMessage.style.display = 'none'), 20000)
+  timeout = setTimeout(() => (opponentMessage.style.display = 'none'), 20000)
 })
 
 socket.on('change', (line, turn) => {
