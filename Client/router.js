@@ -9,8 +9,8 @@ import {
 } from './gameRender.js'
 import { getUserFirstName, getUserId, roomId } from './index.js'
 
-// const socket = io('https://noghteh-bazi.wapp.weblite.me/')
-const socket = io('http://localhost:3000')
+const socket = io('https://noghteh-bazi.wapp.weblite.me/')
+// const socket = io('http://localhost:3000')
 
 socket.on('handshake', () => {
   socket.emit('handshake', roomId(), getUserId())

@@ -1,7 +1,7 @@
 const app = require('express')()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-// const config = require("./src/setup/config");
+const config = require('./src/setup/config')
 let rooms = []
 const createRoom = (roomId) => ({
   id: roomId,
@@ -190,4 +190,4 @@ io.on('connection', (socket) => {
   })
 })
 
-http.listen(3000, () => {})
+http.listen(config.port, () => {})
