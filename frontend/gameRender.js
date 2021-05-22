@@ -145,9 +145,83 @@ const stylePaperBy = (orientation) => {
   else if (orientation === 'column') paper.style.gridTemplateColumns = template
 }
 
+let dotNumber = {
+  green: 0,
+  yellow: 36,
+  purple: 0,
+}
+
 const alignStyle = (div, i, j) => {
-  if ((i * j) % 2 === 1) setDivStyle(div, `${j}`, `${i}`, 'dot')
-  else if (i % 2 === 1 && j % 2 !== 1)
+  if ((i * j) % 2 === 1) {
+    setDivStyle(div, `${j}`, `${i}`, 'dot')
+    div.style.backgroundColor = 'yellow'
+    div.addEventListener('click', () => {
+      console.log(div.style)
+      if (div.style.backgroundColor === 'green') {
+        div.style.backgroundColor = 'yellow'
+        dotNumber['green']--
+        dotNumber['yellow']++
+        console.log(dotNumber['yellow'])
+        if (dotNumber['yellow'] === 36) {
+          showMessage('یافتی! بازم بگرد شاید پیدا شد!')
+          document.getElementById('header').style.color = 'black'
+          document.getElementById('button-container').style.backgroundColor =
+            'orange'
+          document.getElementById('header').style.backgroundColor = 'orange'
+
+          dotNumber['yellow'] = 0
+        } else
+          get('waiting')
+            ? (document.getElementById('header').innerHTML =
+                'در انتظار حریف...')
+            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
+        return
+      }
+      if (div.style.backgroundColor === 'rebeccapurple') {
+        div.style.backgroundColor = 'green'
+        dotNumber['purple']--
+
+        dotNumber['green']++
+        console.log(dotNumber['green'])
+        if (dotNumber['green'] === 36) {
+          document.getElementById('header').style.backgroundColor = 'green'
+          document.getElementById('header').innerHTML = 'سبحان‌الله'
+          document.getElementById('header').style.color = 'white'
+          document.getElementById('button-container').style.backgroundColor =
+            'green'
+          dotNumber['green'] = 0
+        } else
+          get('waiting')
+            ? (document.getElementById('header').innerHTML =
+                'در انتظار حریف...')
+            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
+
+        return
+      }
+      if (div.style.backgroundColor === 'yellow') {
+        div.style.backgroundColor = 'rebeccapurple'
+        dotNumber['yellow']--
+
+        dotNumber['purple']++
+        console.log(dotNumber['purple'])
+        if (dotNumber['purple'] === 36) {
+          document.getElementById('header').style.backgroundColor =
+            'rebeccapurple'
+          document.getElementById('header').innerHTML = 'سبحان‌الله'
+          document.getElementById('header').style.color = 'white'
+          document.getElementById('button-container').style.backgroundColor =
+            'rebeccapurple'
+          dotNumber['purple'] = 0
+        } else
+          get('waiting')
+            ? (document.getElementById('header').innerHTML =
+                'در انتظار حریف...')
+            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
+
+        return
+      }
+    })
+  } else if (i % 2 === 1 && j % 2 !== 1)
     setDivStyle(div, `${j - 1} / ${j + 2}`, `${i}`, 'xline')
   else if (i % 2 !== 1 && j % 2 === 1)
     setDivStyle(div, `${j}`, `${i - 1} / ${i + 2}`, 'yline')
@@ -271,11 +345,16 @@ export const getMesaageOfLanguge = (type) => {
         document.getElementById('header').innerHTML =
           messages.persian.subscriber
         break
+      default:
+        document.getElementById('header').innerHTML = type
     }
   }
 }
 
 export const showMessage = (message) => {
+  if (message !== 'header')
+    document.getElementById('header').style.fontSize = '25px'
+  else document.getElementById('header').style.fontSize = '40px'
   getMesaageOfLanguge(message)
 }
 
