@@ -8,7 +8,7 @@ import {
   checkah,
   getNumberOfLine,
 } from './logic.js'
-import { resign, send, requestGift, sendMessage } from './router.js'
+import { send, requestGift, sendMessage } from './router.js'
 import { getUserFirstName } from './index.js'
 
 const oddScale = 1
@@ -152,17 +152,17 @@ const dotsData = {
   green: {
     count: 0,
     nextColor: 'orange',
-    message: 'رنگ تغییر یافت',
+    message: 'احسنت! یه مورد ویژگی جدید پیدا کردی',
   },
   orange: {
     count: 36,
-    nextColor: 'rebeccap1urple',
-    message: 'احسنت! یه مورد ویژگی جدید پیدا کردی',
+    nextColor: 'rebeccapurple',
+    message: 'رنگ تغییر یافت به بنفش',
   },
   rebeccapurple: {
     count: 0,
     nextColor: 'green',
-    message: 'رنگ تغییر یافت',
+    message: 'رنگ تغییر یافت به سبز',
   },
 }
 
@@ -175,11 +175,14 @@ const clickDot = (div) => {
 
   dotsData[currentColor].count -= 1
   dotsData[nextColor].count += 1
-  if (dotsData[nextColor] === 36) {
+  if (dotsData[nextColor].count === 36) {
     showMessage(message)
     buttonContainer.style.backgroundColor = nextColor
     header.style.backgroundColor = nextColor
-    dotsData[nextColor] = 0
+    nextColor !== 'orange'
+      ? (header.style.color = 'white')
+      : (header.style.color = 'black')
+    dotsData[nextColor].count = 0
   } else
     get('waiting')
       ? (header.innerHTML = 'در انتظار حریف...')
@@ -265,7 +268,6 @@ export const colorBox = (i, j, color) => {
 }
 
 export const getMesaageOfLanguge = (type) => {
-  const header = header
   if (get('language') === 'english') {
     switch (type) {
       case 'waiting':
