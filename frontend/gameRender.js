@@ -19,8 +19,13 @@ const xlines = document.getElementsByClassName('xline')
 const ylines = document.getElementsByClassName('yline')
 const input = document.getElementById('input')
 const sendButton = document.getElementsByClassName('send-button')[0]
+const sendPanel = document.getElementById('send-panel')
 const buttonContainer = document.getElementById('button-container')
 const yourMessage = document.getElementsByClassName('your-message')[0]
+const blue = document.getElementsByClassName('blue')[0]
+const red = document.getElementsByClassName('red')[0]
+const infoContainer = document.getElementById('info-container')
+const fullInformation = document.getElementsByClassName('full-information')[0]
 
 const audio = new Audio('./assets/line2.mp3')
 const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
@@ -64,18 +69,22 @@ export const render = () => {
   changeLanguage('click')
   changeLanguage('touch')
   sendMessageInitializer()
-  show('touch', 'header', 'info-container')
-  show('click', 'header', 'info-container')
-  show('touch', 'button-container', 'send-panel')
-  show('click', 'button-container', 'send-panel')
+  show('touch', header, infoContainer)
+  show('click', header, infoContainer)
+  show('touch', buttonContainer, sendPanel)
+  show('click', buttonContainer, sendPanel)
+  show('click', red, fullInformation, 'red')
+  show('click', blue, fullInformation, 'blue')
 }
 
-const show = (event, helper, element) => {
-  const key = document.getElementById(helper)
-  const value = document.getElementById(element)
+const show = (event, key, value, className) => {
   key.addEventListener(event, () => {
     if (value.style.display === 'flex') value.style.display = 'none'
     else value.style.display = 'flex'
+    if (className) {
+      value.classList.remove(`${className === 'red' ? 'blue' : 'red'}-info`)
+      value.classList.add(`${className}-info`)
+    }
   })
 }
 
@@ -217,8 +226,8 @@ export const showTurn = () => {
   const isMyTurn = get('permission')
   const myColor = get('color')
   const oppColor = get('opponentColor')
-  const myElement = document.getElementById(get('color'))
-  const oppElement = document.getElementById(get('opponentColor'))
+  const myElement = document.getElementsByClassName(get('color'))[0]
+  const oppElement = document.getElementsByClassName(get('opponentColor'))[0]
   myElement.classList.toggle(`active-${myColor}`, isMyTurn)
   oppElement.classList.toggle(`active-${oppColor}`, !isMyTurn)
   myElement.innerHTML = get('name') + ': ' + get('score')
