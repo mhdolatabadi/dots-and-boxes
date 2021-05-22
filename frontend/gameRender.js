@@ -17,9 +17,41 @@ const paper = document.getElementById('paper')
 const header = document.getElementById('header')
 const xlines = document.getElementsByClassName('xline')
 const ylines = document.getElementsByClassName('yline')
-const audio = new Audio('./assets/line2.mp3')
-
 const input = document.getElementById('input')
+const sendButton = document.getElementsByClassName('send-button')[0]
+const buttonContainer = document.getElementById('button-container')
+const yourMessage = document.getElementsByClassName('your-message')[0]
+
+const audio = new Audio('./assets/line2.mp3')
+const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
+
+let timeout
+const sendMessageInitializer = () => {
+  sendButton.addEventListener('click', () => {
+    if (input.value) {
+      clearTimeout(timeout)
+      sendAudio.play()
+      yourMessage.style.display = 'block'
+      yourMessage.innerHTML = input.value
+      sendMessage(input.value)
+      input.value = ''
+      setTimeout(() => (yourMessage.style.display = 'none'), 20000)
+    }
+  })
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      if (input.value) {
+        clearTimeout(timeout)
+        sendAudio.play()
+        yourMessage.style.display = 'block'
+        yourMessage.innerHTML = input.value
+        sendMessage(input.value)
+        input.value = ''
+        timeout = setTimeout(() => (yourMessage.style.display = 'none'), 20000)
+      }
+    }
+  })
+}
 
 export const render = () => {
   createElements()
@@ -31,49 +63,11 @@ export const render = () => {
   lineInitializer(ylines, 'touch')
   changeLanguage('click')
   changeLanguage('touch')
+  sendMessageInitializer()
   show('touch', 'header', 'info-container')
   show('click', 'header', 'info-container')
-  let timeout
-
-  document.getElementById('send').addEventListener('click', () => {
-    const yourMessage = document.getElementsByClassName('your-message')[0]
-    console.log(yourMessage)
-    if (input.value) {
-      clearTimeout(timeout)
-      const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
-      sendAudio.play()
-      yourMessage.style.display = 'block'
-      yourMessage.innerHTML = input.value
-      sendMessage(input.value)
-      input.value = ''
-      setTimeout(() => (yourMessage.style.display = 'none'), 20000)
-    }
-  })
-
-  document.getElementById('input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const yourMessage = document.getElementsByClassName('your-message')[0]
-      console.log(yourMessage)
-      if (input.value) {
-        clearTimeout(timeout)
-        const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
-        sendAudio.play()
-        yourMessage.style.display = 'block'
-        yourMessage.innerHTML = input.value
-        sendMessage(input.value)
-        input.value = ''
-        timeout = setTimeout(() => (yourMessage.style.display = 'none'), 20000)
-      }
-    }
-  })
-  document.getElementById('button-container').addEventListener('click', () => {
-    const sendPanel = document.getElementById('send-panel')
-    sendPanel.style.display =
-      sendPanel.style.display === 'flex' ? 'none' : 'flex'
-  })
-
-  // show("touch", 'button-container', 'message');
-  // show("click", 'button-container', 'message');
+  show('touch', 'button-container', 'send-panel')
+  show('click', 'button-container', 'send-panel')
 }
 
 const show = (event, helper, element) => {
@@ -145,83 +139,52 @@ const stylePaperBy = (orientation) => {
   else if (orientation === 'column') paper.style.gridTemplateColumns = template
 }
 
-let dotNumber = {
-  green: 0,
-  yellow: 36,
-  purple: 0,
+const dotsData = {
+  green: {
+    count: 0,
+    nextColor: 'orange',
+    message: 'رنگ تغییر یافت',
+  },
+  orange: {
+    count: 36,
+    nextColor: 'rebeccap1urple',
+    message: 'احسنت! یه مورد ویژگی جدید پیدا کردی',
+  },
+  rebeccapurple: {
+    count: 0,
+    nextColor: 'green',
+    message: 'رنگ تغییر یافت',
+  },
+}
+
+const clickDot = (div) => {
+  const currentColor = div.style.backgroundColor
+  console.log(currentColor)
+  const { nextColor, message } = dotsData[currentColor]
+  console.log(dotsData[currentColor])
+  div.style.backgroundColor = nextColor
+
+  dotsData[currentColor].count -= 1
+  dotsData[nextColor].count += 1
+  if (dotsData[nextColor] === 36) {
+    showMessage(message)
+    buttonContainer.style.backgroundColor = nextColor
+    header.style.backgroundColor = nextColor
+    dotsData[nextColor] = 0
+  } else
+    get('waiting')
+      ? (header.innerHTML = 'در انتظار حریف...')
+      : (header.innerHTML = 'نقطه‌بازی')
+}
+
+const initializeDot = (div) => {
+  div.style.backgroundColor = 'orange'
+  div.addEventListener('click', () => clickDot(div))
 }
 
 const alignStyle = (div, i, j) => {
-  if ((i * j) % 2 === 1) {
-    setDivStyle(div, `${j}`, `${i}`, 'dot')
-    div.style.backgroundColor = 'yellow'
-    div.addEventListener('click', () => {
-      console.log(div.style)
-      if (div.style.backgroundColor === 'green') {
-        div.style.backgroundColor = 'yellow'
-        dotNumber['green']--
-        dotNumber['yellow']++
-        console.log(dotNumber['yellow'])
-        if (dotNumber['yellow'] === 36) {
-          showMessage('یافتی! بازم بگرد شاید پیدا شد!')
-          document.getElementById('header').style.color = 'black'
-          document.getElementById('button-container').style.backgroundColor =
-            'orange'
-          document.getElementById('header').style.backgroundColor = 'orange'
-
-          dotNumber['yellow'] = 0
-        } else
-          get('waiting')
-            ? (document.getElementById('header').innerHTML =
-                'در انتظار حریف...')
-            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
-        return
-      }
-      if (div.style.backgroundColor === 'rebeccapurple') {
-        div.style.backgroundColor = 'green'
-        dotNumber['purple']--
-
-        dotNumber['green']++
-        console.log(dotNumber['green'])
-        if (dotNumber['green'] === 36) {
-          document.getElementById('header').style.backgroundColor = 'green'
-          document.getElementById('header').innerHTML = 'سبحان‌الله'
-          document.getElementById('header').style.color = 'white'
-          document.getElementById('button-container').style.backgroundColor =
-            'green'
-          dotNumber['green'] = 0
-        } else
-          get('waiting')
-            ? (document.getElementById('header').innerHTML =
-                'در انتظار حریف...')
-            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
-
-        return
-      }
-      if (div.style.backgroundColor === 'yellow') {
-        div.style.backgroundColor = 'rebeccapurple'
-        dotNumber['yellow']--
-
-        dotNumber['purple']++
-        console.log(dotNumber['purple'])
-        if (dotNumber['purple'] === 36) {
-          document.getElementById('header').style.backgroundColor =
-            'rebeccapurple'
-          document.getElementById('header').innerHTML = 'سبحان‌الله'
-          document.getElementById('header').style.color = 'white'
-          document.getElementById('button-container').style.backgroundColor =
-            'rebeccapurple'
-          dotNumber['purple'] = 0
-        } else
-          get('waiting')
-            ? (document.getElementById('header').innerHTML =
-                'در انتظار حریف...')
-            : (document.getElementById('header').innerHTML = 'نقطه‌بازی')
-
-        return
-      }
-    })
-  } else if (i % 2 === 1 && j % 2 !== 1)
+  if ((i * j) % 2 === 1) setDivStyle(div, `${j}`, `${i}`, 'dot')
+  else if (i % 2 === 1 && j % 2 !== 1)
     setDivStyle(div, `${j - 1} / ${j + 2}`, `${i}`, 'xline')
   else if (i % 2 !== 1 && j % 2 === 1)
     setDivStyle(div, `${j}`, `${i - 1} / ${i + 2}`, 'yline')
@@ -232,9 +195,8 @@ const setDivStyle = (div, col, row, styleClass) => {
   div.style.gridColumn = col
   div.style.gridRow = row
   div.setAttribute('class', styleClass)
-  if (styleClass == 'space') {
-    div.setAttribute('line', 0)
-  }
+  if (styleClass === 'space') div.setAttribute('line', 0)
+  if (styleClass === 'dot') initializeDot(div)
 }
 
 export const updateScoreBoard = () => {
@@ -294,19 +256,20 @@ export const colorBox = (i, j, color) => {
 }
 
 export const getMesaageOfLanguge = (type) => {
+  const header = header
   if (get('language') === 'english') {
     switch (type) {
       case 'waiting':
-        document.getElementById('header').innerHTML = messages.english.waiting
+        header.innerHTML = messages.english.waiting
         break
       case 'header':
-        document.getElementById('header').innerHTML = messages.english.header
+        header.innerHTML = messages.english.header
         break
       case 'winner':
-        document.getElementById('header').innerHTML = messages.english.winner
+        header.innerHTML = messages.english.winner
         break
       case 'loser':
-        document.getElementById('header').innerHTML = messages.english.loser
+        header.innerHTML = messages.english.loser
         break
       case 'resign':
         document.getElementById('resign').innerHTML = messages.english.resign
@@ -316,23 +279,22 @@ export const getMesaageOfLanguge = (type) => {
           messages.english.language
         break
       case 'subscriber':
-        document.getElementById('header').innerHTML =
-          messages.english.subscriber
+        header.innerHTML = messages.english.subscriber
         break
     }
   } else if (get('language') === 'persian') {
     switch (type) {
       case 'waiting':
-        document.getElementById('header').innerHTML = messages.persian.waiting
+        header.innerHTML = messages.persian.waiting
         break
       case 'header':
-        document.getElementById('header').innerHTML = messages.persian.header
+        header.innerHTML = messages.persian.header
         break
       case 'winner':
-        document.getElementById('header').innerHTML = messages.persian.winner
+        header.innerHTML = messages.persian.winner
         break
       case 'loser':
-        document.getElementById('header').innerHTML = messages.persian.loser
+        header.innerHTML = messages.persian.loser
         break
       case 'resign':
         document.getElementById('resign').innerHTML = messages.persian.resign
@@ -342,19 +304,17 @@ export const getMesaageOfLanguge = (type) => {
           messages.persian.language
         break
       case 'subscriber':
-        document.getElementById('header').innerHTML =
-          messages.persian.subscriber
+        header.innerHTML = messages.persian.subscriber
         break
       default:
-        document.getElementById('header').innerHTML = type
+        header.innerHTML = type
     }
   }
 }
 
 export const showMessage = (message) => {
-  if (message !== 'header')
-    document.getElementById('header').style.fontSize = '25px'
-  else document.getElementById('header').style.fontSize = '40px'
+  if (message !== 'header') header.style.fontSize = '25px'
+  else header.style.fontSize = '40px'
   getMesaageOfLanguge(message)
 }
 
@@ -375,14 +335,14 @@ export const changeLanguage = (event) => {
   if (language !== null) {
     language.addEventListener(event, () => {
       if (get('language') === 'persian') {
-        document.getElementById('header').innerHTML = messages.english.header
+        header.innerHTML = messages.english.header
         document.getElementById('resign').innerHTML =
           messages.english.resignButton
         document.getElementById('language').innerHTML =
           messages.english.languageButton
         set('language', 'english')
       } else {
-        document.getElementById('header').innerHTML = messages.persian.header
+        header.innerHTML = messages.persian.header
         document.getElementById('resign').innerHTML =
           messages.persian.resignButton
         document.getElementById('language').innerHTML =
