@@ -73,8 +73,8 @@ export const render = () => {
   show('click', header, infoContainer)
   show('touch', buttonContainer, sendPanel)
   show('click', buttonContainer, sendPanel)
-  show('click', red, fullInformation, 'red')
-  show('click', blue, fullInformation, 'blue')
+  // show('click', red, fullInformation, 'red')
+  // show('click', blue, fullInformation, 'blue')
 }
 
 const show = (event, key, value, className) => {
