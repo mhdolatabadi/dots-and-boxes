@@ -212,8 +212,8 @@ const setDivStyle = (div, col, row, styleClass) => {
 }
 
 export const updateScoreBoard = () => {
-  const myElement = document.getElementById(get('color'))
-  const oppElement = document.getElementById(get('opponentColor'))
+  const myElement = document.getElementsByClassName(get('color'))[0]
+  const oppElement = document.getElementsByClassName(get('opponentColor'))[0]
   myElement.innerHTML = get('name') + ': ' + get('score')
   oppElement.innerHTML = get('opponentName') + ': ' + get('opponentScore')
 }
