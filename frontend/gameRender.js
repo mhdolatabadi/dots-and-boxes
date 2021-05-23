@@ -9,7 +9,7 @@ import {
   getNumberOfLine,
 } from './logic.js'
 import { send, requestGift, sendMessage } from './router.js'
-import { getUserFirstName } from '../build/index.js'
+import { getUserFirstName } from './index.js'
 
 const oddScale = 1
 const evenScale = 4
@@ -27,8 +27,8 @@ const red = document.getElementsByClassName('red')[0]
 const infoContainer = document.getElementById('info-container')
 const fullInformation = document.getElementsByClassName('full-information')[0]
 
-const audio = new Audio('../public/line2.mp3')
-const sendAudio = new Audio('../public/i-demand-attention-244.mp3')
+const audio = new Audio('./assets/line2.mp3')
+const sendAudio = new Audio('./assets/i-demand-attention-244.mp3')
 
 let timeout
 const sendMessageInitializer = () => {
@@ -92,10 +92,8 @@ const lineInitializer = (array, event) => {
   for (let i = 0; i < array.length; i++)
     array[i].addEventListener(event, () => {
       hitLine(array[i], get('color'))
-      if (get('gift')) {
-        requestGift()
-        set('gift', false)
-      }
+      if (get('gift')) requestGift()
+      set('gift', false)
     })
 }
 

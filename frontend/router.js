@@ -1,4 +1,4 @@
-import { get, set, create2DArray, initializeArray } from './data.js'
+import { get, set } from './data.js'
 import { recieve } from './logic.js'
 import {
   initializeTurn,
@@ -7,7 +7,7 @@ import {
   showTurn,
   updateScoreBoard,
 } from './gameRender.js'
-import { getUserFirstName, getUserId, roomId } from '../build/index.js'
+import { getUserFirstName, getUserId, roomId } from './index.js'
 
 const socket = io('https://noghteh-bazi.wapp.weblite.me/')
 // const socket = io('http://localhost:3000')
@@ -40,17 +40,6 @@ socket.on('wait', (type) => {
 })
 
 socket.on('watch', (history) => {
-  set('table', {
-    lines: [],
-    squares: [],
-  })
-  get('table').squares = create2DArray(get('row'))
-  initializeArray(get('table').squares, 'squares', get('table').squares.length)
-  initializeArray(
-    get('table').lines,
-    'lines',
-    2 * get('row') * (get('row') - 1)
-  )
   if (history.length > 0) {
     for (let i = 0; i < history.length; i++) {
       recieve(history[i], history[i].color)
