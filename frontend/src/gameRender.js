@@ -9,7 +9,7 @@ import {
   getNumberOfLine,
 } from './logic.js'
 import { send, requestGift, sendMessage } from './router.js'
-import { getUserFirstName } from './index.js'
+import { getUserFirstName } from '../build/index.js'
 
 const oddScale = 1
 const evenScale = 4
@@ -92,8 +92,10 @@ const lineInitializer = (array, event) => {
   for (let i = 0; i < array.length; i++)
     array[i].addEventListener(event, () => {
       hitLine(array[i], get('color'))
-      if (get('gift')) requestGift()
-      set('gift', false)
+      if (get('gift')) {
+        requestGift()
+        set('gift', false)
+      }
     })
 }
 

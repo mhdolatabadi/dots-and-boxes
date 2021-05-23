@@ -30,7 +30,7 @@ const dataCreator = (rowCount, columnCount) => ({
   },
 })
 
-var data = dataCreator(6, 6)
+const data = dataCreator(6, 6)
 
 export const get = (key) => data[key]
 

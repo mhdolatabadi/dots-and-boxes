@@ -1,4 +1,4 @@
-import { set } from './data.js'
+import { set } from '../src/data.js'
 import { render } from './gameRender.js'
 
 const room =
