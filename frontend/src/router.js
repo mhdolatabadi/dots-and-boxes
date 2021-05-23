@@ -1,4 +1,4 @@
-import { get, set } from './data.js'
+import { get, set, create2DArray, initializeArray } from './data.js'
 import { recieve } from './logic.js'
 import {
   initializeTurn,
@@ -44,6 +44,13 @@ socket.on('watch', (history) => {
     lines: [],
     squares: [],
   })
+  get('table').squares = create2DArray(get('row'))
+  initializeArray(get('table').squares, 'squares', get('table').squares.length)
+  initializeArray(
+    get('table').lines,
+    'lines',
+    2 * get('row') * (get('row') - 1)
+  )
   if (history.length > 0) {
     for (let i = 0; i < history.length; i++) {
       recieve(history[i], history[i].color)

@@ -1,5 +1,5 @@
 import { set } from '../src/data.js'
-import { render } from './gameRender.js'
+import { render } from '../src/gameRender.js'
 
 const room =
   'lsweaa123zenV34e.d5m361sskh91s1d0n4LnK383kJ;HiHgF8Nlj23esosdm1f45AXQwsl4dsw'

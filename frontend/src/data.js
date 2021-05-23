@@ -1,6 +1,6 @@
 import { showTurn, render, showEnd } from './gameRender.js'
 
-const create2DArray = (rows) => {
+export const create2DArray = (rows) => {
   let arr = []
   for (let i = 0; i < rows; i++) arr[i] = []
   return arr
@@ -42,7 +42,7 @@ export const reset = () => {
   render()
   showTurn()
 }
-const initializeArray = (array, type, length) => {
+export const initializeArray = (array, type, length) => {
   if (type == 'lines')
     for (let i = 1; i <= length; i++) get('table').lines[i] = 0
   else if (type == 'squares')
