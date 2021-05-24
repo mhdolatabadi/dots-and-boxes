@@ -8,6 +8,7 @@ import Footer from '../../components/footer/footer'
 import Header from '../../components/header/header'
 import Paper from '../../components/paper/paper'
 import SendField from '../../components/send-field'
+import Information from '../../components/information'
 
 export default function GamePresentational(props) {
   const classes = useStyle()
@@ -16,6 +17,7 @@ export default function GamePresentational(props) {
     <div className={classes.root}>
       <h1 className={classes.headerText}>{t.page}</h1>
       <Header />
+      <Information />
       <Paper />
       <SendField />
       <Footer />

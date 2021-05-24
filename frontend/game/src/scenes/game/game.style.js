@@ -7,5 +7,9 @@ export default makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    margin: 0,
+    height: '100%',
+    backgroundColor: 'gray',
+    userSelect: 'none',
   },
 }))

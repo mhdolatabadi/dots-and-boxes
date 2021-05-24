@@ -11,7 +11,7 @@ export default makeStyles(theme => ({
     gridArea: 'header',
     fontSize: '40px',
     height: '80px',
-    width: '95vmin',
+    width: '90vmin',
     textAlign: 'center',
     borderRadius: '50px 50px 0 0',
     backgroundColor: 'orange',

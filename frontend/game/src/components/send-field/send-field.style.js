@@ -4,7 +4,7 @@ export default makeStyles(theme => ({
   root: {
     display: 'flex', //TODO set it to none value
     gridArea: 'message',
-    width: '95vmin',
+    width: '90vmin',
     height: '40px',
     backgroundColor: 'wheat',
   },

@@ -4,7 +4,7 @@ export default makeStyles(theme => ({
   root: {
     gridArea: 'buttons',
     height: '50px',
-    width: '95vmin',
+    width: '90vmin',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -5,8 +5,8 @@ export default makeStyles(theme => ({
     gridArea: 'paper',
     padding: '20px',
     display: 'grid',
-    width: '95vmin',
-    height: '95vmin',
+    width: '90vmin',
+    height: '90vmin',
     backgroundColor: 'rgb(46, 46, 46)',
   },
 }))
