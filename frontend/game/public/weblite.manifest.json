@@ -1,18 +1,14 @@
 {
-  "name": "Wapp name",
-  "id": "Wapp id",
+  "name": "نقطه‌بازی",
+  "id": "5f945d356cb1bf0d609c860a",
   "instantiable": true,
   "searchable": true,
   "fullscreen": true,
-  "inline": true,
-  "shareDB": true,
-  "width": 100,
-  "height": 100,
-  "description": "This is {Wapp name}. Developers BFF, at your service ;)",
+  "inline": false,
+  "notifMessage": "نقطه به نقطه انتظار برای دیدن تو",
   "servIndexes": {
-    "inline": "index",
     "main": "index",
     "fullscreen": "index"
   },
-  "version": "0.1.0"
+  "version": "1.11.15"
 }
