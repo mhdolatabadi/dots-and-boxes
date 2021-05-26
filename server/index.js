@@ -14,10 +14,11 @@ const createRoom = (roomId, socketId) => {
     id: roomId,
     userIds: [],
     subscriberIds: [],
-    history: [],
+    history: {},
     turn: 'red',
     isEnded: false,
     socketIds: [socketId],
+    lastMove: {},
   }
   rooms.push(room)
   return room
@@ -150,6 +151,7 @@ const directUserToRoom = (roomId, userId, socket) => {
   const room = findRoomById(roomId) || createRoom(roomId, socket.id)
   const user = findUserById(userId, roomId) || createUser(userId, socket.id)
   if (room.userIds.includes(user.id)) {
+    console.log('direct to room', room, user)
     socket.emit('warning', 'multiple device')
     socket.disconnect(true)
   } else {
@@ -169,24 +171,36 @@ const directUserToRoom = (roomId, userId, socket) => {
 }
 
 const checkValidation = (room, user, type) => {
-  const result = user.connection && !room.end && user.role === 'player'
-  if (type === 'change')
+  const result =
+    user && room && user.connection && !room.end && user.role === 'player'
+  if (type === 'change') {
+    console.log(
+      `check validation user id: ${user.id} hasPermission is: ${user.hasPermission}`
+    )
     return user.hasPermission && room.turn === user.color && result
-  else return !user.hasPermission && room.turn !== user.color && result
+  } else {
+    console.log(
+      `check validation user id: ${user.id}`,
+      !user.hasPermission,
+      room.turn !== user.color,
+      result
+    )
+    return !user.hasPermission && room.turn !== user.color && result
+  }
 }
 
-const changeTurn = (room) => {
-  if (room.turn === 'red') room.turn = 'blue'
-  else if (room.turn === 'blue') room.turn = 'red'
-  for (let i = 0; i < room.userIds.length; i++)
-    findUserById(room.userIds[i], room.id).hasPermission = !findUserById(
-      room.userIds[i],
-      room.id
-    ).hasPermission
+const changeTurn = (room, userId) => {
+  if (room && room.turn === 'red') room.turn = 'blue'
+  else if (room && room.turn === 'blue') room.turn = 'red'
+  for (let i = 0; i < room.userIds.length; i++) {
+    const user = findUserById(room.userIds[i], room.id)
+    if (user.id === userId) user.hasPermission = false
+    else user.hasPermission = true
+  }
   return true
 }
 const check = (room, user, type) => {
-  if (checkValidation(room, user, type)) return changeTurn(room)
+  if (checkValidation(room, user, type)) return changeTurn(room, user.id)
   return false
 }
 
@@ -200,12 +214,16 @@ io.on('connection', (socket) => {
     socket.broadcast.to(roomId).emit('name', userId)
   )
   socket.on('disconnect', () => {
-    console.log(`user with socket id ${socket.id} disconnected`)
     const user = findUserBySocketId(socket.id)
     const room = findRoomBySocketId(socket.id)
-    user.connection = false
-    if (user.role === 'player') {
-      room.userIds.pop(user.id)
+    console.log(
+      `user with ${user ? 'user' : 'socket'}id ${
+        user ? user.id : socket.id
+      } disconnected`
+    )
+    if (user) user.connection = false
+    if (user && user.role === 'player') {
+      room.userIds.splice(room.userIds.indexOf(user.id), 1)
       socket.broadcast.to(room.id).emit('mustWait', true)
     }
   })
@@ -213,16 +231,42 @@ io.on('connection', (socket) => {
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
     console.log('new line arrived: ', line)
-    console.log(roomId, userId)
     if (check(room, user, 'change')) {
+      const { i, j, color } = line
       line.color = user.color
-      room.history.push(line)
-      socket.broadcast.to(room.id).emit('change', line, user.color)
+      room.lastMove = line
+      room.history[i] = { ...room.history[i] }
+      room.history[i][j] = color
+      socket.broadcast.to(room.id).emit('change', line, color)
     } else socket.emit('warning', 'warning')
+  })
+  socket.on('bouns', (roomId, userId, bouns) => {
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
+    if (user && user.color === bouns.color) {
+      const { i, j, color } = bouns
+      if (room.history[i] && room.history[i][j]) {
+      } else {
+        console.log(`new bouns arrived:`, bouns, `from user:`, user.id)
+        room.history[i] = { ...room.history[i] }
+        room.history[i][j] = color
+
+        // sending gift!
+        if (room) room.turn = user.color
+        for (let i = 0; i < room.userIds.length; i++) {
+          const user = findUserById(room.userIds[i], room.id)
+          if (user.id === userId) user.hasPermission = true
+          else user.hasPermission = false
+        }
+        io.to(roomId).emit('gift', userId)
+      }
+    }
   })
   socket.on('gift', (userId, roomId) => {
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
+    console.log('new gift request arrived by user id:', userId)
+
     if (check(room, user, 'gift')) io.to(room.id).emit('gift')
     else socket.emit('warning', 'warning')
   })
