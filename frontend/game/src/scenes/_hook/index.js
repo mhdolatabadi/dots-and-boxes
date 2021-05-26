@@ -1,1 +1,1 @@
-export * from './useColor'
+export * from './useInitializeData'

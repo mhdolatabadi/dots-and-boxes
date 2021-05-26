@@ -10,6 +10,9 @@ import Paper from '../../components/paper/paper'
 import SendField from '../../components/send-field'
 import Information from '../../components/information'
 
+import '../../services/backend/backend.service'
+import ScoreBoard from '../../components/score-board/score-board'
+
 export default function GamePresentational(props) {
   const classes = useStyle()
 
@@ -19,6 +22,7 @@ export default function GamePresentational(props) {
       <Header />
       <Information />
       <Paper />
+      <ScoreBoard />
       <SendField />
       <Footer />
     </div>

@@ -6,7 +6,7 @@ import './setup/wapp/initialize'
 import ReduxProvider from './setup/store'
 import ThemeProvider from './setup/theme'
 
-import App from './scenes/game'
+import App from './scenes'
 
 ReactDOM.render(
   <React.StrictMode>

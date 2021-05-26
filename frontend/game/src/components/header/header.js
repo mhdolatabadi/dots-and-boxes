@@ -3,9 +3,12 @@ import * as React from 'react'
 import useStyle from './header.style'
 // localiztion
 import t from './header.local'
+import { useSelector } from 'react-redux'
+import { roomIsWaitingView, statusView } from '../../scenes/_slice/game.slice'
 
 export default function Header(props) {
   const classes = useStyle()
+  const status = useSelector(statusView)
 
-  return <div className={classes.root}>{t.title}</div>
+  return <div className={classes.root}>{t[status]}</div>
 }

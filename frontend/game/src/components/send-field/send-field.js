@@ -9,7 +9,7 @@ export default function SendField(props) {
 
   return (
     <div className={classes.root}>
-      <div class={classes.button}>
+      <div className={classes.button}>
         <img alt="فرستادن" src="send-button.svg" className={classes.icon} />
       </div>
       <input className={classes.input} placeholder={t.placeholder} />

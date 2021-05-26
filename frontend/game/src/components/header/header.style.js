@@ -9,7 +9,7 @@ export default makeStyles(theme => ({
     color: 'black',
     cursor: 'pointer',
     gridArea: 'header',
-    fontSize: '40px',
+    fontSize: '30px',
     height: '80px',
     width: '90vmin',
     textAlign: 'center',

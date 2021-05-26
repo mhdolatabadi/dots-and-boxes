@@ -2,14 +2,29 @@ import * as React from 'react'
 // style
 import useStyle from './yline.style'
 
-import { useSelector } from 'react-redux'
-import { playerColorView } from '../../scenes/_slice/game.slice'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  addNewLine,
+  elementColorView,
+  playerColorView,
+  playerIdView,
+  roomHasPermissionView,
+  roomIsWaitingView,
+  setPlayerLastMove,
+  setRoomLastMove,
+} from '../../scenes/_slice/game.slice'
+import { sendNewLine } from '../../services/backend/backend.service'
 
 export default function Yline({ i, j }) {
-  const classes = useStyle()
-  const playerColor = useSelector(playerColorView)
+  const dispatch = useDispatch()
 
-  const [backgroundColor, setBackgroundColor] = React.useState('')
+  const classes = useStyle()
+
+  const playerId = useSelector(playerIdView)
+  const playerColor = useSelector(playerColorView)
+  const lineColor = useSelector(elementColorView(i, j))
+  const isWaiting = useSelector(roomIsWaitingView)
+  const hasPermission = useSelector(roomHasPermissionView)
 
   return (
     <div
@@ -17,10 +32,15 @@ export default function Yline({ i, j }) {
       style={{
         gridColumn: `${j}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor,
+        backgroundColor: lineColor,
       }}
       onClick={() => {
-        setBackgroundColor(playerColor)
+        if (!isWaiting && hasPermission && !lineColor) {
+          sendNewLine(i, j, playerColor)
+          dispatch(addNewLine({ i, j, color: playerColor }))
+          dispatch(setPlayerLastMove({ i, j, color: playerColor }))
+          dispatch(setRoomLastMove({ i, j, color: playerColor }))
+        }
       }}
     ></div>
   )

@@ -1,4 +1,7 @@
 export default {
   name: 'header',
-  title: 'نقطه‌بازی',
+  connected: 'نقطه‌بازی',
+  waiting: 'در انتظار حریف...',
+  connecting: 'در حال اتصال...',
+  disconnected: 'اتصال قطع شد!',
 }

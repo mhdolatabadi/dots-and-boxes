@@ -7,26 +7,41 @@ import Dot from '../dot'
 import Xline from '../xline'
 import Yline from '../yline'
 import Rectangle from '../rectangle'
+import { useSelector } from 'react-redux'
+import {
+  paperColumnNumberView,
+  paperRowNumberView,
+  roomLastMoveView,
+} from '../../scenes/_slice/game.slice'
 
-const createElements = () => {
+const createElements = (rowNumber, columnNumber) => {
   const elements = []
-  for (let i = 1; i <= 2 * 6 - 1; i++)
-    for (let j = 1; j <= 2 * 6 - 1; j++) {
+  for (let i = 1; i <= 2 * rowNumber - 1; i++)
+    for (let j = 1; j <= 2 * columnNumber - 1; j++) {
       elements.push({ i, j })
     }
   return elements
 }
 
-export default function Paper(props) {
+export default function Paper() {
   const classes = useStyle()
+  const roomLastMove = useSelector(roomLastMoveView)
+  console.log({ roomLastMove })
+  const rowNumber = useSelector(paperRowNumberView)
+  const columnNumber = useSelector(paperColumnNumberView)
 
   return (
     <div className={classes.root}>
-      {createElements().map(({ i, j }) => {
-        if ((i * j) % 2 === 1) return <Dot i={i} j={j} />
-        else if (i % 2 === 1 && j % 2 !== 1) return <Xline i={i} j={j} />
-        else if (i % 2 !== 1 && j % 2 === 1) return <Yline i={i} j={j} />
-        else return <Rectangle i={i} j={j} />
+      {createElements(rowNumber, columnNumber).map(({ i, j }) => {
+        if ((i * j) % 2 === 1) return <Dot i={i} j={j} key={`${i}-${j}`} />
+        else if (i % 2 === 1 && j % 2 !== 1)
+          return <Xline i={i} j={j} key={`${i}-${j}`} />
+        else if (i % 2 !== 1 && j % 2 === 1)
+          return <Yline i={i} j={j} key={`${i}-${j}`} />
+        else
+          return (
+            <Rectangle i={i} j={j} lastMove={roomLastMove} key={`${i}-${j}`} />
+          )
       })}
     </div>
   )
