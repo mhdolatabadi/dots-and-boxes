@@ -19,6 +19,7 @@ const createRoom = (roomId, socketId) => {
     isEnded: false,
     socketIds: [socketId],
     lastMove: {},
+    messages: [],
   }
   rooms.push(room)
   return room
@@ -89,6 +90,8 @@ const hostFirstUser = (room, user, socket) => {
   room.userIds.push(user.id)
   room.socketIds.push(socket.id)
   socket.emit('hasPermission', user.hasPermission)
+  socket.emit('watch', room.history, room.messages)
+
   socket.join(room.id)
   socket.emit('color', 'red')
   socket.emit('mustWait', true)
@@ -122,7 +125,7 @@ const hostSecondUser = (room, user, socket) => {
 
   socket.emit('color', user.color)
   socket.emit('hasPermission', user.hasPermission)
-  socket.emit('watch', room.history)
+  socket.emit('watch', room.history, room.messages)
   socket.join(room.id)
   io.to(room.id).emit('mustWait', false)
   io.to(room.id).emit('introduce', 'hello')
@@ -144,7 +147,7 @@ const hostSubscriber = (room, user, socket) => {
   room.subscriberIds.push(user.id)
   socket.join(room.id)
   socket.emit('role', 'subscriber', room.turn)
-  socket.emit('watch', room.history)
+  socket.emit('watch', room.history, room.messages)
 }
 
 const directUserToRoom = (roomId, userId, socket) => {
@@ -290,9 +293,12 @@ io.on('connection', (socket) => {
     socket.emit('getname', redName, blueName)
   })
 
-  socket.on('message', (roomId, message) => {
+  socket.on('message', (roomId, userId, message) => {
     const room = findRoomById(roomId)
-    socket.broadcast.to(room.id).emit('message', message)
+    room.messages.push({ sender: userId, content: message })
+    socket.broadcast
+      .to(room.id)
+      .emit('message', { sender: userId, content: message })
   })
 })
 http.listen(config.server.port, () => {})
