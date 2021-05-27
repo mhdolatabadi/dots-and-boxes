@@ -28,7 +28,14 @@ export default function Footer(props) {
           <span>کانال نقطه‌بازی</span>
           <img className={classes.channelIcon} src="dotsandboxes.png" />
         </div>
-        <div className={classes.channel}>
+        <div
+          className={classes.channel}
+          onClick={() =>
+            W.wappSystem.openInDrawer('5f12f01d170f91242534aa92', {
+              wisId: '60afc7f29532b6ecccaf560d',
+            })
+          }
+        >
           <span>نظرات</span>
           <img className={classes.channelIcon} src="comment.png" />
         </div>
