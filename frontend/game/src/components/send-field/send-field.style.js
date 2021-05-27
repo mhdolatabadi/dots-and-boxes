@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core'
 
 export default makeStyles(theme => ({
   root: {
-    display: 'flex', //TODO set it to none value
+    display: 'none', //TODO set it to none value as it is flex
     gridArea: 'message',
     width: '90vmin',
     height: '40px',
