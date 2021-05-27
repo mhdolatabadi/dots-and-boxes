@@ -25,7 +25,7 @@ export default makeStyles(theme => ({
     alignItems: 'center',
     backgroundColor: 'wheat',
     padding: '3px 8px',
-    borderRadius: '10px',
+    borderRadius: '50px',
     margin: '0 5px',
   },
   channelIcon: {
