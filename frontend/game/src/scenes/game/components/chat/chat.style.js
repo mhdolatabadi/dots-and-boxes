@@ -6,14 +6,18 @@ export default makeStyles(theme => ({
     margin: '0 10px 10px',
     minWidth: '270px',
     maxWidth: '450px',
+    backgroundColor: 'darkgray',
+    borderRadius: '15px',
   },
   messageList: {
-    borderRadius: '0 0 15px 15px',
+    // borderRadius: '0 0 50px 50px',
     width: '100%',
     maxHeight: '100px',
     overflowY: 'auto',
     direction: 'rtl',
     backgroundColor: 'darkgray',
+    padding: '5px 0',
+    borderRadius: '0 0 5px 5px',
     '&::-webkit-scrollbar': {
       // backgroundColor: 'darkgray',
       width: '5px',
@@ -36,7 +40,7 @@ export default makeStyles(theme => ({
     justifyContent: 'space-between',
     direction: 'rtl',
     backgroundColor: 'lightgray',
-    padding: '5px',
+    padding: '5px 15px',
     borderRadius: '5px',
   },
 }))

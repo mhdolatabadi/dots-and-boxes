@@ -35,6 +35,7 @@ export default makeStyles(theme => ({
     transition: '2s',
   },
   score: {
+    padding: '3px 0',
     textAlign: 'center',
     textShadow: 'thistle',
     color: 'white',

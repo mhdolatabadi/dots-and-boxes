@@ -26,6 +26,7 @@ export default makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: 'wheat',
+
     padding: '3px 8px',
     borderRadius: '50px',
     margin: '0 5px',

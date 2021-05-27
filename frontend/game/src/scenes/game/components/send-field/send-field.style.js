@@ -8,7 +8,7 @@ export default makeStyles(theme => ({
     minWidth: '270px',
     maxWidth: '450px',
 
-    height: '40px',
+    height: '30px',
     backgroundColor: 'wheat',
   },
   input: {
@@ -23,7 +23,7 @@ export default makeStyles(theme => ({
   button: {
     backgroundColor: 'orange',
     border: '2px solid wheat',
-    width: '50px',
+    width: '60px',
     cursor: 'pointer',
     borderRadius: '10px',
   },

@@ -4,7 +4,7 @@ export default makeStyles(theme => ({
   root: {
     width: '100%',
     display: 'flex',
-    padding: '10px',
+    padding: '3px 5px',
   },
   sended: {
     backgroundColor: 'yellowgreen',
@@ -13,6 +13,7 @@ export default makeStyles(theme => ({
     transition: 'all 0.35s ease-in-out',
     // display: 'none',
     direction: 'rtl',
+    marginRight: '8px',
   },
   recieved: {
     backgroundColor: 'rgb(227, 255, 65)',
@@ -21,5 +22,6 @@ export default makeStyles(theme => ({
     transition: 'all 0.35s ease-in-out',
     // display: 'none',
     direction: 'rtl',
+    marginLeft: '8px',
   },
 }))
