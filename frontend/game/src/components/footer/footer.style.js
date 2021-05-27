@@ -11,5 +11,18 @@ export default makeStyles(theme => ({
     backgroundColor: 'orange',
     borderRadius: '0 0 50px 50px',
     cursor: 'pointer',
+    minWidth: '270px',
+    maxWidth: '450px',
+  },
+  channel: {
+    height: '70%',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'red',
+    padding: '3px 8px',
+    borderRadius: '10px',
+  },
+  channelIcon: {
+    height: '100%',
   },
 }))

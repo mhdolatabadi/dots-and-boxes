@@ -1,8 +1,8 @@
 import * as React from 'react'
 // style
-import useStyle from './yline.style'
-
+import useStyle from './xline.style'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {
   addNewLine,
   elementColorView,
@@ -12,10 +12,10 @@ import {
   roomIsWaitingView,
   setPlayerLastMove,
   setRoomLastMove,
-} from '../../scenes/_slice/game.slice'
-import { sendNewLine } from '../../services/backend/backend.service'
+} from '../../../_slice/game.slice'
+import { sendNewLine } from '../../../../services/backend/backend.service'
 
-export default function Yline({ i, j }) {
+export default function Xline({ i, j }) {
   const dispatch = useDispatch()
 
   const classes = useStyle()
@@ -30,8 +30,8 @@ export default function Yline({ i, j }) {
     <div
       className={classes.root}
       style={{
-        gridColumn: `${j}`,
-        gridRow: `${i - 1} / ${i + 2}`,
+        gridColumn: `${j - 1} / ${j + 2}`,
+        gridRow: `${i}`,
         backgroundColor: lineColor,
       }}
       onClick={() => {

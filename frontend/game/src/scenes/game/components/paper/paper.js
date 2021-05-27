@@ -12,7 +12,7 @@ import {
   paperColumnNumberView,
   paperRowNumberView,
   roomLastMoveView,
-} from '../../scenes/_slice/game.slice'
+} from '../../../_slice/game.slice'
 
 const createElements = (rowNumber, columnNumber) => {
   const elements = []

@@ -3,6 +3,13 @@ import * as React from 'react'
 import useStyle from './rectangle.style'
 // localiztion
 import t from './rectangle.local'
+
+import { useSelector } from 'react-redux'
+import {
+  requestGift,
+  sendBouns,
+} from '../../../../services/backend/backend.service'
+import { dispatch } from '../../../../setup/store/store'
 import {
   addNewLine,
   elementColorView,
@@ -10,10 +17,7 @@ import {
   increaseOpponentScore,
   increasePlayerScore,
   playerColorView,
-} from '../../scenes/_slice/game.slice'
-import { useSelector } from 'react-redux'
-import { requestGift, sendBouns } from '../../services/backend/backend.service'
-import { dispatch } from '../../setup/store/store'
+} from '../../../_slice/game.slice'
 
 export default function Rectangle({ i, j, lastMove }) {
   const classes = useStyle()

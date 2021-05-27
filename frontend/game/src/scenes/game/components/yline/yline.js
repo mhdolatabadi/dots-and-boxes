@@ -1,21 +1,22 @@
 import * as React from 'react'
 // style
-import useStyle from './xline.style'
+import useStyle from './yline.style'
+
 import { useDispatch, useSelector } from 'react-redux'
+
+import { sendNewLine } from '../../../../services/backend/backend.service'
 import {
   addNewLine,
   elementColorView,
-  getPlayerId,
   playerColorView,
   playerIdView,
   roomHasPermissionView,
   roomIsWaitingView,
   setPlayerLastMove,
   setRoomLastMove,
-} from '../../scenes/_slice/game.slice'
-import { sendNewLine } from '../../services/backend/backend.service'
+} from '../../../_slice/game.slice'
 
-export default function Xline({ i, j }) {
+export default function Yline({ i, j }) {
   const dispatch = useDispatch()
 
   const classes = useStyle()
@@ -30,8 +31,8 @@ export default function Xline({ i, j }) {
     <div
       className={classes.root}
       style={{
-        gridColumn: `${j - 1} / ${j + 2}`,
-        gridRow: `${i}`,
+        gridColumn: `${j}`,
+        gridRow: `${i - 1} / ${i + 2}`,
         backgroundColor: lineColor,
       }}
       onClick={() => {

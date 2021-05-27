@@ -2,11 +2,13 @@
 import { io } from 'socket.io-client'
 import {
   dispatchAddNewLine,
+  dispatchAddNewMessage,
   dispatchHasPermission,
   dispatchIsWaiting,
   dispatchOpponentId,
   dispatchPlayerColor,
   dispatchSetHistory,
+  dispatchSetMessages,
   dispatchSetOpponentLastMove,
   dispatchSetRoomLastMove,
   dispatchSetStatus,
@@ -57,10 +59,11 @@ socket.on('mustWait', type => {
   type ? dispatchSetStatus('waiting') : dispatchSetStatus('connected')
 })
 
-socket.on('watch', history => {
+socket.on('watch', (history, messages) => {
   console.log('wathcing history...')
   console.log(history)
   dispatchSetHistory(history)
+  dispatchSetMessages(messages)
   // if (history.length > 0) {
   //   for (let i = 0; i < history.length; i++) {
   //     recieve(history[i], history[i].color)
@@ -95,17 +98,10 @@ socket.on('getname', (redName, blueName) => {
   // }
 })
 
-let timeout
-
 socket.on('message', message => {
-  clearTimeout(timeout)
-  const opponentMessage = document.getElementsByClassName('opponent-message')[0]
-  console.log(opponentMessage)
-  opponentMessage.style.display = 'block'
-  opponentMessage.innerHTML = message
+  dispatchAddNewMessage(message)
   const sendAudio = new Audio('./assets/what-302.mp3')
   sendAudio.play()
-  timeout = setTimeout(() => (opponentMessage.style.display = 'none'), 20000)
 })
 
 socket.on('change', (line, color) => {
@@ -163,7 +159,10 @@ export const sendBouns = (i, j, color) => {
 }
 
 export const sendMessage = message => {
-  // socket.emit('message', get('roomId'), message)
+  const roomId = getRoomId()
+  const userId = getPlayerId()
+
+  socket.emit('message', roomId, userId, message)
 }
 
 export const resign = () => {

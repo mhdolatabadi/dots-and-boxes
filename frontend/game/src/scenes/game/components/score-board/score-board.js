@@ -12,7 +12,7 @@ import {
   playerColorView,
   playerNameView,
   playerScoreView,
-} from '../../scenes/_slice/game.slice'
+} from '../../../_slice/game.slice'
 
 export default function ScoreBoard(props) {
   const classes = useStyle()

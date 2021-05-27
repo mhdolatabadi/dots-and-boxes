@@ -5,6 +5,8 @@ export default makeStyles(theme => ({
     display: 'flex',
     width: '90vmin',
     marginBottom: '6px',
+    minWidth: '270px',
+    maxWidth: '450px',
   },
   blue: {
     padding: 'auto',

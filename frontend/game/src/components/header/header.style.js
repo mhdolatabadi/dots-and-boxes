@@ -12,6 +12,9 @@ export default makeStyles(theme => ({
     fontSize: '30px',
     height: '80px',
     width: '90vmin',
+    minWidth: '270px',
+    maxWidth: '450px',
+
     textAlign: 'center',
     borderRadius: '50px 50px 0 0',
     backgroundColor: 'orange',

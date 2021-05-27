@@ -31,6 +31,7 @@ const gameSlice = createSlice({
       hasPermission: false,
       end: false,
       gift: false,
+      messages: [],
       history: {},
       lastMove: {},
     },
@@ -97,6 +98,14 @@ const gameSlice = createSlice({
     increaseOpponentScore: (state, aciton) => {
       state.opponent.score += 1
     },
+    addNewMessage: (state, action) => {
+      const { sender, content } = action.payload
+      state.room.messages.push({ sender, content })
+    },
+    setMessages: (state, action) => {
+      const { messages } = action.payload
+      state.room.messages = messages
+    },
   },
 })
 
@@ -117,11 +126,16 @@ export const {
   setRoomLastMove,
   increasePlayerScore,
   increaseOpponentScore,
+  addNewMessage,
+  setMessages,
 } = actions
 export default reducer
 
 /* Views */
 export const statusView = state => state.game.status
+
+export const messagesView = state => state.game.room.messages
+
 export const playerIdView = state => state.game.player.id
 export const playerColorView = state => state.game.player.color
 export const playerNameView = state => state.game.player.name
@@ -193,3 +207,9 @@ export const dispatchSetStatus = status => store.dispatch(setStatus({ status }))
 
 export const dispatchSetHistory = history =>
   store.dispatch(setHistory({ history }))
+
+export const dispatchSetMessages = messages =>
+  store.dispatch(setMessages({ messages }))
+
+export const dispatchAddNewMessage = message =>
+  store.dispatch(addNewMessage(message))

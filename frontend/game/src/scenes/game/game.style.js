@@ -9,6 +9,7 @@ export default makeStyles(theme => ({
     alignItems: 'center',
     margin: 0,
     height: '100%',
+    maxWidth: '550px',
     backgroundColor: 'gray',
     userSelect: 'none',
   },
