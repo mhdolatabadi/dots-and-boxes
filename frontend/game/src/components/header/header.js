@@ -6,9 +6,13 @@ import t from './header.local'
 import { useSelector } from 'react-redux'
 import { roomIsWaitingView, statusView } from '../../scenes/_slice/game.slice'
 
-export default function Header(props) {
+export default function Header({ type }) {
   const classes = useStyle()
   const status = useSelector(statusView)
 
-  return <div className={classes.root}>{t[status]}</div>
+  return (
+    <div className={classes.root}>
+      {type === 'game' ? t[status] : t.connected}
+    </div>
+  )
 }
