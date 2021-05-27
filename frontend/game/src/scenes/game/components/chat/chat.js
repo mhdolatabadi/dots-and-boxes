@@ -10,8 +10,8 @@ import { messagesView, playerIdView } from '../../../_slice/game.slice'
 
 export default function Chat(props) {
   const classes = useStyle()
-  const messages = useSelector(messagesView)
   const playerId = useSelector(playerIdView)
+  const messages = useSelector(messagesView)
 
   const [chatExpansion, setChatExpansion] = React.useState('block')
 

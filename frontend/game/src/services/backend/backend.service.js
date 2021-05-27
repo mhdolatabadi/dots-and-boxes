@@ -30,11 +30,6 @@ import { getCurrentUserId, getWisId } from '../weblite/weblite.api'
 //   axios.get('api-path', { params }).then(res => res.data)
 const socket = io(HTTP_BACKEND)
 
-const roomId = getRoomId()
-const playerId = getPlayerId()
-const playerName = getPlayerName()
-const playerColor = getPlayerColor()
-
 socket.on('connect', () => {
   console.log('connected')
   dispatchSetStatus('connected')
@@ -53,7 +48,6 @@ socket.on('color', color => {
 
 socket.on('mustWait', type => {
   console.log('waiting...')
-  console.log(type)
   // W.messages.sendMessageToCurrentChat('text', 'نقطه بازی کنیم؟')
   dispatchIsWaiting(type)
   type ? dispatchSetStatus('waiting') : dispatchSetStatus('connected')
@@ -61,7 +55,6 @@ socket.on('mustWait', type => {
 
 socket.on('watch', (history, messages) => {
   console.log('wathcing history...')
-  console.log(history)
   dispatchSetHistory(history)
   dispatchSetMessages(messages)
   // if (history.length > 0) {
@@ -72,6 +65,10 @@ socket.on('watch', (history, messages) => {
 })
 
 socket.on('introduce', () => {
+  const playerId = getPlayerId()
+
+  const roomId = getRoomId()
+
   console.log('introducing...')
   socket.emit('introduce', playerId, roomId)
 })
@@ -82,6 +79,8 @@ socket.on('name', opponentId => {
 })
 
 socket.on('role', (role, color) => {
+  const roomId = getRoomId()
+  const playerColor = getPlayerColor()
   console.log('getting role')
   if (color === playerColor) dispatchHasPermission(true)
   else dispatchHasPermission(false)
@@ -110,7 +109,8 @@ socket.on('change', (line, color) => {
   //   if (turn === 'red') set('color', 'blue')
   //   else set('color', 'red')
   // }
-  console.log(color)
+  const playerColor = getPlayerColor()
+
   if (playerColor !== color) {
     const { i, j } = line
     dispatchSetRoomLastMove(i, j, color)
@@ -125,7 +125,6 @@ socket.on('change', (line, color) => {
 
 socket.on('gift', userId => {
   const playerId = getPlayerId()
-  console.log(`permission changed to ${playerId === userId}`)
   dispatchHasPermission(playerId === userId)
 })
 

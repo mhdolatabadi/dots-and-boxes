@@ -3,6 +3,6 @@ import Game from './game'
 import { useInitializeData } from './_hook/useInitializeData'
 
 export default function Root() {
-  useInitializeData()
+  // useInitializeData()
   return <Game />
 }

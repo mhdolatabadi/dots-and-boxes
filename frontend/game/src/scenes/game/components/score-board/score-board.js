@@ -16,8 +16,8 @@ import {
 
 export default function ScoreBoard(props) {
   const classes = useStyle()
-  const playerColor = useSelector(playerColorView)
   const playerName = useSelector(playerNameView)
+  const playerColor = useSelector(playerColorView)
   const playerScore = useSelector(playerScoreView)
   const opponentName = useSelector(opponentNameView)
   const opponentScore = useSelector(opponentScoreView)

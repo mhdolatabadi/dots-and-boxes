@@ -11,7 +11,7 @@ const gameSlice = createSlice({
     player: {
       id: undefined,
       name: 'هوشنگ',
-      color: '',
+      color: 'red',
       score: 0,
       letter: 'ه',
       lastMove: {},
@@ -19,7 +19,7 @@ const gameSlice = createSlice({
     opponent: {
       id: undefined,
       name: 'بیژن',
-      color: '',
+      color: 'blue',
       score: 0,
       letter: 'ب',
       lastMove: {},
@@ -28,7 +28,7 @@ const gameSlice = createSlice({
       id: undefined,
       role: undefined,
       isWaiting: false,
-      hasPermission: false,
+      hasPermission: true,
       end: false,
       gift: false,
       messages: [],

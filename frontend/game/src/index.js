@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import './setup/wapp/initialize'
-
 import ReduxProvider from './setup/store'
 import ThemeProvider from './setup/theme'
 
+import './setup/wapp/initialize'
 import App from './scenes'
 
 ReactDOM.render(

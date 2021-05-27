@@ -26,7 +26,6 @@ const createElements = (rowNumber, columnNumber) => {
 export default function Paper() {
   const classes = useStyle()
   const roomLastMove = useSelector(roomLastMoveView)
-  console.log({ roomLastMove })
   const rowNumber = useSelector(paperRowNumberView)
   const columnNumber = useSelector(paperColumnNumberView)
 

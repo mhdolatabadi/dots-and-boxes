@@ -2,14 +2,19 @@ import {
   dispatchPlayerId,
   dispatchRoomId,
   dispatchSetPlayerName,
+  setPlayerId,
+  setPlayerName,
+  setRoomId,
 } from '../../../scenes/_slice/game.slice'
+import store from '../../store/store'
 
 const { W } = window
-export const wappDidStart = async () => {
-  const userId = W.user.userId()
+export const wappDidStart = () => {
+  const userId = W.user.getId()
   const roomId = W.wapp.getWisId()
   const playerName = W.user.getFirstname()
-  dispatchPlayerId(userId)
-  dispatchRoomId(roomId)
-  dispatchSetPlayerName(playerName)
+
+  store.dispatch(setPlayerId({ id: userId }))
+  store.dispatch(setRoomId({ id: roomId }))
+  store.dispatch(setPlayerName({ name: playerName }))
 }

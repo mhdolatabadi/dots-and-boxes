@@ -44,7 +44,6 @@ export default function Rectangle({ i, j, lastMove }) {
     ? lastLineColor
     : ''
   if (!background && backgroundColor) {
-    console.log({ backgroundColor })
     dispatch(addNewLine({ i, j, color: backgroundColor }))
   }
   if (
@@ -59,7 +58,6 @@ export default function Rectangle({ i, j, lastMove }) {
     !!downLineColor &&
     !playerHasPermission
   ) {
-    console.log({ playerColor, lastColor, background })
     if (playerColor === lastColor) {
       dispatch(increasePlayerScore())
       sendBouns(i, j, playerColor)
