@@ -4,12 +4,16 @@ import useStyle from './rectangle.style'
 // localiztion
 import t from './rectangle.local'
 import {
+  addNewLine,
   elementColorView,
   getPlayerHasPermission,
+  increaseOpponentScore,
+  increasePlayerScore,
   playerColorView,
 } from '../../scenes/_slice/game.slice'
 import { useSelector } from 'react-redux'
 import { requestGift, sendBouns } from '../../services/backend/backend.service'
+import { dispatch } from '../../setup/store/store'
 
 export default function Rectangle({ i, j, lastMove }) {
   const classes = useStyle()
@@ -29,14 +33,16 @@ export default function Rectangle({ i, j, lastMove }) {
   if (i + 1 === lastI && j === lastJ) lastLineColor = downLineColor || ''
   if (i === lastI && j - 1 === lastJ) lastLineColor = leftLineColor || ''
   if (i === lastI && j + 1 === lastJ) lastLineColor = rightLineColor || ''
-  // if (i === 2 && j === 10) console.log(lastLineColor)
 
   const backgroundColor = background
-    ? `dark${background}`
+    ? background
     : !!topLineColor && !!rightLineColor && !!leftLineColor && !!downLineColor
-    ? `dark${lastLineColor}`
+    ? lastLineColor
     : ''
-
+  if (!background && backgroundColor) {
+    console.log({ backgroundColor })
+    dispatch(addNewLine({ i, j, color: backgroundColor }))
+  }
   if (
     ((i - 1 === lastI && j === lastJ) ||
       (i + 1 === lastI && j === lastJ) ||
@@ -47,10 +53,13 @@ export default function Rectangle({ i, j, lastMove }) {
     !!rightLineColor &&
     !!leftLineColor &&
     !!downLineColor &&
-    playerColor === lastColor
+    !playerHasPermission
   ) {
-    // console.log({ playerColor, lastColor, lastLineColor })
-    sendBouns(i, j, playerColor)
+    console.log({ playerColor, lastColor, background })
+    if (playerColor === lastColor) {
+      dispatch(increasePlayerScore())
+      sendBouns(i, j, playerColor)
+    } else dispatch(increaseOpponentScore())
   }
   return (
     <div
@@ -58,7 +67,7 @@ export default function Rectangle({ i, j, lastMove }) {
       style={{
         gridColumn: `${j - 1} / ${j + 2}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor,
+        backgroundColor: `dark${backgroundColor}`,
       }}
     >
       <span></span>

@@ -91,6 +91,12 @@ const gameSlice = createSlice({
       const { history } = action.payload
       state.room.history = history
     },
+    increasePlayerScore: (state, aciton) => {
+      state.player.score += 1
+    },
+    increaseOpponentScore: (state, aciton) => {
+      state.opponent.score += 1
+    },
   },
 })
 
@@ -109,6 +115,8 @@ export const {
   setPlayerLastMove,
   setOpponentLastMove,
   setRoomLastMove,
+  increasePlayerScore,
+  increaseOpponentScore,
 } = actions
 export default reducer
 

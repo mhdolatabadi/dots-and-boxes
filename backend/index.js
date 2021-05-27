@@ -1,183 +1,289 @@
 const app = require('express')()
 const http = require('http').createServer(app)
-const io = require('socket.io')(http)
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+})
 const config = require('./src/setup/config')
-let rooms = []
-const createRoom = (roomId) => ({
-  id: roomId,
-  users: [],
-  subscribers: [],
-  history: [],
-  turn: 'red',
-  end: false,
-})
-
-const createUser = (userId, userSocket) => ({
-  id: userId,
-  name: '',
-  score: '',
-  room: '',
-  color: '',
-  isTurn: false,
-  role: '',
-  connection: false,
-  socket: userSocket,
-})
-
-const getRoom = (roomId) => {
-  const room = createRoom(roomId)
+const rooms = []
+const users = []
+const createRoom = (roomId, socketId) => {
+  const room = {
+    id: roomId,
+    userIds: [],
+    subscriberIds: [],
+    history: {},
+    turn: 'red',
+    isEnded: false,
+    socketIds: [socketId],
+    lastMove: {},
+  }
   rooms.push(room)
   return room
 }
 
-const findRoom = (roomId) => {
-  for (let i = 0; i < rooms.length; i++)
-    if (rooms[i].id === roomId) return rooms[i]
-  return false
+const createUser = (userId, socketId) => {
+  const user = {
+    id: userId,
+    score: '',
+    roomIds: [],
+    color: '',
+    hasPermission: false,
+    role: '',
+    connection: false,
+    socketId,
+  }
+  users.push(user)
+  return user
 }
 
-const searchBySocket = (socket, kind) => {
-  for (let i = 0; i < rooms.length; i++)
-    for (let j = 0; j < rooms[i].users.length; j++)
-      if (rooms[i].users[j].socket === socket) {
-        if (kind === 'user') return rooms[i].users[j]
-        else return rooms[i]
-      }
-  return false
-}
+// const getUserById = id =>
 
-const findUser = (room, userId) => {
-  for (let i = 0; i < room.users.length; i++)
-    if (room.users[i].id === userId) return room.users[i]
-  return false
-}
+const findRoomById = (roomId) => rooms.find((room) => room.id === roomId)
+const findUserById = (userId, roomId) =>
+  users.find((user) => {
+    const result = !!(user.id === userId && user.roomIds.includes(roomId))
+    return result
+  })
 
-const configUser = (user, room, color, isTurn, role, connection, socket) => {
-  user.room = room
+const findUserBySocketId = (socketId) =>
+  users.find((user) => user.socketId === socketId)
+const findRoomBySocketId = (socketId) =>
+  rooms.find((room) => room.socketIds.includes(socketId))
+
+const configUser = ({
+  user,
+  room,
+  color,
+  hasPermission,
+  role,
+  connection,
+  socketId,
+}) => {
+  user.roomIds.push(room.id)
   user.color = color
-  user.isTurn = isTurn
+  user.hasPermission = hasPermission
   user.role = role
   user.connection = connection
-  user.socket = socket
+  user.socketId = socketId
 }
 
+const configRoom = {}
+
 const hostFirstUser = (room, user, socket) => {
-  configUser(user, room, 'red', true, 'player', true, socket)
+  console.log(
+    `hosting first user with userId: ${user.id} in room with roomId: ${room.id}`
+  )
+  configUser({
+    user,
+    room,
+    color: 'red',
+    hasPermission: true,
+    role: 'player',
+    connection: true,
+    socketId: socket.id,
+  })
   room.turn = 'red'
-  room.users.push(user)
+  room.userIds.push(user.id)
+  room.socketIds.push(socket.id)
+  socket.emit('hasPermission', user.hasPermission)
   socket.join(room.id)
   socket.emit('color', 'red')
-  socket.emit('wait', 'wait')
+  socket.emit('mustWait', true)
 }
 
 const hostSecondUser = (room, user, socket) => {
-  configUser(user, room, undefined, undefined, 'player', true, socket)
-  const secondUser =
-    room.users[0].id === user.id ? room.users[1] : room.users[0]
+  console.log(
+    `hosting second user with userId: ${user.id} in room with roomId: ${room.id}`
+  )
+
+  configUser({
+    user,
+    room,
+    color: undefined,
+    hasPermission: false,
+    role: 'player',
+    connection: true,
+    socketId: socket.id,
+  })
+  const secondUser = findUserById(
+    room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0],
+    room.id
+  )
+  console.log('roomTurn: ', room.turn)
   if (secondUser && secondUser.color === 'red') user.color = 'blue'
   else user.color = 'red'
-  if (room.turn !== user.color) user.isTurn = false
-  else user.isTurn = true
-  room.users.push(user)
+  user.hasPermission = room.turn === user.color
+  console.log('user has permission? ', user.hasPermission)
+  if (!room.userIds.includes(user.id)) room.userIds.push(user.id)
+  if (!room.socketIds.includes(socket.id)) room.socketIds.push(socket.id)
+
   socket.emit('color', user.color)
-  socket.emit('permission', user.isTurn)
+  socket.emit('hasPermission', user.hasPermission)
   socket.emit('watch', room.history)
-  socket.broadcast.to(room.id).emit('wait', 'play')
   socket.join(room.id)
+  io.to(room.id).emit('mustWait', false)
   io.to(room.id).emit('introduce', 'hello')
 }
 
 const hostSubscriber = (room, user, socket) => {
-  configUser(user, room, undefined, undefined, 'subscriber', true, socket)
-  room.subscribers.push(user)
+  console.log(
+    `hosting subscriber with userId: ${user.id} in room with roomId: ${room.id}`
+  )
+  configUser({
+    user,
+    room,
+    color: undefined,
+    hasPermission: false,
+    role: 'subscriber',
+    connection: true,
+    socketId: socket.id,
+  })
+  room.subscriberIds.push(user.id)
   socket.join(room.id)
   socket.emit('role', 'subscriber', room.turn)
   socket.emit('watch', room.history)
 }
 
-const directToRoom = (roomId, userId, socket) => {
-  const room = findRoom(roomId) || getRoom(roomId)
-  const user = findUser(room, userId) || createUser(userId, socket)
-  switch (room.users.length) {
-    case 0:
-      hostFirstUser(room, user, socket)
-      break
-    case 1:
-      hostSecondUser(room, user, socket)
-      break
-    default:
-      if (findUser(room, userId)) hostSecondUser(room, user, socket)
-      else hostSubscriber(room, user, socket)
-      break
+const directUserToRoom = (roomId, userId, socket) => {
+  const room = findRoomById(roomId) || createRoom(roomId, socket.id)
+  const user = findUserById(userId, roomId) || createUser(userId, socket.id)
+  if (room.userIds.includes(user.id)) {
+    console.log('direct to room', room, user)
+    socket.emit('warning', 'multiple device')
+    socket.disconnect(true)
+  } else {
+    switch (room.userIds.length) {
+      case 0:
+        hostFirstUser(room, user, socket)
+        break
+      case 1:
+        hostSecondUser(room, user, socket)
+        break
+      default:
+        if (!!findUserById(userId, roomId)) hostSecondUser(room, user, socket)
+        else hostSubscriber(room, user, socket)
+        break
+    }
   }
 }
 
 const checkValidation = (room, user, type) => {
-  const result = user.connection && !room.end && user.role === 'player'
-  if (type === 'change')
-    return user.isTurn && room.turn === user.color && result
-  else return !user.isTurn && room.turn !== user.color && result
+  const result =
+    user && room && user.connection && !room.end && user.role === 'player'
+  if (type === 'change') {
+    console.log(
+      `check validation user id: ${user.id} hasPermission is: ${user.hasPermission}`
+    )
+    return user.hasPermission && room.turn === user.color && result
+  } else {
+    console.log(
+      `check validation user id: ${user.id}`,
+      !user.hasPermission,
+      room.turn !== user.color,
+      result
+    )
+    return !user.hasPermission && room.turn !== user.color && result
+  }
 }
 
-const changeTurn = (room) => {
-  if (room.turn === 'red') room.turn = 'blue'
-  else if (room.turn === 'blue') room.turn = 'red'
-  for (let i = 0; i < room.users.length; i++)
-    room.users[i].isTurn = !room.users[i].isTurn
+const changeTurn = (room, userId) => {
+  if (room && room.turn === 'red') room.turn = 'blue'
+  else if (room && room.turn === 'blue') room.turn = 'red'
+  for (let i = 0; i < room.userIds.length; i++) {
+    const user = findUserById(room.userIds[i], room.id)
+    if (user.id === userId) user.hasPermission = false
+    else user.hasPermission = true
+  }
   return true
 }
 const check = (room, user, type) => {
-  if (checkValidation(room, user, type)) return changeTurn(room)
+  if (checkValidation(room, user, type)) return changeTurn(room, user.id)
   return false
 }
 
 io.on('connection', (socket) => {
   socket.emit('handshake', 'welcome! give me your room id!')
-  socket.on('handshake', (roomId, userId) => {
-    directToRoom(roomId, userId, socket)
+  socket.on('handshake', (input) => {
+    const { roomId, userId } = input
+    directUserToRoom(roomId, userId, socket)
   })
-  socket.on('introduce', (userId, roomId, name) => {
-    const room = findRoom(roomId)
-    const user = findUser(room, userId)
-    user.name = name
-    socket.broadcast.to(room.id).emit('name', name)
-  })
+  socket.on('introduce', (userId, roomId) =>
+    socket.broadcast.to(roomId).emit('name', userId)
+  )
   socket.on('disconnect', () => {
-    const room = searchBySocket(socket, 'room')
-    const user = searchBySocket(socket, 'user')
-    user.connection = false
-    if (user.role === 'player')
-      socket.broadcast.to(room.id).emit('wait', 'wait')
+    const user = findUserBySocketId(socket.id)
+    const room = findRoomBySocketId(socket.id)
+    console.log(
+      `user with ${user ? 'user' : 'socket'}id ${
+        user ? user.id : socket.id
+      } disconnected`
+    )
+    if (user) user.connection = false
+    if (user && user.role === 'player') {
+      room.userIds.splice(room.userIds.indexOf(user.id), 1)
+      socket.broadcast.to(room.id).emit('mustWait', true)
+    }
   })
-  socket.on('change', (userId, roomId, change) => {
-    const room = findRoom(roomId)
-    const user = findUser(room, userId)
+  socket.on('change', (userId, roomId, line) => {
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
+    console.log('new line arrived: ', line)
     if (check(room, user, 'change')) {
-      change.color = user.color
-      room.history.push(change)
-      socket.broadcast.to(room.id).emit('change', change, user.color)
+      const { i, j, color } = line
+      line.color = user.color
+      room.lastMove = line
+      room.history[i] = { ...room.history[i] }
+      room.history[i][j] = color
+      socket.broadcast.to(room.id).emit('change', line, color)
     } else socket.emit('warning', 'warning')
   })
+  socket.on('bouns', (roomId, userId, bouns) => {
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
+    if (user && user.color === bouns.color) {
+      const { i, j, color } = bouns
+      if (room.history[i] && room.history[i][j]) {
+      } else {
+        console.log(`new bouns arrived:`, bouns, `from user:`, user.id)
+        room.history[i] = { ...room.history[i] }
+        room.history[i][j] = color
+
+        // sending gift!
+        if (room) room.turn = user.color
+        for (let i = 0; i < room.userIds.length; i++) {
+          const user = findUserById(room.userIds[i], room.id)
+          if (user.id === userId) user.hasPermission = true
+          else user.hasPermission = false
+        }
+        io.to(roomId).emit('gift', userId)
+      }
+    }
+  })
   socket.on('gift', (userId, roomId) => {
-    const room = findRoom(roomId)
-    const user = findUser(room, userId)
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
+    console.log('new gift request arrived by user id:', userId)
+
     if (check(room, user, 'gift')) io.to(room.id).emit('gift')
     else socket.emit('warning', 'warning')
   })
 
   socket.on('resign', (userId, roomId) => {
-    const room = findRoom(roomId)
-    const user = findRoom(room, userId)
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
     room.end = true
     user.connection = false
     socket.broadcast.to(room.id).emit('resign', 'salam')
   })
 
   socket.on('getname', (roomId) => {
-    const room = findRoom(roomId)
+    const room = findRoomById(roomId)
     let redName, blueName
-    for (let i = 0; i < room.users.length; i++) {
-      const element = room.users[i]
+    for (let i = 0; i < room.userIds.length; i++) {
+      const element = room.userIds[i]
       if (element.color === 'red') redName = element.name
       else blueName = element.name
     }
@@ -185,7 +291,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('message', (roomId, message) => {
-    const room = findRoom(roomId)
+    const room = findRoomById(roomId)
     socket.broadcast.to(room.id).emit('message', message)
   })
 })
