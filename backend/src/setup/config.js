@@ -7,6 +7,9 @@ const defaultConfig = {
   server: {
     host: production ? 'localhost' : undefined, // all IPs
     port: 13797,
+    origin: production
+      ? 'https://www.weblite.me:3000'
+      : 'http://localhost:3000',
   },
 }
 
