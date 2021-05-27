@@ -18,5 +18,7 @@ export default makeStyles(theme => ({
     textAlign: 'center',
     borderRadius: '50px 50px 0 0',
     backgroundColor: 'orange',
+    backgroundImage: 'url("header.png")',
+    backgroundSize: 'cover',
   },
 }))

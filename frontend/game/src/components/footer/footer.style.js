@@ -10,6 +10,8 @@ export default makeStyles(theme => ({
     cursor: 'pointer',
     minWidth: '270px',
     maxWidth: '450px',
+    backgroundImage: 'url("header.png")',
+    backgroundSize: 'cover',
   },
   button: {
     // marginRight: '30px',
