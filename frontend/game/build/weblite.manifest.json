@@ -1,14 +1,12 @@
 {
-  "name": "نقطه‌بازی",
-  "id": "5f945d356cb1bf0d609c860a",
+  "name": "dots-test",
+  "id": "60afa37c526d2ee0f383a6ee",
   "instantiable": true,
   "searchable": true,
-  "fullscreen": true,
   "inline": false,
   "notifMessage": "نقطه به نقطه انتظار برای دیدن تو",
   "servIndexes": {
-    "main": "index",
-    "fullscreen": "index"
+    "main": "index"
   },
-  "version": "1.11.16"
+  "version": "0.0.9"
 }

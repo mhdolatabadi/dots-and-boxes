@@ -16,6 +16,18 @@ body {
   flex-direction: column;
   user-select: none;
 }
+.channel {
+  height: 70%;
+  display: flex;
+  align-items: center;
+  background-color: wheat;
+  padding: 3px 8px;
+  border-radius: 50px;
+  margin: 0 5px;
+}
+.channelIcon {
+  height: 100%;
+}
 
 #root-container {
   margin: auto;

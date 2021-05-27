@@ -75,6 +75,23 @@ export const render = () => {
   show('click', buttonContainer, sendPanel)
   // show('click', red, fullInformation, 'red')
   // show('click', blue, fullInformation, 'blue')
+  document
+    .getElementsByClassName('channel')[0]
+    .addEventListener('click', () => {
+      window.W.wappSystem.openInPopup('5e7393898850a7419b1ed495', {
+        input: { chatId: '60aa7323fa713a0bc0f54d43' },
+        uiOptions: {
+          height: 310,
+        },
+      })
+    })
+  document
+    .getElementsByClassName('channel')[1]
+    .addEventListener('click', () => {
+      window.W.wappSystem.openInDrawer('5f12f01d170f91242534aa92', {
+        wisId: '60afc7f29532b6ecccaf560d',
+      })
+    })
 }
 
 const show = (event, key, value, className) => {
