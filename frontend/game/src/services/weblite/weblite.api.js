@@ -2,7 +2,9 @@
 
 const { W } = window
 
-export const getCurrentUserId = () => prompt('user id')
+export const getCurrentUserId = () => (W ? W.user.getId() : prompt('user id'))
+
+export const getUserFirstName = () => (W ? W.user.getFirstname() : 'بیژن')
 
 export const openImageInModal = src => W.images.openModal({ src })
 
@@ -32,4 +34,6 @@ export const sendAnalytics = ({ type, ...args }) => W.analytics(type, args)
 export const doneDrawer = output => W.wapp.doneDrawer(output)
 
 export const getWisId = () =>
-  'lswea13zenV34ed5m361sskh91s1d0n4LnK383kJHiHgF8Nlj23esosdm1f45AXQwl4dsw'
+  W
+    ? W.wapp.getWisId()
+    : 'lswea13zenV34ed5m361sskh91s1d0n4LnK383kJHiHgF8Nlj23esosdm1f45AXQwl4dsw'

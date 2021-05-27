@@ -1,6 +1,6 @@
 {
-  "name": "نقطه‌بازی",
-  "id": "5f945d356cb1bf0d609c860a",
+  "name": "dots-test",
+  "id": "60afa37c526d2ee0f383a6ee",
   "instantiable": true,
   "searchable": true,
   "inline": false,
@@ -8,5 +8,5 @@
   "servIndexes": {
     "main": "index"
   },
-  "version": "1.11.15"
+  "version": "0.0.31"
 }

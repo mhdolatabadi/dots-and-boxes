@@ -39,6 +39,10 @@ const gameSlice = createSlice({
     status: 'connecting',
   },
   reducers: {
+    setPlayerName: (state, action) => {
+      const { name } = action.payload
+      state.player.name = name
+    },
     setPlayerColor: (state, action) => {
       const { color } = action.payload
       state.player.color = color
@@ -92,10 +96,10 @@ const gameSlice = createSlice({
       const { history } = action.payload
       state.room.history = history
     },
-    increasePlayerScore: (state, aciton) => {
+    increasePlayerScore: (state, action) => {
       state.player.score += 1
     },
-    increaseOpponentScore: (state, aciton) => {
+    increaseOpponentScore: (state, action) => {
       state.opponent.score += 1
     },
     addNewMessage: (state, action) => {
@@ -111,6 +115,7 @@ const gameSlice = createSlice({
 
 const { actions, reducer } = gameSlice
 export const {
+  setPlayerName,
   setPlayerColor,
   setPlayerId,
   setOpponentName,
@@ -213,3 +218,6 @@ export const dispatchSetMessages = messages =>
 
 export const dispatchAddNewMessage = message =>
   store.dispatch(addNewMessage(message))
+
+export const dispatchSetPlayerName = name =>
+  store.dispatch(setPlayerName({ name }))

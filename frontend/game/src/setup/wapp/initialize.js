@@ -1,8 +1,13 @@
-import { mockWebliteApi } from '@web-lite/api-types'
-// hooks
+import './mockWebliteApi'
 import { wappDidStart } from './hooks'
 
-mockWebliteApi({})
 const { W } = window
-W.setHooks({})
-W.initializeAsync().then(wappDidStart)
+
+W.setHooks({
+  wappWillStart(start) {
+    W.initializeAsync().then(() => {
+      start()
+      wappDidStart()
+    })
+  },
+})
