@@ -35,7 +35,10 @@ export default function Chat(props) {
           setChatExpansion(chatExpansion === 'block' ? 'none' : 'block')
         }
       >
-        <span>{t.chat}</span>
+        <div className={classes.title}>
+          <img className={classes.icon} src="chat.png" />
+          <span>{t.chat}</span>
+        </div>
         <span>{chatExpansion === 'block' ? t.collapse : t.expand}</span>
       </div>
       <div

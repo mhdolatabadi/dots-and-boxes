@@ -4,7 +4,7 @@ export default makeStyles(theme => ({
   root: {
     gridArea: 'info-container',
     height: '30px',
-    width: '90vmin',
+    width: '300px',
     minWidth: '270px',
     maxWidth: '450px',
 

@@ -3,10 +3,16 @@ import { makeStyles } from '@material-ui/core'
 export default makeStyles(theme => ({
   root: {
     height: '50px',
-    width: '90vmin',
-
+    width: '300px',
+    '@media (min-width: 420px) and (min-height: 700px)': {
+      width: '420px',
+    },
+    '@media (max-width: 305px) and (max-height: 520px)': {
+      width: '150px',
+      height: '30px',
+    },
     backgroundColor: 'orange',
-    borderRadius: '0 0 50px 50px',
+    borderRadius: '0 0 30px 30px',
     cursor: 'pointer',
     minWidth: '270px',
     maxWidth: '650px',
@@ -16,6 +22,9 @@ export default makeStyles(theme => ({
   button: {
     // marginRight: '30px',
     height: '50px',
+    '@media (max-width: 305px) and (max-height: 520px)': {
+      height: '30px',
+    },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -4,7 +4,15 @@ export default makeStyles(theme => ({
   root: {
     display: 'flex', //TODO set it to none value as it is flex
     gridArea: 'message',
-    width: '90vmin',
+    width: '300px',
+    '@media (min-width: 420px) and (min-height: 700px)': {
+      width: '420px',
+      height: '40px',
+    },
+    '@media (max-width: 305px) and (max-height: 520px)': {
+      width: '150px',
+      height: '25px',
+    },
     minWidth: '270px',
     maxWidth: '650px',
 
@@ -21,15 +29,20 @@ export default makeStyles(theme => ({
     },
   },
   button: {
-    backgroundColor: 'orange',
+    // backgroundColor: 'orange',
     border: '2px solid wheat',
-    width: '60px',
+    width: '40px',
     cursor: 'pointer',
     borderRadius: '10px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   icon: {
+    // backgroundColor: 'orange',
+
     transform: 'scaleX(-1)',
-    height: '100%',
-    width: '100%',
+    height: '70%',
+    width: '70%',
   },
 }))
