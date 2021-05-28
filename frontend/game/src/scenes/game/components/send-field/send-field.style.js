@@ -6,9 +6,9 @@ export default makeStyles(theme => ({
     gridArea: 'message',
     width: '90vmin',
     minWidth: '270px',
-    maxWidth: '450px',
+    maxWidth: '650px',
 
-    height: '30px',
+    height: '35px',
     backgroundColor: 'wheat',
   },
   input: {

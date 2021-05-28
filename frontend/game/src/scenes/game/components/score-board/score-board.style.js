@@ -6,7 +6,7 @@ export default makeStyles(theme => ({
     width: '90vmin',
     marginBottom: '6px',
     minWidth: '270px',
-    maxWidth: '450px',
+    maxWidth: '650px',
   },
   blue: {
     padding: 'auto',

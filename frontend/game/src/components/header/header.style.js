@@ -13,7 +13,7 @@ export default makeStyles(theme => ({
     height: '80px',
     width: '90vmin',
     minWidth: '270px',
-    maxWidth: '450px',
+    maxWidth: '650px',
 
     textAlign: 'center',
     borderRadius: '50px 50px 0 0',

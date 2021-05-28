@@ -6,5 +6,5 @@ import { useInitializeData } from './_hook/useInitializeData'
 
 export default function Root() {
   // useInitializeData()
-  return <Home />
+  return <Game />
 }

@@ -19,10 +19,9 @@ export default function GamePresentational(props) {
 
   return (
     <div className={classes.root}>
-      <h1 className={classes.headerText}>{t.page}</h1>
-      <Chat />
       <Header type="game" />
-      <Information />
+      <Chat />
+      {/* <Information /> */}
       <Paper />
       <ScoreBoard />
       <SendField />

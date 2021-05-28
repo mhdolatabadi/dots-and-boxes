@@ -9,7 +9,7 @@ export default makeStyles(theme => ({
     borderRadius: '0 0 50px 50px',
     cursor: 'pointer',
     minWidth: '270px',
-    maxWidth: '450px',
+    maxWidth: '650px',
     backgroundImage: 'url("header.png")',
     backgroundSize: 'cover',
   },
