@@ -20,7 +20,7 @@ export default makeStyles(theme => ({
     width: '100%',
     height: '35px',
     '@media (min-height: 720px)': {
-      width: '80px',
+      height: '80px',
     },
 
     // maxHeight: '100px',

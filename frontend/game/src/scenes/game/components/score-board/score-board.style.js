@@ -10,6 +10,7 @@ export default makeStyles(theme => ({
     height: '20px',
     '@media (min-width: 420px) and (min-height: 700px)': {
       width: '420px',
+      height: '30px',
     },
     '@media (max-width: 305px) and (max-height: 520px)': {
       width: '150px',
@@ -49,5 +50,8 @@ export default makeStyles(theme => ({
     fontSize: '14px',
     marginBottom: 0,
     width: '50%',
+    '@media (min-width: 420px) and (min-height: 700px)': {
+      fontSize: '20px',
+    },
   },
 }))
