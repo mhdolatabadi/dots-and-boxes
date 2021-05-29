@@ -71,8 +71,8 @@ export const render = () => {
   sendMessageInitializer()
   show('touch', header, infoContainer)
   show('click', header, infoContainer)
-  show('touch', buttonContainer, sendPanel)
-  show('click', buttonContainer, sendPanel)
+  // show('touch', buttonContainer, sendPanel)
+  // show('click', buttonContainer, sendPanel)
   // show('click', red, fullInformation, 'red')
   // show('click', blue, fullInformation, 'blue')
   document
@@ -91,6 +91,13 @@ export const render = () => {
       window.W.wappSystem.openInDrawer('5f12f01d170f91242534aa92', {
         wisId: '60afc7f29532b6ecccaf560d',
       })
+    })
+
+  document
+    .getElementsByClassName('channel')[2]
+    .addEventListener('click', () => {
+      sendPanel.style.display =
+        sendPanel.style.display === 'flex' ? 'none' : 'flex'
     })
 }
 

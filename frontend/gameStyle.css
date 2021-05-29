@@ -17,11 +17,12 @@ body {
   user-select: none;
 }
 .channel {
-  height: 70%;
+  height: 50%;
+  font-size: 10px;
   display: flex;
   align-items: center;
   background-color: wheat;
-  padding: 3px 8px;
+  padding: 1px 8px;
   border-radius: 50px;
   margin: 0 5px;
 }
