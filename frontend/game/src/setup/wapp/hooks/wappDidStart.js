@@ -6,6 +6,7 @@ import {
   setPlayerName,
   setRoomId,
 } from '../../../scenes/_slice/game.slice'
+import { setLoading } from '../../../scenes/_slice/loading.slice'
 import store from '../../store/store'
 
 const { W } = window
@@ -17,4 +18,5 @@ export const wappDidStart = () => {
   store.dispatch(setPlayerId({ id: userId }))
   store.dispatch(setRoomId({ id: roomId }))
   store.dispatch(setPlayerName({ name: playerName }))
+  store.dispatch(setLoading(false))
 }
