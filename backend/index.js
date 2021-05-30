@@ -1,12 +1,12 @@
 const app = require('express')()
 const http = require('http').createServer(app)
+const config = require('./src/setup/config')
 const io = require('socket.io')(http, {
   cors: {
     origin: config.server.origin,
     methods: ['GET', 'POST'],
   },
 })
-const config = require('./src/setup/config')
 const rooms = []
 const users = []
 const createRoom = (roomId, socketId) => {
