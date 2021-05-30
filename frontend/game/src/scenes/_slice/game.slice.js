@@ -34,6 +34,7 @@ const gameSlice = createSlice({
       messages: [],
       history: {},
       lastMove: {},
+      winner: null,
     },
     language: 'persian',
     status: 'connecting',
@@ -110,6 +111,22 @@ const gameSlice = createSlice({
       const { messages } = action.payload
       state.room.messages = messages
     },
+    setOpponentScore: (state, action) => {
+      const { score } = action.payload
+      state.opponent.score = score
+    },
+    setPlayerScore: (state, action) => {
+      const { score } = action.payload
+      state.player.score = score
+    },
+    setRoomWinner: (state, action) => {
+      const winner = action.payload
+      state.room.winner = winner
+    },
+    setOpponentColor: (state, action) => {
+      const { color } = action.payload
+      state.opponent.color = color
+    },
   },
 })
 
@@ -133,6 +150,10 @@ export const {
   increaseOpponentScore,
   addNewMessage,
   setMessages,
+  setOpponentScore,
+  setPlayerScore,
+  setRoomWinner,
+  setOpponentColor,
 } = actions
 export default reducer
 
@@ -154,6 +175,7 @@ export const opponentScoreView = state => state.game.opponent.score
 export const roomIsWaitingView = state => state.game.room.isWaiting
 export const roomHasPermissionView = state => state.game.room.hasPermission
 export const roomLastMoveView = state => state.game.room.lastMove
+export const roomWinnerView = state => state.game.room.winner
 
 export const paperRowNumberView = state => state.game.paper.row
 export const paperColumnNumberView = state => state.game.paper.column
@@ -166,21 +188,41 @@ export const getRoomId = state => (state ?? store.getState()).game.room.id
 export const getRoomHasPermission = state =>
   (state ?? store.getState()).game.room.hasPermission
 export const getPlayerId = state => (state ?? store.getState()).game.player.id
+
 export const getPlayerName = state =>
   (state ?? store.getState()).game.player.name
+
 export const getPlayerColor = state =>
   (state ?? store.getState()).game.player.color
+
 export const getOpponentName = state =>
   (state ?? store.getState()).game.opponent.name
+
 export const getPlayerHasPermission = state =>
   (state ?? store.getState()).game.room.hasPermission
 
 export const getLineView = (i, j) => state =>
   (state ?? store.getState()).game.room.history[i][j] || {}
 
+export const getPlayerScore = state =>
+  (state ?? store.getState()).game.player.score
+
+export const getOpponentColor = state =>
+  (state ?? store.getState()).game.opponent.color
+export const getOpponentId = state =>
+  (state ?? store.getState()).game.opponent.id
+export const getOpponentScore = state =>
+  (state ?? store.getState()).game.opponent.score
+export const getPaperSize = state => (state ?? store.getState()).game.paper.row
+
+export const getRoomWinner = state =>
+  (state ?? store.getState()).game.room.winner
+
 /* Dispatches */
 export const dispatchPlayerColor = color =>
   store.dispatch(setPlayerColor({ color }))
+export const dispatchOpponentColor = color =>
+  store.dispatch(setOpponentColor({ color }))
 export const dispatchPlayerId = id => store.dispatch(setPlayerId({ id }))
 
 export const dispatchOpponentName = name =>
@@ -221,3 +263,9 @@ export const dispatchAddNewMessage = message =>
 
 export const dispatchSetPlayerName = name =>
   store.dispatch(setPlayerName({ name }))
+
+export const dispatchOpponentScore = score =>
+  store.dispatch(setOpponentScore({ score }))
+
+export const dispatchPlayerScore = score =>
+  store.dispatch(setPlayerScore({ score }))

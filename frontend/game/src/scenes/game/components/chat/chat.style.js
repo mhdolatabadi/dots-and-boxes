@@ -64,4 +64,11 @@ export default makeStyles(theme => ({
   icon: {
     height: '300%',
   },
+  empty: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }))

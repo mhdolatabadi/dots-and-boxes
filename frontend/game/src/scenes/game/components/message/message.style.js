@@ -24,4 +24,14 @@ export default makeStyles(theme => ({
     direction: 'rtl',
     marginLeft: '8px',
   },
+  system: {
+    backgroundColor: 'purple',
+    padding: '5px',
+    borderRadius: '5px 5px 5px 0',
+    transition: 'all 0.35s ease-in-out',
+    color: 'white',
+    // display: 'none',
+    direction: 'rtl',
+    marginLeft: '8px',
+  },
 }))

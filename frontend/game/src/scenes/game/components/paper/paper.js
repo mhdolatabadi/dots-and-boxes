@@ -7,11 +7,18 @@ import Dot from '../dot'
 import Xline from '../xline'
 import Yline from '../yline'
 import Rectangle from '../rectangle'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
+  opponentColorView,
+  opponentIdView,
+  opponentScoreView,
   paperColumnNumberView,
   paperRowNumberView,
+  playerColorView,
+  playerIdView,
+  playerScoreView,
   roomLastMoveView,
+  setRoomWinner,
 } from '../../../_slice/game.slice'
 
 const createElements = (rowNumber, columnNumber) => {
@@ -39,7 +46,13 @@ export default function Paper() {
           return <Yline i={i} j={j} key={`${i}-${j}`} />
         else
           return (
-            <Rectangle i={i} j={j} lastMove={roomLastMove} key={`${i}-${j}`} />
+            <Rectangle
+              i={i}
+              j={j}
+              lastMove={roomLastMove}
+              key={`${i}-${j}`}
+              paperSize={rowNumber}
+            />
           )
       })}
     </div>

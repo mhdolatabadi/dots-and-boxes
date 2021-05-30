@@ -47,11 +47,18 @@ export default function Chat(props) {
           display: chatExpansion,
         }}
       >
-        {messages.map(({ sender, content }) => {
-          if (sender === playerId)
-            return <Message type="sended" content={content} />
-          else return <Message type="recieved" content={content} />
-        })}
+        {messages.length > 0 ? (
+          messages.map(({ sender, content }) => {
+            if (sender === playerId)
+              return <Message type="sended" content={content} key={content} />
+            else if (sender === 'noghte-bazi')
+              return <Message type="system" content={content} key={content} />
+            else
+              return <Message type="recieved" content={content} key={content} />
+          })
+        ) : (
+          <div className={classes.empty}>{t.empty}</div>
+        )}
         <div ref={messagesRef}></div>
       </div>
     </div>

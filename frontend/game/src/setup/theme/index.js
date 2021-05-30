@@ -9,7 +9,7 @@ import './scrollbar.css'
 const theme = createMuiTheme({
   palette: palette,
   // TODO: Update FONT with you loaded font-name
-  typography: { fontFamily: 'FONT, sans-serif' },
+  typography: { fontFamily: 'Vazir' },
   overrides: {
     MuiCssBaseline: {
       '@global': {

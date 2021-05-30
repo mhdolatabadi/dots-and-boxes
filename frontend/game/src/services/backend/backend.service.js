@@ -1,26 +1,33 @@
 // import { axios } from 'axios'
 import { io } from 'socket.io-client'
+import { useInitializeData } from '../../scenes/_hook'
 import {
   dispatchAddNewLine,
   dispatchAddNewMessage,
   dispatchHasPermission,
   dispatchIsWaiting,
+  dispatchOpponentColor,
   dispatchOpponentId,
+  dispatchOpponentName,
+  dispatchOpponentScore,
   dispatchPlayerColor,
+  dispatchPlayerScore,
   dispatchSetHistory,
   dispatchSetMessages,
   dispatchSetOpponentLastMove,
   dispatchSetRoomLastMove,
   dispatchSetStatus,
+  getPaperSize,
   getPlayerColor,
   getPlayerHasPermission,
   getPlayerId,
   getPlayerName,
   getRoomId,
+  paperRowNumberView,
 } from '../../scenes/_slice/game.slice'
 
 import { HTTP_BACKEND } from '../../setup/api'
-import { dispatch } from '../../setup/store/store'
+import store, { dispatch } from '../../setup/store/store'
 import { getCurrentUserId, getWisId } from '../weblite/weblite.api'
 // /**
 //  * @param {Object} params - your passed data
@@ -37,8 +44,13 @@ socket.on('connect', () => {
 
 socket.on('handshake', () => {
   console.log('handshaking...')
+  const paperSize = getPaperSize()
 
-  socket.emit('handshake', { roomId: getWisId(), userId: getCurrentUserId() })
+  socket.emit('handshake', {
+    roomId: getWisId(),
+    userId: getCurrentUserId(),
+    paperSize,
+  })
 })
 
 socket.on('color', color => {
@@ -73,9 +85,19 @@ socket.on('introduce', () => {
   socket.emit('introduce', playerId, roomId)
 })
 
-socket.on('name', opponentId => {
+socket.on('score', score => {
+  console.log('getting score...')
+  dispatchPlayerScore(score)
+})
+
+socket.on('name', (opponentId, opponentScore, opponentColor) => {
   console.log('getting opponent name')
   dispatchOpponentId(opponentId)
+  dispatchOpponentScore(opponentScore)
+  dispatchOpponentColor(opponentColor)
+  window.W.users.getById([String(opponentId)]).then(data => {
+    dispatchOpponentName(data[opponentId].firstname)
+  })
 })
 
 socket.on('role', (role, color) => {
@@ -99,8 +121,8 @@ socket.on('getname', (redName, blueName) => {
 
 socket.on('message', message => {
   dispatchAddNewMessage(message)
-  const sendAudio = new Audio('./assets/what-302.mp3')
-  sendAudio.play()
+  // const sendAudio = new Audio('what-02.mp3')
+  // sendAudio.play()
 })
 
 socket.on('change', (line, color) => {

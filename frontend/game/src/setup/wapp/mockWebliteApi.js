@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'development' && !window.W) {
     checkPurchase: async () => true,
     purchase: () => {},
     user: {
-      getId: () => id,
+      getId: () => prompt('give me id'),
       getFirstname: () => firstname,
       getLastname: () => lastname,
       getProfile: async () => ({
@@ -73,8 +73,8 @@ if (process.env.NODE_ENV === 'development' && !window.W) {
       getById: async ([fid = '1', sid = '2', tid = '3']) => ({
         [fid]: {
           id: fid,
-          firstname: 'Michael',
-          lastname: 'Caine',
+          firstname: 'جواد',
+          lastname: 'خیابانی',
           username: 'user_fid',
         },
         [sid]: {

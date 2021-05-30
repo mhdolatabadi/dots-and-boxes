@@ -18,5 +18,5 @@ export const wappDidStart = () => {
   store.dispatch(setPlayerId({ id: userId }))
   store.dispatch(setRoomId({ id: roomId }))
   store.dispatch(setPlayerName({ name: playerName }))
-  setTimeout(() => store.dispatch(setLoading(false)), 5000)
+  store.dispatch(setLoading(false))
 }
