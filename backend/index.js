@@ -9,7 +9,7 @@ const io = require('socket.io')(http, {
 })
 const rooms = []
 const users = []
-const createRoom = (roomId, socketId) => {
+const createRoom = (roomId, socketId, paperSize) => {
   const room = {
     id: roomId,
     userIds: [],
@@ -20,6 +20,8 @@ const createRoom = (roomId, socketId) => {
     socketIds: [socketId],
     lastMove: {},
     messages: [],
+    size: paperSize,
+    winner: undefined,
   }
   rooms.push(room)
   return room
@@ -28,7 +30,7 @@ const createRoom = (roomId, socketId) => {
 const createUser = (userId, socketId) => {
   const user = {
     id: userId,
-    score: '',
+    score: 0,
     roomIds: [],
     color: '',
     hasPermission: false,
@@ -77,6 +79,7 @@ const hostFirstUser = (room, user, socket) => {
   console.log(
     `hosting first user with userId: ${user.id} in room with roomId: ${room.id}`
   )
+
   configUser({
     user,
     room,
@@ -94,6 +97,8 @@ const hostFirstUser = (room, user, socket) => {
 
   socket.join(room.id)
   socket.emit('color', 'red')
+  socket.emit('score', user.score)
+
   socket.emit('mustWait', true)
 }
 
@@ -102,33 +107,46 @@ const hostSecondUser = (room, user, socket) => {
     `hosting second user with userId: ${user.id} in room with roomId: ${room.id}`
   )
 
-  configUser({
-    user,
-    room,
-    color: undefined,
-    hasPermission: false,
-    role: 'player',
-    connection: true,
-    socketId: socket.id,
-  })
-  const secondUser = findUserById(
-    room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0],
-    room.id
-  )
-  console.log('roomTurn: ', room.turn)
-  if (secondUser && secondUser.color === 'red') user.color = 'blue'
-  else user.color = 'red'
-  user.hasPermission = room.turn === user.color
-  console.log('user has permission? ', user.hasPermission)
-  if (!room.userIds.includes(user.id)) room.userIds.push(user.id)
-  if (!room.socketIds.includes(socket.id)) room.socketIds.push(socket.id)
+  if (room.isEnded) {
+    const opponentId =
+      room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0]
+    const opponent = findUserById(opponentId, room.id)
+    socket.emit('color', user.color)
+    socket.emit('hasPermission', false)
+    socket.emit('watch', room.history, room.messages)
+    socket.emit('score', user.score)
+    io.to(room.id).emit('mustWait', false)
+    socket.emit('name', opponent.id, opponent.score, opponent.color)
+  } else {
+    configUser({
+      user,
+      room,
+      color: undefined,
+      hasPermission: false,
+      role: 'player',
+      connection: true,
+      socketId: socket.id,
+    })
+    const secondUser = findUserById(
+      room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0],
+      room.id
+    )
+    console.log('roomTurn: ', room.turn)
+    if (secondUser && secondUser.color === 'red') user.color = 'blue'
+    else user.color = 'red'
+    user.hasPermission = room.turn === user.color
+    console.log('user has permission? ', user.hasPermission)
+    if (!room.userIds.includes(user.id)) room.userIds.push(user.id)
+    if (!room.socketIds.includes(socket.id)) room.socketIds.push(socket.id)
 
-  socket.emit('color', user.color)
-  socket.emit('hasPermission', user.hasPermission)
-  socket.emit('watch', room.history, room.messages)
-  socket.join(room.id)
-  io.to(room.id).emit('mustWait', false)
-  io.to(room.id).emit('introduce', 'hello')
+    socket.emit('color', user.color)
+    socket.emit('hasPermission', user.hasPermission)
+    socket.emit('watch', room.history, room.messages)
+    socket.emit('score', user.score)
+    socket.join(room.id)
+    io.to(room.id).emit('mustWait', false)
+    io.to(room.id).emit('introduce', 'hello')
+  }
 }
 
 const hostSubscriber = (room, user, socket) => {
@@ -150,10 +168,14 @@ const hostSubscriber = (room, user, socket) => {
   socket.emit('watch', room.history, room.messages)
 }
 
-const directUserToRoom = (roomId, userId, socket) => {
-  const room = findRoomById(roomId) || createRoom(roomId, socket.id)
+const directUserToRoom = (roomId, userId, socket, paperSize) => {
+  const room = findRoomById(roomId) || createRoom(roomId, socket.id, paperSize)
   const user = findUserById(userId, roomId) || createUser(userId, socket.id)
-  if (room.userIds.includes(user.id)) {
+  if (
+    (room.userIds.includes(user.id) && user.connection === true) ||
+    !userId ||
+    !roomId
+  ) {
     console.log('direct to room', room, user)
     socket.emit('warning', 'multiple device')
     socket.disconnect(true)
@@ -210,12 +232,20 @@ const check = (room, user, type) => {
 io.on('connection', (socket) => {
   socket.emit('handshake', 'welcome! give me your room id!')
   socket.on('handshake', (input) => {
-    const { roomId, userId } = input
-    directUserToRoom(roomId, userId, socket)
+    const { roomId, userId, paperSize } = input
+    const room = findRoomById(roomId)
+    const user = findUserById(userId, roomId)
+    directUserToRoom(roomId, userId, socket, paperSize)
   })
-  socket.on('introduce', (userId, roomId) =>
-    socket.broadcast.to(roomId).emit('name', userId)
-  )
+  socket.on('introduce', (userId, roomId) => {
+    const user = findUserById(userId, roomId)
+    socket.broadcast.to(roomId).emit('name', userId, user.score, user.color)
+    socket.emit('message', {
+      sender: 'noghte-bazi',
+      content:
+        'سلام. امیدوارم حالت خوب باشه. با ضربه‌زدن روی هر خط میتونی اون خط رو مال خودت کنی فقط حواست به نوبتت باشه. پس منتظر چی هستی؟ زودتر شروع کن!',
+    })
+  })
   socket.on('disconnect', () => {
     const user = findUserBySocketId(socket.id)
     const room = findRoomBySocketId(socket.id)
@@ -226,7 +256,7 @@ io.on('connection', (socket) => {
     )
     if (user) user.connection = false
     if (user && user.role === 'player') {
-      room.userIds.splice(room.userIds.indexOf(user.id), 1)
+      // room.userIds.splice(room.userIds.indexOf(user.id), 1)
       socket.broadcast.to(room.id).emit('mustWait', true)
     }
   })
@@ -253,15 +283,55 @@ io.on('connection', (socket) => {
         console.log(`new bouns arrived:`, bouns, `from user:`, user.id)
         room.history[i] = { ...room.history[i] }
         room.history[i][j] = color
+        user.score += 1
 
         // sending gift!
         if (room) room.turn = user.color
+        let sumOfScores = 0
         for (let i = 0; i < room.userIds.length; i++) {
           const user = findUserById(room.userIds[i], room.id)
+          sumOfScores += user.score
           if (user.id === userId) user.hasPermission = true
           else user.hasPermission = false
         }
         io.to(roomId).emit('gift', userId)
+        console.log(sumOfScores, room.size)
+
+        if (sumOfScores === (room.size - 1) * (room.size - 1)) {
+          room.isEnded = true
+          console.log(user.score)
+          for (let i = 0; i < room.userIds.length; i++) {
+            const user = findUserById(room.userIds[i], room.id)
+            console.log(sumOfScores, user.score)
+            if (user.score > sumOfScores - user.score) {
+              if (user.id === userId)
+                socket.emit('message', {
+                  sender: 'noghte-bazi',
+                  content:
+                    'آفرین! تو بازیو بردی. به افتخار بردت بازیو به رنگی که تو باهاش بازی کردی زدیم. فقط شیرینی یادت نره!',
+                })
+              else
+                socket.broadcast.to(roomId).emit('message', {
+                  sender: 'noghte-bazi',
+                  content:
+                    'آفرین! تو بازیو بردی. به افتخار بردت بازیو به رنگی که تو باهاش بازی کردی زدیم. فقط شیرینی یادت نره!',
+                })
+            } else {
+              if (user.id === userId)
+                socket.emit('message', {
+                  sender: 'noghte-bazi',
+                  content:
+                    'بازیو باختی ولی اشکالی نداره اول ازش شیرینی بردشو بگیر بعدش یه بار دیگه نقطه بازیو بفرست تا این دفعه بهش نشون بدی کی بلده بازی کنه...',
+                })
+              else
+                socket.broadcast.to(roomId).emit('message', {
+                  sender: 'noghte-bazi',
+                  content:
+                    'بازیو باختی ولی اشکالی نداره اول ازش شیرینی بردشو بگیر بعدش یه بار دیگه نقطه بازیو بفرست تا این دفعه بهش نشون بدی کی بلده بازی کنه...',
+                })
+            }
+          }
+        }
       }
     }
   })
