@@ -38,10 +38,10 @@ export default function CustomDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions className={classes.dialogBody}>
-        <Button className={classes.dialogButton} onClick={() => handleClose()}>
+        <Button className={classes.dialogButton} onClick={() => onAgree()}>
           {agree}
         </Button>
-        <Button className={classes.dialogButton} onClick={() => onAgree()}>
+        <Button className={classes.dialogButton} onClick={() => handleClose()}>
           {deny}
         </Button>
       </DialogActions>
