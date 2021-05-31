@@ -10,7 +10,7 @@ const gameSlice = createSlice({
     },
     player: {
       id: undefined,
-      name: 'هوشنگ',
+      name: 'نامشخص',
       color: 'red',
       score: 0,
       letter: 'ه',
@@ -18,7 +18,7 @@ const gameSlice = createSlice({
     },
     opponent: {
       id: undefined,
-      name: 'بیژن',
+      name: 'نامشخص',
       color: 'blue',
       score: 0,
       letter: 'ب',
