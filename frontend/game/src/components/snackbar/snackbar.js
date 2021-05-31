@@ -2,9 +2,7 @@ import * as React from 'react'
 // style
 import useStyle from './snackbar.style'
 // localiztion
-import t from './snackbar.local'
-import { Button, IconButton, Snackbar } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import { Snackbar } from '@material-ui/core'
 
 export default function CustomSnackbar({ open, handleClose, message }) {
   const classes = useStyle()

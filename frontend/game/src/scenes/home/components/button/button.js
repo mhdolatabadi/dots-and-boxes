@@ -2,7 +2,6 @@ import * as React from 'react'
 // style
 import useStyle from './button.style'
 // localiztion
-import t from './button.local'
 
 export default function Button({ content, color }) {
   const classes = useStyle()

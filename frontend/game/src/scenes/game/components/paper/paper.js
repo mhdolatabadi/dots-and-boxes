@@ -7,18 +7,11 @@ import Dot from '../dot'
 import Xline from '../xline'
 import Yline from '../yline'
 import Rectangle from '../rectangle'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
-  opponentColorView,
-  opponentIdView,
-  opponentScoreView,
   paperColumnNumberView,
   paperRowNumberView,
-  playerColorView,
-  playerIdView,
-  playerScoreView,
   roomLastMoveView,
-  setRoomWinner,
 } from '../../../_slice/game.slice'
 
 const createElements = (rowNumber, columnNumber) => {

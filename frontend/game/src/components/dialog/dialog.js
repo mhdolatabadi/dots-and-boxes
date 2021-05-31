@@ -2,7 +2,6 @@ import * as React from 'react'
 // style
 import useStyle from './dialog.style'
 // localiztion
-import t from './dialog.local'
 import {
   Button,
   Dialog,

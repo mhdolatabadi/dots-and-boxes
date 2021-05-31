@@ -2,7 +2,6 @@ import * as React from 'react'
 // style
 import useStyle from './message.style'
 // localiztion
-import t from './message.local'
 
 export default function Message({ type, content }) {
   const classes = useStyle()

@@ -2,7 +2,6 @@ import * as React from 'react'
 // style
 import useStyle from './menu.style'
 // localiztion
-import t from './menu.local'
 import Button from '../button/button'
 
 export default function Menu(props) {

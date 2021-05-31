@@ -9,11 +9,10 @@ export default makeStyles(theme => ({
       width: '420px',
       height: '40px',
     },
-    '@media (max-width: 305px) and (max-height: 520px)': {
-      width: '150px',
+    '@media (max-width: 350px) and (max-height: 550px)': {
+      width: '100vw',
       height: '25px',
     },
-    minWidth: '270px',
     maxWidth: '650px',
 
     height: '35px',

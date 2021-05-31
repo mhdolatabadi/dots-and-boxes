@@ -1,6 +1,5 @@
 // import { axios } from 'axios'
 import { io } from 'socket.io-client'
-import { useInitializeData } from '../../scenes/_hook'
 import {
   dispatchAddNewLine,
   dispatchAddNewMessage,
@@ -19,15 +18,11 @@ import {
   dispatchSetStatus,
   getPaperSize,
   getPlayerColor,
-  getPlayerHasPermission,
   getPlayerId,
-  getPlayerName,
   getRoomId,
-  paperRowNumberView,
 } from '../../scenes/_slice/game.slice'
 
 import { HTTP_BACKEND } from '../../setup/api'
-import store, { dispatch } from '../../setup/store/store'
 import { getCurrentUserId, getWisId } from '../weblite/weblite.api'
 // /**
 //  * @param {Object} params - your passed data
@@ -121,8 +116,8 @@ socket.on('getname', (redName, blueName) => {
 
 socket.on('message', message => {
   dispatchAddNewMessage(message)
-  // const sendAudio = new Audio('what-02.mp3')
-  // sendAudio.play()
+  const sendAudio = new Audio('received-message.mp3')
+  sendAudio.play()
 })
 
 socket.on('change', (line, color) => {
@@ -132,7 +127,8 @@ socket.on('change', (line, color) => {
   //   else set('color', 'red')
   // }
   const playerColor = getPlayerColor()
-
+  const sendAudio = new Audio('line.mp3')
+  sendAudio.play()
   if (playerColor !== color) {
     const { i, j } = line
     dispatchSetRoomLastMove(i, j, color)
@@ -170,6 +166,8 @@ export const sendNewLine = (i, j, color) => {
   const message = { i, j, color }
   socket.emit('change', playerId, roomId, message)
   dispatchHasPermission(false)
+  const sendAudio = new Audio('line.mp3')
+  sendAudio.play()
 }
 
 export const sendBouns = (i, j, color) => {
@@ -182,6 +180,8 @@ export const sendBouns = (i, j, color) => {
 export const sendMessage = message => {
   const roomId = getRoomId()
   const userId = getPlayerId()
+  const sendAudio = new Audio('send-message.mp3')
+  sendAudio.play()
 
   socket.emit('message', roomId, userId, message)
 }

@@ -37,7 +37,11 @@ export default function Footer(props) {
       <div className={classes.button}>
         <div className={classes.channel} onClick={handleClickOpenDialog}>
           <span>کانال نقطه‌بازی</span>
-          <img className={classes.channelIcon} src="dotsandboxes.png" />
+          <img
+            alt="dotsandboxess"
+            className={classes.channelIcon}
+            src="dotsandboxes.png"
+          />
         </div>
         <Dialog
           handleClose={handleCloseDialog}
@@ -64,7 +68,11 @@ export default function Footer(props) {
           }
         >
           <span>نظرات</span>
-          <img className={classes.channelIcon} src="comment.png" />
+          <img
+            alt="comment"
+            className={classes.channelIcon}
+            src="comment.png"
+          />
         </div>
       </div>
     </div>

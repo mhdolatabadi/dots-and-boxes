@@ -3,7 +3,6 @@ import * as React from 'react'
 import useStyle from './score-board.style'
 import clsx from 'clsx'
 // localiztion
-import t from './score-board.local'
 import { useSelector } from 'react-redux'
 import {
   getPlayerHasPermission,

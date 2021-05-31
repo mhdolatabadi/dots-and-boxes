@@ -14,8 +14,9 @@ export default makeStyles(theme => ({
     '@media (min-width: 420px) and (min-height: 700px)': {
       width: '420px',
     },
-    '@media (max-width: 305px) and (max-height: 520px)': {
-      width: '150px',
+    '@media (max-width: 350px) and (max-height: 550px)': {
+      width: '100vw',
+      borderRadius: '0px',
       height: '30px',
       fontSize: '15px',
     },

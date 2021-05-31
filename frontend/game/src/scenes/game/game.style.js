@@ -12,9 +12,6 @@ export default makeStyles(theme => ({
     height: '100%',
     width: '100%',
     overflowY: 'auto',
-    minHeight: '520px',
-    minWidth: '305px',
-    // maxWidth: '550px',
     backgroundColor: 'gray',
     userSelect: 'none',
     '&::-webkit-scrollbar': {

@@ -4,12 +4,9 @@ import { dispatch } from '../../setup/store/store'
 import {
   getOpponentColor,
   getOpponentId,
-  getOpponentScore,
   getPaperSize,
   getPlayerColor,
   getPlayerId,
-  getPlayerScore,
-  getRoomWinner,
   opponentScoreView,
   playerScoreView,
   roomWinnerView,

@@ -2,7 +2,6 @@ import * as React from 'react'
 // style
 import useStyle from './game.style'
 //localization
-import t from './game.local'
 //components
 import Chat from './components/chat'
 import Footer from '../../components/footer/footer'

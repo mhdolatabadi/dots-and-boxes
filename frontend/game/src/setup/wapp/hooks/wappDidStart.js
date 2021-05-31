@@ -1,7 +1,4 @@
 import {
-  dispatchPlayerId,
-  dispatchRoomId,
-  dispatchSetPlayerName,
   setPlayerId,
   setPlayerName,
   setRoomId,

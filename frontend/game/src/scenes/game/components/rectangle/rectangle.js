@@ -2,13 +2,9 @@ import * as React from 'react'
 // style
 import useStyle from './rectangle.style'
 // localiztion
-import t from './rectangle.local'
 
 import { useSelector } from 'react-redux'
-import {
-  requestGift,
-  sendBouns,
-} from '../../../../services/backend/backend.service'
+import { sendBouns } from '../../../../services/backend/backend.service'
 import { dispatch } from '../../../../setup/store/store'
 import {
   addNewLine,
@@ -16,15 +12,8 @@ import {
   getPlayerHasPermission,
   increaseOpponentScore,
   increasePlayerScore,
-  opponentColorView,
-  opponentIdView,
-  opponentScoreView,
   playerColorView,
-  playerIdView,
-  playerScoreView,
-  setRoomWinner,
 } from '../../../_slice/game.slice'
-import { useInitializeData } from '../../../_hook'
 
 export default function Rectangle({ i, j, lastMove, paperSize }) {
   const classes = useStyle()

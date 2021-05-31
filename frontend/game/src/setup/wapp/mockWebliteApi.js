@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'development' && !window.W) {
     checkPurchase: async () => true,
     purchase: () => {},
     user: {
-      getId: () => prompt('give me id'),
+      getId: () => 1,
       getFirstname: () => firstname,
       getLastname: () => lastname,
       getProfile: async () => ({

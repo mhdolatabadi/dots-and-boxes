@@ -9,7 +9,7 @@ export default function LoadingPresentational(props) {
 
   return (
     <div className={classes.root}>
-      <img className={classes.icon} src="dotsandboxes.png" />
+      <img className={classes.icon} src="dotsandboxes.png" alt="dotsandboxes" />
       <span className={classes.message}>{t.message}</span>
     </div>
   )

@@ -5,15 +5,14 @@ export default makeStyles(theme => ({
     display: 'flex',
     width: '300px',
     marginBottom: '6px',
-    minWidth: '270px',
     maxWidth: '650px',
     height: '20px',
     '@media (min-width: 420px) and (min-height: 700px)': {
       width: '420px',
       height: '30px',
     },
-    '@media (max-width: 305px) and (max-height: 520px)': {
-      width: '150px',
+    '@media (max-width: 350px) and (max-height: 550px)': {
+      width: '100vw',
     },
   },
   blue: {

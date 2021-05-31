@@ -36,7 +36,7 @@ export default function Chat(props) {
         }
       >
         <div className={classes.title}>
-          <img className={classes.icon} src="chat.png" />
+          <img className={classes.icon} src="chat.png" alt="chat" />
           <span>{t.chat}</span>
         </div>
         <span>{chatExpansion === 'block' ? t.collapse : t.expand}</span>

@@ -6,11 +6,11 @@ export default makeStyles(theme => ({
     '@media (min-width: 420px) and (min-height: 700px)': {
       width: '420px',
     },
-    '@media (max-width: 305px) and (max-height: 520px)': {
-      width: '150px',
+    '@media (max-width: 350px) and (max-height: 550px)': {
+      width: '100vw',
+      height: '100%',
     },
     // margin: '0 10px 10px',
-    minWidth: '270px',
     maxWidth: '650px',
     backgroundColor: 'wheat',
   },
@@ -18,7 +18,7 @@ export default makeStyles(theme => ({
     // borderRadius: '0 0 50px 50px',
     minHeight: '35px',
     width: '100%',
-    height: '35px',
+    height: '50px',
     '@media (min-height: 720px)': {
       height: '80px',
     },

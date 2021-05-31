@@ -9,7 +9,6 @@ import {
   addNewLine,
   elementColorView,
   playerColorView,
-  playerIdView,
   roomHasPermissionView,
   roomIsWaitingView,
   setPlayerLastMove,
@@ -21,7 +20,6 @@ export default function Yline({ i, j }) {
 
   const classes = useStyle()
 
-  const playerId = useSelector(playerIdView)
   const playerColor = useSelector(playerColorView)
   const lineColor = useSelector(elementColorView(i, j))
   const isWaiting = useSelector(roomIsWaitingView)
