@@ -1,70 +1,0 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dots and Boxes</title>
-    <link rel="stylesheet" href="./gameStyle.css" />
-    <!-- <link rel="stylesheet" href="./lobbyStyle.css"> -->
-    <!-- <link rel="shortcut icon" href=""> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="./index.js" type="module"></script>
-  </head>
-
-  <body>
-    <!-- <div>
-      <div id="resign" class="button" title="تسلیم">🏳 تسلیم</div>
-      <div id="like" class="button">🔊</div>
-      <div id="dislike" class="button">👎</div>
-    </div> -->
-
-    <div id="root-container">
-      <div id="header" role="img" alt="let's play">نقطه‌بازی</div>
-      <div id="info-container">
-        <a href="https://github.com/mhdolatabadi/DotsAndBoxes" target="_blank"
-          ><img id="github" src="./assets/123.png" alt="github"
-        /></a>
-      </div>
-      <div id="paper"></div>
-      <div class="score-board">
-        <div class="score blue"><span>آبی: 0</span></div>
-        <div class="score red"><span>قرمز: 0</span></div>
-      </div>
-      <div class="full-information">
-        <img alt="avatar" class="avatar" src="https://picsum.photos/200" />
-        <div class="facts">
-          <span class="full-name">محمدحسین دولت‌آبادی</span>
-          <!-- <span>تعداد دفعات بازی: ۳۴</span>
-          <span>تعداد دفعات برد: ۲۳</span> -->
-        </div>
-      </div>
-      <div id="send-panel">
-        <div class="send-button">
-          <img alt="فرستادن" src="./7475741651600002657.svg" />
-        </div>
-        <input id="input" placeholder="پیام خود را وارد کنید" />
-      </div>
-      <div id="button-container">
-        <div class="channel">
-          <span>کانال نقطه‌بازی</span>
-          <img class="channelIcon" src="./assets/dotsandboxes.png" />
-        </div>
-        <div class="channel">
-          <span>نظرات</span>
-          <img class="channelIcon" src="./assets/comment.png" />
-        </div>
-        <div class="channel">
-          <span>گفت‌وگو</span>
-          <img class="channelIcon" src="./assets/chat.png" />
-        </div>
-        <!-- <div id="resign" class="button">تسلیم</div> -->
-        <!-- <div id="language" class="button">فارسی</div> -->
-        <!-- <div id="resign" class="button">سازنده</div> -->
-      </div>
-    </div>
-    <div class="your-message">شما: چه حرکت خفنی! احسنت</div>
-    <div class="opponent-message">محمدحسین: قربون شما!</div>
-
-    <script src="./GameAnalytics.js" />
-  </body>
-</html>
