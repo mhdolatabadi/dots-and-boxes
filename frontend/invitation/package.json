@@ -1,0 +1,57 @@
+{
+  "name": "invitation",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@reduxjs/toolkit": "^1.5.1",
+    "clsx": "^1.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.3",
+    "react-scripts": "4.0.3",
+    "redux": "^4.0.5",
+    "source-map-explorer": "^2.5.2",
+    "superagent": "^6.1.0",
+    "web-vitals": "^1.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "PORT=3001 react-scripts start",
+    "windows:dev": "set PORT=3001 react-scripts start",
+    "cheap:build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "http-server": "http-server -b -g -p 3001 --proxy http://localhost:3001? build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "safari>=10",
+      "Chrome>=23",
+      "ff>=28",
+      "Edge>=79",
+      "and_chr>=23",
+      "and_ff>=28",
+      "Samsung>=4",
+      "iOS>=10",
+      "not dead"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@web-lite/api-types": "1.1.1"
+  }
+}

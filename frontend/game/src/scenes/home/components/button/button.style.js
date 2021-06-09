@@ -12,8 +12,8 @@ export default makeStyles(theme => ({
   },
   point: {
     backgroundColor: 'yellow',
-    width: '80px',
-    height: '80px',
+    width: '70px',
+    height: '70px',
     borderRadius: '100%',
     zIndex: '1',
     '&:hover': {
@@ -21,7 +21,6 @@ export default makeStyles(theme => ({
     },
   },
   line: {
-    backgroundColor: 'blue',
     width: '90%',
     left: '5%',
     height: '50px',
@@ -30,8 +29,24 @@ export default makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     color: 'white',
-    fontSize: '25px',
+    fontSize: '20px',
     cursor: 'pointer',
+    direction: 'rtl',
+
+    '&:hover': {
+      backgroundColor: 'rgb(65, 65, 65)',
+    },
+  },
+
+  blue: {
+    '&:hover': {
+      backgroundColor: 'blue',
+    },
+  },
+  red: {
+    '&:hover': {
+      backgroundColor: 'red',
+    },
   },
 }))
 

@@ -9,12 +9,12 @@ export default function Menu(props) {
 
   return (
     <div className={classes.root}>
-      <Button content="بازی تک‌نفره" color="red" />
-      <Button content="بازی دونفره" color="blue" />
-      <Button content="بازی سه نفره" color="red" />
-      <Button content="بازی چهار نفره" color="blue" />
-      <Button content="تنظیمات" color="red" />
-      <Button content="خروج" color="blue" />
+      <Button content="حریف دارم!" color="blue" />
+      <Button content="پیداکردن حریف (به‌زودی) " color="red" />
+      <Button content="مشاهده نمایه (به‌زودی)" color="blue" />
+      {/* <Button content="بازی چهار نفره" color="blue" />
+      <Button content="تنظیمات" color="red" />*/}
+      <Button content="خروج" color="red" />
     </div>
   )
 }

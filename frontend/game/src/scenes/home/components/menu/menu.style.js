@@ -2,19 +2,20 @@ import { makeStyles } from '@material-ui/core'
 
 export default makeStyles(theme => ({
   root: {
-    padding: '40px',
+    padding: '20px',
     display: 'grid',
-    minHeight: '270px',
-    minWidth: '270px',
-    height: '300px',
+
+    height: '500px',
     width: '300px',
-    maxWidth: '450px',
-    maxHeight: '450px',
+    '@media (min-width: 420px) and (min-height: 700px)': {
+      width: '420px',
+      height: '620px',
+    },
+    '@media (max-width: 350px) and (max-height: 550px)': {
+      width: '100vw',
+      height: '100vw',
+    },
     margin: '0 25px',
     backgroundColor: 'rgb(46, 46, 46)',
-    overflowY: 'auto',
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
   },
 }))

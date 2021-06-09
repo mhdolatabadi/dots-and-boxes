@@ -6,10 +6,15 @@ export default makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     margin: 0,
     height: '100%',
-    maxWidth: '550px',
+    width: '100%',
+    overflowY: 'auto',
     backgroundColor: 'gray',
     userSelect: 'none',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   },
 }))
