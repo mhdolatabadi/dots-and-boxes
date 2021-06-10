@@ -7,9 +7,13 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
+    "node-pg-migrate": "^5.9.0",
     "pg": "^8.6.0",
     "ramda": "^0.27.1",
     "socket.io": "^4.1.2",
     "uuid": "^8.3.2"
+  },
+  "scripts":{
+    "migrate": "node-pg-migrate"
   }
 }

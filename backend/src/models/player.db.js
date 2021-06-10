@@ -26,3 +26,12 @@ export const getGamePlayers = gameId =>
     `,
     [gameId],
   ).then(({ rows }) => rows)
+
+export const getPlayerById = id =>
+  query(
+    `
+      select * from players
+      where user_id = $1
+    `,
+    [id],
+  ).then(({ rows }) => rows[0])
