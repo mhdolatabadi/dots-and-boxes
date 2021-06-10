@@ -1,8 +1,14 @@
+// TODO check user is saved
+// TODO check player is saved
+// TODO check game is saved
+
 import express from 'express'
 import http from 'http'
 //localazation
 import message from '../helper/localization'
-import { createNewGame } from '../models/game.db'
+import { createNewGame, getAllGame } from '../models/game.db'
+import { addNewPlayer } from '../models/player.db'
+import { addNewUser, getAllUser } from '../models/user.db'
 
 const app = express()
 const server = http.createServer(app)
@@ -13,8 +19,8 @@ const io = require('socket.io')(http, {
     methods: ['GET', 'POST'],
   },
 })
-const rooms = []
-const users = []
+const rooms = getAllGame()
+const users = getAllPlayer()
 const createRoom = (socketId, paperSize) => {
   const room = {
     id: createNewGame(paperSize),
@@ -45,6 +51,7 @@ const createUser = (userId, socketId) => {
     socketId,
   }
   users.push(user)
+  addNewUser(userId)
   return user
 }
 
@@ -96,6 +103,17 @@ const hostFirstUser = (room, user, socket) => {
   room.turn = 'red'
   room.userIds.push(user.id)
   room.socketIds.push(socket.id)
+
+  addNewPlayer(
+    user.id,
+    room.id,
+    user.color,
+    user.hasPermission,
+    user.connection,
+    user.role,
+    user.score,
+  )
+
   socket.emit('hasPermission', user.hasPermission)
   socket.emit('watch', room.history, room.messages)
 
@@ -175,12 +193,12 @@ const hostSubscriber = (room, user, socket) => {
 const directUserToRoom = (roomId, userId, socket, paperSize) => {
   const room = findRoomById(roomId) || createRoom(socket.id, paperSize)
   const user = findUserById(userId, roomId) || createUser(userId, socket.id)
+  console.log('direct to room', room, user)
   if (
     (room.userIds.includes(user.id) && user.connection === true) ||
     !userId ||
     !roomId
   ) {
-    console.log('direct to room', room, user)
     socket.emit('warning', 'multiple device')
     socket.disconnect(true)
   } else {

@@ -21,3 +21,6 @@ export const getGameById = id =>
     `,
     [id],
   ).then(({ rows }) => rows[0])
+
+export const getAllGame = () =>
+  query(`select * from games`).then(({ rows }) => rows)

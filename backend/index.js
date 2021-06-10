@@ -1,9 +1,9 @@
 //TODO add player as new concept
-import express from 'express'
-import router from './src/routers/router'
-import config from './src/setup/config'
 import './src/routers/socket.io'
 
+const express = require('express')
+const router = require('./src/routers/router')
+const config = require('./src/setup/config')
 const app = express()
 
 app.use(express.json())
