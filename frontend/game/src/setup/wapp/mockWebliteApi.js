@@ -1,5 +1,6 @@
+import { v4 as uuidv4 } from 'uuid'
 if (process.env.NODE_ENV === 'development' && !window.W) {
-  const id = '1'
+  const id = uuidv4()
   const firstname = 'جواد'
   const lastname = 'خیابانی'
   const role = id === '1' ? 'student' : id === '2' ? 'teacher' : 'other'
@@ -17,7 +18,7 @@ if (process.env.NODE_ENV === 'development' && !window.W) {
     checkPurchase: async () => true,
     purchase: () => {},
     user: {
-      getId: () => 1,
+      getId: () => id,
       getFirstname: () => firstname,
       getLastname: () => lastname,
       getProfile: async () => ({

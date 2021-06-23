@@ -65,4 +65,16 @@ create table moves (
 
 
 
+--reset
+DELETE FROM players     
+WHERE EXISTS (SELECT * FROM players);
+			  
+DELETE FROM users     
+WHERE EXISTS (SELECT * FROM users);
+
+DELETE FROM games     
+WHERE EXISTS (SELECT * FROM games);
+
+
+
 

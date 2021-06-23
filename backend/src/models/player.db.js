@@ -1,4 +1,4 @@
-const { query } = require('./index')
+import { query } from './index.js'
 
 export const addNewPlayer = (
   userId,
@@ -35,3 +35,12 @@ export const getPlayerById = id =>
     `,
     [id],
   ).then(({ rows }) => rows[0])
+
+export const getAllPlayer = async () =>
+  query(
+    `
+      select * from players
+    `,
+  )
+    .then(res => (res ? res.rows : {}))
+    .catch(console.log)

@@ -1,17 +1,15 @@
 import { v4 as uuidv4 } from 'uuid'
-import query from './index'
+import { query } from './index.js'
 
-export const createNewGame = size => {
-  const id = uuidv4()
+export const createNewGame = async (id, size) => {
+  const currentDate = new Date()
   query(
     `
-    insert into games(id, size, created_date, turn)
-    values($1, $2, $3, $4, $5, $6, $7, $8)
-    
+    insert into games(id, size, created_date)
+    values($1, $2, $3)    
     `,
-    [id, size, Date.now()],
+    [id, size, currentDate.toISOString()],
   )
-  return id
 }
 export const getGameById = id =>
   query(
@@ -22,5 +20,5 @@ export const getGameById = id =>
     [id],
   ).then(({ rows }) => rows[0])
 
-export const getAllGame = () =>
+export const getAllGame = async () =>
   query(`select * from games`).then(({ rows }) => rows)

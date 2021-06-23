@@ -1,5 +1,5 @@
-const R = require('ramda')
-const fse = require('fs-extra')
+import * as R from 'ramda'
+import fse from 'fs-extra'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -25,4 +25,4 @@ const getLocalConfig = () => {
   }
 }
 
-module.exports = R.mergeDeepRight(defaultConfig, getLocalConfig())
+export default R.mergeDeepRight(defaultConfig, getLocalConfig())

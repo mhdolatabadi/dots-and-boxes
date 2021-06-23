@@ -1,4 +1,4 @@
-import { query } from './index'
+import { query } from './index.js'
 
 export const getAllUser = () =>
   query(
@@ -17,10 +17,10 @@ export const getUserById = id =>
     [id],
   ).then(({ rows }) => rows[0])
 
-export const addNewUser = id =>
+export const addNewUser = async id =>
   query(
     `
-      insert into users (id, name)
+      insert into users (id)
       values($1)
     `,
     [id],

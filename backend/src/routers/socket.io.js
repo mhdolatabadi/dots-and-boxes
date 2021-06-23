@@ -5,25 +5,27 @@
 import express from 'express'
 import http from 'http'
 //localazation
-import message from '../helper/localization'
-import { createNewGame, getAllGame } from '../models/game.db'
-import { addNewPlayer } from '../models/player.db'
-import { addNewUser, getAllUser } from '../models/user.db'
+
+import message from '../helper/localization/messages.js'
+import { createNewGame, getAllGame } from '../models/game.db.js'
+import { addNewPlayer, getAllPlayer } from '../models/player.db.js'
+import { addNewUser, getAllUser } from '../models/user.db.js'
+import config from '../setup/config.js'
+import { Server } from 'socket.io'
 
 const app = express()
 const server = http.createServer(app)
-const config = require('./src/setup/config')
-const io = require('socket.io')(http, {
+const io = new Server(server, {
   cors: {
     origin: config.server.origin,
     methods: ['GET', 'POST'],
   },
 })
-const rooms = getAllGame()
-const users = getAllPlayer()
-const createRoom = (socketId, paperSize) => {
+const rooms = await getAllGame()
+const users = await getAllPlayer()
+const createRoom = async (socketId, paperSize, roomId) => {
   const room = {
-    id: createNewGame(paperSize),
+    id: roomId,
     userIds: [],
     subscriberIds: [],
     history: {},
@@ -35,11 +37,13 @@ const createRoom = (socketId, paperSize) => {
     size: paperSize,
     winner: undefined,
   }
+  await createNewGame(roomId, paperSize)
   rooms.push(room)
+  console.log('-------->', room.userIds)
   return room
 }
 
-const createUser = (userId, socketId) => {
+const createUser = async (userId, socketId) => {
   const user = {
     id: userId,
     score: 0,
@@ -51,7 +55,7 @@ const createUser = (userId, socketId) => {
     socketId,
   }
   users.push(user)
-  addNewUser(userId)
+  await addNewUser(userId)
   return user
 }
 
@@ -104,15 +108,15 @@ const hostFirstUser = (room, user, socket) => {
   room.userIds.push(user.id)
   room.socketIds.push(socket.id)
 
-  addNewPlayer(
-    user.id,
-    room.id,
-    user.color,
-    user.hasPermission,
-    user.connection,
-    user.role,
-    user.score,
-  )
+  // addNewPlayer(
+  //   user.id,
+  //   room.id,
+  //   user.color,
+  //   user.hasPermission,
+  //   user.connection,
+  //   user.role,
+  //   user.score,
+  // )
 
   socket.emit('hasPermission', user.hasPermission)
   socket.emit('watch', room.history, room.messages)
@@ -190,10 +194,12 @@ const hostSubscriber = (room, user, socket) => {
   socket.emit('watch', room.history, room.messages)
 }
 
-const directUserToRoom = (roomId, userId, socket, paperSize) => {
-  const room = findRoomById(roomId) || createRoom(socket.id, paperSize)
-  const user = findUserById(userId, roomId) || createUser(userId, socket.id)
-  console.log('direct to room', room, user)
+const directUserToRoom = async (roomId, userId, socket, paperSize) => {
+  const room =
+    findRoomById(roomId) || (await createRoom(socket.id, paperSize, roomId))
+  const user =
+    findUserById(userId, roomId) || (await createUser(userId, socket.id))
+  console.log(`>> ${room.userIds}`)
   if (
     (room.userIds.includes(user.id) && user.connection === true) ||
     !userId ||
@@ -253,11 +259,11 @@ const check = (room, user, type) => {
 
 io.on('connection', socket => {
   socket.emit('handshake', 'welcome! give me your room id!')
-  socket.on('handshake', input => {
+  socket.on('handshake', async input => {
     const { roomId, userId, paperSize } = input
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
-    directUserToRoom(roomId, userId, socket, paperSize)
+    await directUserToRoom(roomId, userId, socket, paperSize)
   })
   socket.on('introduce', (userId, roomId) => {
     const user = findUserById(userId, roomId)
@@ -385,4 +391,6 @@ io.on('connection', socket => {
       .emit('message', { sender: userId, content: message })
   })
 })
-server.listen(config.server.port, () => {})
+server.listen(config.server.port, () =>
+  console.log(`server is listening on port ${config.server.port}`),
+)

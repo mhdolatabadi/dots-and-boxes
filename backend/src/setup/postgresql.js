@@ -1,23 +1,27 @@
-const { Pool } = require('pg')
+import pkg from 'pg'
+const { Pool } = pkg
 
 const pool = new Pool({
   database: 'noghte_bazi',
-  user: 'mohammadhossein',
+  user: 'postgres',
+  password: 'MoHo791818',
+  mbu9wsa: null,
 })
 
-pool.on('error', (err) => console.error(' ❌  postgres connection error:', err))
+pool.on('error', err => console.error(' ❌  postgres connection error:', err))
 
 pool
   .query('SELECT NOW()')
   .then(
-    (res) =>
-      res.rows[0].now && console.log(` ✔️  postgres successfully connected!`)
+    res =>
+      res.rows[0].now && console.log(` ✔️  postgres successfully connected!`),
   )
-  .catch((err) => console.error(' ❌  postgres connection error:', err))
+  .catch(err => console.error(' ❌  postgres connection error:', err))
 
-exports.query = (query, params) => pool.query(query, params).catch(console.log)
+export const query = (query, params) =>
+  pool.query(query, params).catch(console.log)
 
-exports.getClient = async () => {
+export const getClient = async () => {
   const client = await pool.connect()
 
   const { query: oldQuery, release: oldRelease } = client
@@ -31,11 +35,11 @@ exports.getClient = async () => {
   const timeout = setTimeout(() => {
     console.error('A client has been checked out for more than 5 seconds!')
     console.error(
-      `The last executed query on this client was: ${client.lastQuery}`
+      `The last executed query on this client was: ${client.lastQuery}`,
     )
   }, 5000)
 
-  client.release = (error) => {
+  client.release = error => {
     // call the actual 'release' method, returning this client to the pool
     oldRelease.call(client, error)
     clearTimeout(timeout)

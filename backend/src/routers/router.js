@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllUser, getUserById } from '../models/user.db'
+import { getAllUser, getUserById } from '../models/user.db.js'
 
 const router = express.Router()
 
@@ -14,3 +14,5 @@ router.get('/user/:id', async (req, res) => {
   if (!user) res.sendStatus(404)
   else res.send(user)
 })
+
+export default router
