@@ -10,7 +10,7 @@ export default makeStyles(theme => ({
     backgroundImage: 'url("header.png")',
     backgroundSize: 'cover',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   title: {
     fontSize: '30px',

@@ -13,6 +13,7 @@ export default makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: '5px',
-    borderRadius: '50px',
+    borderRadius: '10px',
+    fontWeight: 'bold',
   },
 }))

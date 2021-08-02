@@ -22,6 +22,8 @@ export const addNewUser = async id =>
     `
       insert into users (id)
       values($1)
+      on duplicate key update
+      on conflict replace
     `,
     [id],
   )

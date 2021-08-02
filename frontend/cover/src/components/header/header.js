@@ -11,10 +11,10 @@ export default function Header(props) {
     <div className={classes.root}>
       <img className={classes.icon} src="dotsandboxes.png" />
       <span className={classes.title}>{t.title}</span>
-      <div className={classes.subscribers}>
+      {/* <div className={classes.subscribers}>
         <span>۳۴</span>
         <span className={classes.count}>تعداد تماشاچی‌ها</span>
-      </div>
+      </div> */}
     </div>
   )
 }
