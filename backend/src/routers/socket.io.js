@@ -7,11 +7,11 @@ import http from 'http'
 //localazation
 
 import message from '../helper/localization/messages.js'
-import { createNewGame, getAllGame } from '../models/game.db.js'
-import { addNewPlayer, getAllPlayer } from '../models/player.db.js'
-import { addNewUser, getAllUser } from '../models/user.db.js'
+import {createNewGame, getAllGame} from '../models/game.db.js'
+import {addNewPlayer, getAllPlayer} from '../models/player.db.js'
+import {addNewUser, getAllUser} from '../models/user.db.js'
 import config from '../setup/config.js'
-import { Server } from 'socket.io'
+import {Server} from 'socket.io'
 
 const app = express()
 const server = http.createServer(app)
@@ -72,14 +72,14 @@ const findRoomBySocketId = socketId =>
   rooms.find(room => room.socketIds.includes(socketId))
 
 const configUser = ({
-  user,
-  room,
-  color,
-  hasPermission,
-  role,
-  connection,
-  socketId,
-}) => {
+                      user,
+                      room,
+                      color,
+                      hasPermission,
+                      role,
+                      connection,
+                      socketId,
+                    }) => {
   user.roomIds.push(room.id)
   user.color = color
   user.hasPermission = hasPermission
@@ -260,7 +260,7 @@ const check = (room, user, type) => {
 io.on('connection', socket => {
   socket.emit('handshake', 'welcome! give me your room id!')
   socket.on('handshake', async input => {
-    const { roomId, userId, paperSize } = input
+    const {roomId, userId, paperSize} = input
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
     await directUserToRoom(roomId, userId, socket, paperSize)
@@ -292,10 +292,10 @@ io.on('connection', socket => {
     const user = findUserById(userId, roomId)
     console.log('new line arrived: ', line)
     if (check(room, user, 'change')) {
-      const { i, j, color } = line
+      const {i, j, color} = line
       line.color = user.color
       room.lastMove = line
-      room.history[i] = { ...room.history[i] }
+      room.history[i] = {...room.history[i]}
       room.history[i][j] = color
       socket.broadcast.to(room.id).emit('change', line, color)
     } else socket.emit('warning', 'warning')
@@ -304,11 +304,11 @@ io.on('connection', socket => {
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
     if (user && user.color === bouns.color) {
-      const { i, j, color } = bouns
+      const {i, j, color} = bouns
       if (room.history[i] && room.history[i][j]) {
       } else {
         console.log(`new bouns arrived:`, bouns, `from user:`, user.id)
-        room.history[i] = { ...room.history[i] }
+        room.history[i] = {...room.history[i]}
         room.history[i][j] = color
         user.score += 1
 
@@ -333,23 +333,23 @@ io.on('connection', socket => {
             if (user.score > sumOfScores - user.score)
               user.id === userId
                 ? socket.emit('message', {
-                    sender: 'noghte-bazi',
-                    content: message.end.winner,
-                  })
+                  sender: 'noghte-bazi',
+                  content: message.end.winner,
+                })
                 : socket.broadcast.to(roomId).emit('message', {
-                    sender: 'noghte-bazi',
-                    content: message.end.winner,
-                  })
+                  sender: 'noghte-bazi',
+                  content: message.end.winner,
+                })
             else
               user.id === userId
                 ? socket.emit('message', {
-                    sender: 'noghte-bazi',
-                    content: message.end.loser,
-                  })
+                  sender: 'noghte-bazi',
+                  content: message.end.loser,
+                })
                 : socket.broadcast.to(roomId).emit('message', {
-                    sender: 'noghte-bazi',
-                    content: message.end.loser,
-                  })
+                  sender: 'noghte-bazi',
+                  content: message.end.loser,
+                })
           }
         }
       }
@@ -385,10 +385,10 @@ io.on('connection', socket => {
 
   socket.on('message', (roomId, userId, message) => {
     const room = findRoomById(roomId)
-    room.messages.push({ sender: userId, content: message })
+    room.messages.push({sender: userId, content: message})
     socket.broadcast
       .to(room.id)
-      .emit('message', { sender: userId, content: message })
+      .emit('message', {sender: userId, content: message})
   })
 })
 server.listen(config.server.port, () =>
