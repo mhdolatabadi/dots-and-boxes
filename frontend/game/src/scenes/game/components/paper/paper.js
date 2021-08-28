@@ -1,4 +1,6 @@
 import * as React from 'react'
+
+import cns from 'clsx'
 // style
 import useStyle from './paper.style'
 
@@ -23,16 +25,27 @@ const createElements = (rowNumber, columnNumber) => {
   return elements
 }
 
-export default function Paper() {
+export default function Paper({ theme }) {
   const classes = useStyle()
   const roomLastMove = useSelector(roomLastMoveView)
   const rowNumber = useSelector(paperRowNumberView)
   const columnNumber = useSelector(paperColumnNumberView)
+  const { darkMode, richMode } = theme
 
   return (
-    <div className={classes.root}>
+    <div
+      className={cns(
+        classes.root,
+        richMode
+          ? classes['rich']
+          : darkMode
+          ? classes['dark']
+          : classes['lite'],
+      )}
+    >
       {createElements(rowNumber, columnNumber).map(({ i, j }) => {
-        if ((i * j) % 2 === 1) return <Dot i={i} j={j} key={`${i}-${j}`} />
+        if ((i * j) % 2 === 1)
+          return <Dot i={i} j={j} key={`${i}-${j}`} theme={theme} />
         else if (i % 2 === 1 && j % 2 !== 1)
           return <Xline i={i} j={j} key={`${i}-${j}`} />
         else if (i % 2 !== 1 && j % 2 === 1)

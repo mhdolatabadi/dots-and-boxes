@@ -12,10 +12,20 @@ export default makeStyles(theme => ({
     height: '100%',
     width: '100%',
     overflowY: 'auto',
-    backgroundColor: 'gray',
     userSelect: 'none',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
+  },
+
+  rich: {
+    backgroundColor: 'gray',
+  },
+
+  lite: {
+    backgroundColor: '#ff6407',
+  },
+  dark: {
+    backgroundColor: '#000f22',
   },
 }))

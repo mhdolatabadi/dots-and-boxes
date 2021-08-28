@@ -16,6 +16,9 @@ export default makeStyles(theme => ({
       height: '100vw',
     },
     margin: '0 25px',
+  },
+
+  rich: {
     backgroundColor: 'rgb(46, 46, 46)',
   },
 }))

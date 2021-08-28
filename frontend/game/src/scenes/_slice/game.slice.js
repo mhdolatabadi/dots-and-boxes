@@ -4,6 +4,10 @@ import store from '../../setup/store/store'
 const gameSlice = createSlice({
   name: 'game',
   initialState: {
+    theme: {
+      darkMode: false,
+      richMode: false,
+    },
     paper: {
       row: 6,
       column: 6,
@@ -127,6 +131,10 @@ const gameSlice = createSlice({
       const { color } = action.payload
       state.opponent.color = color
     },
+    setTheme: (state, action) => {
+      const theme = action.payload
+      state.theme = theme
+    },
   },
 })
 
@@ -154,10 +162,13 @@ export const {
   setPlayerScore,
   setRoomWinner,
   setOpponentColor,
+  setTheme,
 } = actions
 export default reducer
 
 /* Views */
+export const themeView = state => state.game.theme
+
 export const statusView = state => state.game.status
 
 export const messagesView = state => state.game.room.messages
@@ -184,6 +195,8 @@ export const elementColorView = (i, j) => state =>
   state.game.room.history[i] ? state.game.room.history[i][j] : ''
 
 /* Getters */
+export const getThemeView = state => (state ?? store.getState()).game.theme
+
 export const getRoomId = state => (state ?? store.getState()).game.room.id
 export const getRoomHasPermission = state =>
   (state ?? store.getState()).game.room.hasPermission
@@ -219,10 +232,14 @@ export const getRoomWinner = state =>
   (state ?? store.getState()).game.room.winner
 
 /* Dispatches */
+export const dispatchTheme = theme => store.dispatch(setTheme(theme))
+
 export const dispatchPlayerColor = color =>
   store.dispatch(setPlayerColor({ color }))
+
 export const dispatchOpponentColor = color =>
   store.dispatch(setOpponentColor({ color }))
+
 export const dispatchPlayerId = id => store.dispatch(setPlayerId({ id }))
 
 export const dispatchOpponentName = name =>

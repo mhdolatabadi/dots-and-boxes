@@ -1,14 +1,13 @@
 import { CssBaseline } from '@material-ui/core'
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core'
 import palette from './palette'
 import './scrollbar.css'
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: palette,
-  // TODO: Update FONT with you loaded font-name
   typography: { fontFamily: 'Vazir' },
   overrides: {
     MuiCssBaseline: {

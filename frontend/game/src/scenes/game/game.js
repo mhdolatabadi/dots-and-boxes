@@ -1,4 +1,5 @@
 import * as React from 'react'
+import cns from 'clsx'
 // style
 import useStyle from './game.style'
 //localization
@@ -12,26 +13,36 @@ import SendField from './components/send-field'
 import '../../services/backend/backend.service'
 import ScoreBoard from './components/score-board'
 import { useInitializeData } from '../_hook'
-import { roomWinnerView } from '../_slice/game.slice'
+import { roomWinnerView, themeView } from '../_slice/game.slice'
 import { useSelector } from 'react-redux'
+import Information from './components/information'
 
-export default function GamePresentational(props) {
+export default function GamePresentational() {
   const classes = useStyle()
   const winner = useSelector(roomWinnerView)
+  const theme = useSelector(themeView)
+  const { darkMode, richMode } = theme
   useInitializeData()
 
   return (
     <div
-      className={classes.root}
-      style={{ backgroundColor: winner ? `dark${winner.color}` : 'gray' }}
+      className={cns(
+        classes.root,
+        richMode
+          ? classes['rich']
+          : darkMode
+          ? classes['dark']
+          : classes['lite'],
+      )}
+      style={{ backgroundColor: winner ? `dark${winner.color}` : '' }}
     >
-      <Header type="game" />
-      <Chat />
-      {/* <Information /> */}
-      <Paper />
-      <ScoreBoard />
-      <SendField />
-      <Footer />
+      <Information theme={theme} />
+      {theme.richMode && <Header type="game" />}
+      {theme.richMode && <Chat />}
+      <Paper theme={theme} />
+      <ScoreBoard theme={theme} />
+      {theme.richMode && <SendField />}
+      {theme.richMode && <Footer />}
     </div>
   )
 }

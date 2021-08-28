@@ -1,6 +1,9 @@
 import * as React from 'react'
 // style
-import useStyle from './score-board.style'
+import useRichStyle from './score-board.rich.style'
+import useDarkStyle from './score-board.dark.style'
+import useLiteStyle from './score-board.lite.style'
+
 import clsx from 'clsx'
 // localiztion
 import { useSelector } from 'react-redux'
@@ -13,8 +16,12 @@ import {
   playerScoreView,
 } from '../../../_slice/game.slice'
 
-export default function ScoreBoard(props) {
-  const classes = useStyle()
+export default function ScoreBoard({ theme }) {
+  const richClasses = useRichStyle()
+  const darkClasses = useDarkStyle()
+  const liteClasses = useLiteStyle()
+  const { darkMode, richMode } = theme
+  const classes = richMode ? richClasses : darkMode ? darkClasses : liteClasses
   const playerName = useSelector(playerNameView)
   const playerColor = useSelector(playerColorView)
   const playerScore = useSelector(playerScoreView)
