@@ -31,14 +31,14 @@ export default makeStyles(theme => ({
     width: '30%',
     color: 'white',
     '@media (min-width: 420px) and (min-height: 700px)': {
-      fontSize: '20px',
+      fontSize: '150%',
     },
   },
   scores: {
     padding: '25px',
     color: 'white',
     width: '40%',
-    fontSize: '30px',
+    fontSize: '150%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

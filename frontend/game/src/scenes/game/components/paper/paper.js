@@ -6,8 +6,6 @@ import useStyle from './paper.style'
 
 // components
 import Dot from '../dot'
-import Xline from '../xline'
-import Yline from '../yline'
 import Rectangle from '../rectangle'
 import { useSelector } from 'react-redux'
 import {
@@ -15,6 +13,8 @@ import {
   paperRowNumberView,
   roomLastMoveView,
 } from '../../../_slice/game.slice'
+import { type } from 'ramda'
+import Line from '../line/line'
 
 const createElements = (rowNumber, columnNumber) => {
   const elements = []
@@ -47,9 +47,9 @@ export default function Paper({ theme }) {
         if ((i * j) % 2 === 1)
           return <Dot i={i} j={j} key={`${i}-${j}`} theme={theme} />
         else if (i % 2 === 1 && j % 2 !== 1)
-          return <Xline i={i} j={j} key={`${i}-${j}`} />
+          return <Line i={i} j={j} key={`${i}-${j}`} type="x" />
         else if (i % 2 !== 1 && j % 2 === 1)
-          return <Yline i={i} j={j} key={`${i}-${j}`} />
+          return <Line i={i} j={j} key={`${i}-${j}`} type="y" />
         else
           return (
             <Rectangle

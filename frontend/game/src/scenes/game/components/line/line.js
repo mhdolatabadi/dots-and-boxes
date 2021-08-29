@@ -1,6 +1,7 @@
 import * as React from 'react'
 // style
-import useStyle from './xline.style'
+import clsx from 'clsx'
+import useStyle from './line.style'
 import { useDispatch, useSelector } from 'react-redux'
 
 import {
@@ -9,27 +10,42 @@ import {
   playerColorView,
   roomHasPermissionView,
   roomIsWaitingView,
+  roomLastMoveView,
   setPlayerLastMove,
   setRoomLastMove,
+  themeView,
 } from '../../../_slice/game.slice'
 import { sendNewLine } from '../../../../services/backend/backend.service'
 
-export default function Xline({ i, j }) {
+export default function Line({ i, j, type }) {
   const dispatch = useDispatch()
 
   const playerColor = useSelector(playerColorView)
-  const classes = useStyle(playerColor)
+  const classes = useStyle({ playerColor })
 
   const lineColor = useSelector(elementColorView(i, j))
   const isWaiting = useSelector(roomIsWaitingView)
   const hasPermission = useSelector(roomHasPermissionView)
+  const lastMove = useSelector(roomLastMoveView)
+  const { darkMode, richMode } = useSelector(themeView)
+
+  const isLastMove = lastMove.i === i && lastMove.j === j
 
   return (
     <div
-      className={classes.root}
+      className={clsx(
+        classes.root,
+        type === 'x' ? classes.xRoot : classes.yRoot,
+        isLastMove
+          ? darkMode && !richMode
+            ? classes.lastMoveDark
+            : classes.lastMoveLight
+          : undefined,
+        type === 'x' ? classes.xLastMove : classes.yLastMove,
+      )}
       style={{
-        gridColumn: `${j - 1} / ${j + 2}`,
-        gridRow: `${i}`,
+        gridColumn: type === 'x' ? `${j - 1} / ${j + 2}` : `${j}`,
+        gridRow: type === 'x' ? `${i}` : `${i - 1} / ${i + 2}`,
         backgroundColor: lineColor,
       }}
       onClick={() => {
