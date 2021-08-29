@@ -14,7 +14,7 @@ export default makeStyles(theme => ({
   },
 
   rich: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#ffa600',
   },
 
   dark: {
@@ -22,6 +22,6 @@ export default makeStyles(theme => ({
   },
 
   lite: {
-    backgroundColor: '#fbbb45',
+    backgroundColor: '#ffa600',
   },
 }))

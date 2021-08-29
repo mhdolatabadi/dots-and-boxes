@@ -19,6 +19,7 @@ export default makeStyles(theme => ({
   },
 
   rich: {
-    backgroundColor: 'rgb(46, 46, 46)',
+    // background: 'linear-gradient(#2b0037, #4e0359, #2b0037)',
+    backgroundColor: '#ffd17a',
   },
 }))

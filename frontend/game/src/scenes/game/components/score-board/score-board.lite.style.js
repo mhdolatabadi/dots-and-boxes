@@ -27,11 +27,20 @@ export default makeStyles(theme => ({
     alignItems: 'center',
     padding: '25px',
     borderRadius: '20px',
-    width: '40%',
-    margin: '0 5%',
+    boxSizing: 'border-box',
+    width: '30%',
     color: 'black',
     '@media (min-width: 420px) and (min-height: 700px)': {
       fontSize: '20px',
     },
+  },
+  scores: {
+    padding: '25px',
+    color: 'black',
+    width: '40%',
+    fontSize: '30px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }))

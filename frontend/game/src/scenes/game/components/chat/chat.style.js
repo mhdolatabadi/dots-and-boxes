@@ -8,7 +8,7 @@ export default makeStyles(theme => ({
     },
     '@media (max-width: 350px) and (max-height: 550px)': {
       width: '100vw',
-      height: '100%',
+      height: '20%',
     },
     // margin: '0 10px 10px',
     maxWidth: '650px',

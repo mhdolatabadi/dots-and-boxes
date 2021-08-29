@@ -19,11 +19,11 @@ export default makeStyles(theme => ({
   },
 
   rich: {
-    backgroundColor: 'gray',
+    backgroundColor: '#2b0037',
   },
 
   lite: {
-    backgroundColor: '#ff6407',
+    backgroundColor: '#ffd17a',
   },
   dark: {
     backgroundColor: '#000f22',

@@ -41,7 +41,10 @@ export default function Information({ theme }) {
   return (
     <div className={classes.root}>
       <SettingsIcon
-        style={{ color: 'white', fontSize: '35px' }}
+        style={{
+          color: !darkMode && !richMode ? 'black' : 'white',
+          fontSize: '35px',
+        }}
         onClick={toggleDrawer(true)}
       />
       <Drawer

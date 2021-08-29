@@ -9,7 +9,7 @@ export default makeStyles(theme => ({
     margin: 'auto',
     transition: 'all 0.5s',
     '&:hover': {
-      backgroundColor: 'rgb(65, 65, 65)',
+      backgroundColor: 'red',
     },
   },
 }))

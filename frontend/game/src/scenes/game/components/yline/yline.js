@@ -18,9 +18,9 @@ import {
 export default function Yline({ i, j }) {
   const dispatch = useDispatch()
 
-  const classes = useStyle()
-
   const playerColor = useSelector(playerColorView)
+  const classes = useStyle(playerColor)
+
   const lineColor = useSelector(elementColorView(i, j))
   const isWaiting = useSelector(roomIsWaitingView)
   const hasPermission = useSelector(roomHasPermissionView)
