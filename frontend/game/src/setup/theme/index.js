@@ -3,11 +3,15 @@ import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core'
-import palette from './palette'
 import './scrollbar.css'
 
 const theme = createTheme({
-  palette: palette,
+  palette: {
+    primary: {
+      lighter: '#ffd17a',
+      main: '#ffa600',
+    },
+  },
   typography: { fontFamily: 'Vazir' },
   overrides: {
     MuiCssBaseline: {

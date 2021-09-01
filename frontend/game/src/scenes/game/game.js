@@ -16,6 +16,8 @@ import { useInitializeData } from '../_hook'
 import { roomWinnerView, themeView } from '../_slice/game.slice'
 import { useSelector } from 'react-redux'
 import Information from './components/information'
+import { LinearProgress } from '@material-ui/core'
+import Timer from './components/timer/timer'
 
 export default function GamePresentational() {
   const classes = useStyle()
@@ -37,6 +39,7 @@ export default function GamePresentational() {
       style={{ backgroundColor: winner ? `dark${winner.color}` : '' }}
     >
       <Information theme={theme} />
+      <Timer />
       {theme.richMode && <Header type="game" />}
       {theme.richMode && <Chat />}
       <Paper theme={theme} />

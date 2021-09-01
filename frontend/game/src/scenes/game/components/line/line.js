@@ -11,6 +11,7 @@ import {
   roomHasPermissionView,
   roomIsWaitingView,
   roomLastMoveView,
+  setChanged,
   setPlayerLastMove,
   setRoomLastMove,
   themeView,
@@ -54,6 +55,7 @@ export default function Line({ i, j, type }) {
           dispatch(addNewLine({ i, j, color: playerColor }))
           dispatch(setPlayerLastMove({ i, j, color: playerColor }))
           dispatch(setRoomLastMove({ i, j, color: playerColor }))
+          dispatch(setChanged(true))
         }
       }}
     ></div>

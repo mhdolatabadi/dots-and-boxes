@@ -40,6 +40,7 @@ const gameSlice = createSlice({
       lastMove: {},
       winner: null,
     },
+    changed: false,
     language: 'persian',
     status: 'connecting',
   },
@@ -135,6 +136,9 @@ const gameSlice = createSlice({
       const theme = action.payload
       state.theme = theme
     },
+    setChanged: (state, action) => {
+      state.changed = action.payload
+    },
   },
 })
 
@@ -163,10 +167,13 @@ export const {
   setRoomWinner,
   setOpponentColor,
   setTheme,
+  setChanged,
 } = actions
 export default reducer
 
 /* Views */
+export const changedView = state => state.game.changed
+
 export const themeView = state => state.game.theme
 
 export const statusView = state => state.game.status
@@ -286,3 +293,5 @@ export const dispatchOpponentScore = score =>
 
 export const dispatchPlayerScore = score =>
   store.dispatch(setPlayerScore({ score }))
+
+export const dispatchSetChanged = value => store.dispatch(setChanged(value))

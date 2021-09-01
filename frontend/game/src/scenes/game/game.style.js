@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 
 export default makeStyles(theme => ({
-  headerText: { color: props => theme.palette.colorRecommender(props.colorId) },
   root: {
     padding: 'auto',
     display: 'flex',
@@ -23,7 +22,7 @@ export default makeStyles(theme => ({
   },
 
   lite: {
-    backgroundColor: '#ffd17a',
+    backgroundColor: theme.palette.primary.lighter,
   },
   dark: {
     backgroundColor: '#000f22',
