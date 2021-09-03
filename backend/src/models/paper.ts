@@ -16,8 +16,8 @@ const paperSchema = new Schema(
 		winnerId: String,
 	},
 	{
-		versionKey: false, //remove __v
-		timestamps: true, //add createdAt & updatedAt to db
+		versionKey: false,
+		timestamps: true,
 	},
 )
 
@@ -75,18 +75,22 @@ export const addLine = async (
 	await Paper.updateOne(
 		{ paperId },
 		{
+			$set: {
+				lastMoveId: lineId,
+			},
 			$push: {
 				histories: lineId,
 			},
 		},
 	)
 }
-export const endPaper = async (paperId: string) => {
+export const dbSetPaperEnd = async (paperId: string, userId: string) => {
 	await Paper.updateOne(
 		{ paperId },
 		{
 			$set: {
 				isEnded: true,
+				winnerId: userId,
 			},
 		},
 	)

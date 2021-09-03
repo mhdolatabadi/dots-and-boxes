@@ -7,7 +7,7 @@ import { message } from './helper/localization/'
 import { config } from './setup/config'
 import { Server } from 'socket.io'
 import { createUserById, getUserByUserId } from './models/user'
-import { endPaper, updatePaper } from './models/paper.js'
+import { dbSetPaperEnd, updatePaper } from './models/paper.js'
 import { updatePlayer, updateScore } from './models/player.js'
 import { createMessage } from './models/message.js'
 import { createLine } from './models/line.js'
@@ -255,7 +255,7 @@ const directUserToPaper = async (
 	const user = findUserById(userId, paperId) || createUser(userId, socket.id)
 
 	const dbUser =
-		(await getUserByUserId(userId)) || (await createUserById(userId, '', '', 0))
+		(await getUserByUserId(userId)) || (await createUserById(userId, 0))
 
 	if (checkMultipleDeviceEntry(paper, user, userId, paperId)) {
 		socket.emit('warning', 'multiple device')
@@ -390,40 +390,28 @@ io.on('connection', socket => {
 
 				if (sumOfScores === (paper.size - 1) * (paper.size - 1)) {
 					paper.isEnded = true
-					endPaper(paperId)
 					updateScore(userId, paperId, user.score)
-
-					paper.userIds.map(userId => {
-						const user = findUserById(userId, paper.id)
-						if (!user) return
-					})
 
 					for (let i = 0; i < paper.userIds.length; i++) {
 						const user = findUserById(paper.userIds[i], paper.id)
 						if (!user) continue
 
 						const sender = 'noghte-bazi'
+						const isWinner = user.score > sumOfScores - user.score
 						if (user.id === userId) {
-							const content =
-								user.score > sumOfScores - user.score
-									? message.default.end.winner
-									: message.default.end.loser
-							socket.emit('message', {
-								sender,
-								content,
-							})
+							const content = isWinner
+								? message.default.end.winner
+								: message.default.end.loser
+							socket.emit('message', { sender, content })
 							createMessage('noghte-bazi', paperId, content)
+							if (isWinner) dbSetPaperEnd(paperId, userId)
 						} else {
-							const content =
-								user.score > sumOfScores - user.score
-									? message.default.end.loser
-									: message.default.end.winner
-
-							socket.broadcast.to(paperId).emit('message', {
-								sender,
-								content,
-							})
+							const content = isWinner
+								? message.default.end.loser
+								: message.default.end.winner
+							socket.broadcast.to(paperId).emit('message', { sender, content })
 							createMessage('noghte-bazi', paperId, content)
+							if (isWinner) dbSetPaperEnd(paperId, userId)
 						}
 					}
 				}
