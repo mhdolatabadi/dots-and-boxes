@@ -8,6 +8,7 @@ import {
   dispatchOpponentColor,
   dispatchOpponentId,
   dispatchOpponentName,
+  dispatchOpponentProfileImage,
   dispatchOpponentScore,
   dispatchPlayerColor,
   dispatchPlayerScore,
@@ -61,12 +62,12 @@ socket.on('mustWait', type => {
 })
 
 socket.on('watch', (history, messages) => {
-  console.log('wathcing history...')
+  console.log('watching history...')
   dispatchSetHistory(history)
   dispatchSetMessages(messages)
   // if (history.length > 0) {
   //   for (let i = 0; i < history.length; i++) {
-  //     recieve(history[i], history[i].color)
+  //     receive(history[i], history[i].color)
   //   }
   // }
 })
@@ -92,6 +93,7 @@ socket.on('name', (opponentId, opponentScore, opponentColor) => {
   dispatchOpponentColor(opponentColor)
   window.W.users.getById([String(opponentId)]).then(data => {
     dispatchOpponentName(data[opponentId].firstname)
+    dispatchOpponentProfileImage(data[opponentId].profileImage)
   })
 })
 
@@ -103,10 +105,10 @@ socket.on('role', (role, color) => {
   else dispatchHasPermission(false)
   // set('role', role)
   // showMessage('subscriber')
-  socket.emit('getname', roomId)
+  socket.emit('name', roomId)
 })
 
-socket.on('getname', (redName, blueName) => {
+socket.on('name', (redName, blueName) => {
   console.log('getting name...')
   // if (get('role') === 'subscriber') {
   //   set('name', redName)
@@ -171,6 +173,7 @@ export const sendNewLine = (i, j, color) => {
 }
 
 export const sendBouns = (i, j, color) => {
+  console.log('>>> here send bouns')
   const roomId = getRoomId()
   const userId = getPlayerId()
   const bouns = { i, j, color }

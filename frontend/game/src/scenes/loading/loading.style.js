@@ -20,4 +20,8 @@ export default makeStyles(theme => ({
     direction: 'rtl',
     fontSize: '30px',
   },
+  version: {
+    position: 'absolute',
+    bottom: '10%',
+  },
 }))

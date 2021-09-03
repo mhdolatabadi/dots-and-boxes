@@ -11,6 +11,7 @@ export default function LoadingPresentational(props) {
     <div className={classes.root}>
       <img className={classes.icon} src="dotsandboxes.png" alt="dotsandboxes" />
       <span className={classes.message}>{t.message}</span>
+      <span className={classes.version}>{t.version}</span>
     </div>
   )
 }

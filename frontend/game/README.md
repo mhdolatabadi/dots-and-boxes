@@ -1,6 +1,6 @@
 <div align="center">
   <img alt="weblite-wapp-brand" src="./public/store.svg" width="50" heigth="50"/>
-	<h1>Wapp Name</h1>
+	<h1>noghte-bazi</h1>
 		Wapp Description
 </div>
 

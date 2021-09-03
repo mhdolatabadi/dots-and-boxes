@@ -39,7 +39,7 @@ export default function GamePresentational() {
       style={{ backgroundColor: winner ? `dark${winner.color}` : '' }}
     >
       <Information theme={theme} />
-      <Timer />
+      {/* <Timer /> */}
       {theme.richMode && <Header type="game" />}
       {theme.richMode && <Chat />}
       <Paper theme={theme} />

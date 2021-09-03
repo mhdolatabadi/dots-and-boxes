@@ -1,8 +1,6 @@
 import * as React from 'react'
 // style
 import useStyle from './timer.style'
-// localiztion
-import t from './timer.local'
 import { LinearProgress } from '@material-ui/core'
 import {
   changedView,

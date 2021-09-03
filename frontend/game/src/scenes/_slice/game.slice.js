@@ -6,7 +6,7 @@ const gameSlice = createSlice({
   initialState: {
     theme: {
       darkMode: false,
-      richMode: false,
+      richMode: true,
     },
     paper: {
       row: 6,
@@ -19,6 +19,7 @@ const gameSlice = createSlice({
       score: 0,
       letter: 'ه',
       lastMove: {},
+      profileImage: '',
     },
     opponent: {
       id: undefined,
@@ -27,6 +28,7 @@ const gameSlice = createSlice({
       score: 0,
       letter: 'ب',
       lastMove: {},
+      profileImage: '',
     },
     room: {
       id: undefined,
@@ -132,6 +134,14 @@ const gameSlice = createSlice({
       const { color } = action.payload
       state.opponent.color = color
     },
+    setPlayerProfileImage: (state, action) => {
+      const profileImage = action.payload
+      state.player.profileImage = profileImage
+    },
+    setOpponentProfileImage: (state, action) => {
+      const profileImage = action.payload
+      state.opponent.profileImage = profileImage
+    },
     setTheme: (state, action) => {
       const theme = action.payload
       state.theme = theme
@@ -168,6 +178,8 @@ export const {
   setOpponentColor,
   setTheme,
   setChanged,
+  setOpponentProfileImage,
+  setPlayerProfileImage,
 } = actions
 export default reducer
 
@@ -184,11 +196,14 @@ export const playerIdView = state => state.game.player.id
 export const playerColorView = state => state.game.player.color
 export const playerNameView = state => state.game.player.name
 export const playerScoreView = state => state.game.player.score
+export const playerProfileImageView = state => state.game.player.profileImage
 
 export const opponentIdView = state => state.game.opponent.id
 export const opponentColorView = state => state.game.opponent.color
 export const opponentNameView = state => state.game.opponent.name
 export const opponentScoreView = state => state.game.opponent.score
+export const opponentProfileImageView = state =>
+  state.game.opponent.profileImage
 
 export const roomIsWaitingView = state => state.game.room.isWaiting
 export const roomHasPermissionView = state => state.game.room.hasPermission
@@ -293,5 +308,11 @@ export const dispatchOpponentScore = score =>
 
 export const dispatchPlayerScore = score =>
   store.dispatch(setPlayerScore({ score }))
+
+export const dispatchPlayerProfileImage = profileImage =>
+  store.dispatch(setPlayerProfileImage(profileImage))
+
+export const dispatchOpponentProfileImage = profileImage =>
+  store.dispatch(setOpponentProfileImage(profileImage))
 
 export const dispatchSetChanged = value => store.dispatch(setChanged(value))

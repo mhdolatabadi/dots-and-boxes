@@ -44,6 +44,8 @@ if (process.env.NODE_ENV === 'development' && !window.W) {
         profileImage:
           '20201002_155139.jpg-@-676004ed-f92f-44dc-bd34-7dea53b2d6cf.jpg',
       }),
+
+      getProfileImage: () => 'https://picsum.photos/200/300?random=1',
     },
     fileSystem: {
       upload: async (superagent, ...args) => {
