@@ -1,24 +1,21 @@
 {
-  "name": "server",
+  "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
-  "type": "module",
   "dependencies": {
     "@socket.io/postgres-adapter": "^0.1.1",
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.12",
-    "@types/node": "^16.7.6",
+    "@types/mongodb": "^4.0.7",
     "@types/pg": "^8.6.1",
-    "cors": "^2.8.5",
+    "@types/socket.io": "^3.0.2",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
+    "http": "^0.0.1-security",
+    "mongodb": "^4.1.1",
+    "mongoose": "^6.0.4",
     "pg": "^8.7.1",
-    "ramda": "^0.27.1",
-    "socket.io": "^4.1.2",
-    "uuid": "^8.3.2"
-  },
-  "scripts": {
-    "migrate": "node-pg-migrate"
+    "socket.io": "^4.2.0"
   }
 }

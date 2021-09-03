@@ -9,6 +9,13 @@ const defaultConfig = {
 		origin: production
 			? 'https://www.weblite.me:3000'
 			: 'http://localhost:3000',
+		mongo: {
+			url: 'mongodb://127.0.0.1:27017/noghte-bazi',
+			options: {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+			},
+		},
 	},
 }
 
@@ -24,4 +31,4 @@ const getLocalConfig = () => {
 	}
 }
 
-export default { ...defaultConfig, ...getLocalConfig() }
+export const config = { ...defaultConfig, ...getLocalConfig() }

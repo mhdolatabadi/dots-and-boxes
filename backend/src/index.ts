@@ -1,11 +1,16 @@
 import * as express from 'express'
 import * as http from 'http'
 
-import {message} from './helper/localization/'
-import config from './setup/config'
-import {Server} from 'socket.io'
-import {Pool} from 'pg'
-import {createAdapter} from '@socket.io/postgres-adapter'
+import './setup/mongodb.js'
+
+import { message } from './helper/localization/'
+import { config } from './setup/config'
+import { Server } from 'socket.io'
+import { createUserById, getUserByUserId } from './models/user'
+import { endPaper, updatePaper } from './models/paper.js'
+import { updatePlayer, updateScore } from './models/player.js'
+import { createMessage } from './models/message.js'
+import { createLine } from './models/line.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -16,71 +21,8 @@ const io = new Server(server, {
 	},
 })
 
-const pool = new Pool({
-	user: 'noghte-bazi',
-	host: 'localhost',
-	database: 'noghte-bazi',
-	password: 'password',
-	port: 5432,
-})
-
-pool.query(`
-  create table if not exists user (
-    id uuid unique primary key
-    first_name text
-    last_name text
-    credit integer,
-  )
-`).then(console.log)
-pool.query(`
-  create table if not exists player (
-    id uuid unique primary key
-    user_id uuid references user (id)
-    role text
-    color text
-    score integer
-    has_permission boolean
-    is_connected boolean
-  )
-`).then(console.log)
-// pen is an many to many relation between player and game
-pool.query(`
-  create table if not exists pen (
-    player_id uuid references player (id)
-    game_id uuid references paper (id)
-    primary key (player_id, paper_id)
-  )
-`).then(console.log)
-
-pool.query(`
-  create table if not exists paper (
-    id uuid unique primary key
-    is_finished boolean
-    size integer
-    winner uuid references player (id)
-    last_line uuid references line (id)
-  )
-`).then(console.log)
-pool.query(`
-  create table if not exists line (
-    id uuid unique primary key
-    i integer
-    j integer
-    paper_id uuid references paper (id)
-    color text
-  )
-`).then(console.log)
-
-pool.query(`
-    create table if not exists message (
-      id uuid unique primary key
-      paper_id uuid references paper (id)
-      sender uuid references player (id)
-    )
-`).then(console.log)
-
-const rooms = []
-const users = []
+const papers: paper[] = []
+const users: user[] = []
 
 type line = {
 	i: number
@@ -93,7 +35,7 @@ type message = {}
 type user = {
 	id: string
 	score: number
-	roomIds: string[]
+	paperIds: string[]
 	color: string
 	hasPermission: boolean
 	role: string
@@ -102,47 +44,43 @@ type user = {
 	name: string
 }
 
-type room = {
+type paper = {
 	id: string
 	userIds: string[]
-	subscriberIds: string[]
+	subscriberIds?: string[]
 	turn: string
 	isEnded: boolean
 	socketIds: string[]
-	lastMove: line
-	history: line[]
+	lastMove?: line
+	history: string[][]
 	messages: message[]
 	size: number
-	winner: user
+	winner?: user
 }
-const createRoom = (
+const createPaper = (
 	socketId: string,
 	paperSize: number,
-	roomId: string,
-): room => {
-	const room = {
-		id: roomId,
-		userIds: [],
-		subscriberIds: [],
-		history: [],
+	paperId: string,
+): paper => {
+	const paper = {
+		id: paperId,
+		userIds: [''],
 		turn: 'red',
 		isEnded: false,
 		socketIds: [socketId],
-		lastMove: null,
-		messages: [],
+		messages: [''],
 		size: paperSize,
-		winner: undefined,
+		history: [['']],
 	}
-	rooms.push(room)
-	console.log('-------->', room.userIds)
-	return room
+	papers.push(paper)
+	return paper
 }
 
 const createUser = (userId: string, socketId: string): user => {
 	const user = {
 		id: userId,
 		score: 0,
-		roomIds: [],
+		paperIds: [''],
 		color: '',
 		hasPermission: false,
 		role: '',
@@ -151,324 +89,392 @@ const createUser = (userId: string, socketId: string): user => {
 		name: '',
 	}
 	users.push(user)
+
 	return user
 }
 
-const findRoomById = (roomId: string): room | undefined =>
-	rooms.find(room => room.id === roomId)
-const findUserById = (userId: string, roomId: string): user | undefined =>
-	users.find(user =>
-		 !!(user.id === userId && user.roomIds.includes(roomId))
-	)
+const findPaperById = (paperId: string): paper | undefined =>
+	papers.find(paper => paper.id === paperId)
+const findUserById = (userId: string, paperId: string): user | undefined =>
+	users.find(user => !!(user.id === userId && user.paperIds.includes(paperId)))
 
 const findUserBySocketId = (socketId: string): user | undefined =>
 	users.find(user => user.socketId === socketId)
-const findRoomBySocketId = (socketId: string): room | undefined =>
-	rooms.find(room => room.socketIds.includes(socketId))
+const findPaperBySocketId = (socketId: string): paper | undefined =>
+	papers.find(paper => paper.socketIds.includes(socketId))
 
-const configUser = ({
-	user,
-	room,
-	color,
-	hasPermission,
-	role,
-	isConnected,
-	socketId,
-}) => {
-	user.roomIds.push(room.id)
+interface configUserProp {
+	color: string
+	hasPermission: boolean
+	role: string
+	isConnected: boolean
+	socketId: string
+	score: number
+}
+
+const configUser = async (
+	user: user,
+	paper: paper,
+	{ color, hasPermission, role, isConnected, socketId, score }: configUserProp,
+) => {
+	user.paperIds.push(paper.id)
 	user.color = color
 	user.hasPermission = hasPermission
 	user.role = role
 	user.isConnected = isConnected
 	user.socketId = socketId
+	await updatePlayer(
+		user.id,
+		paper.id,
+		color,
+		hasPermission,
+		role,
+		isConnected,
+		socketId,
+		score,
+	)
 }
-const hostFirstUser = (room: room, user: user, socket: any) => {
+const hostFirstUser = async (paper: paper, user: user, socket: any) => {
 	console.log(
-		`hosting first user with userId: ${user.id} in room with roomId: ${room.id}`,
+		`hosting first user with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
 
-	configUser({
-		user,
-		room,
+	configUser(user, paper, {
 		color: 'red',
 		hasPermission: true,
 		role: 'player',
 		isConnected: true,
 		socketId: socket.id,
+		score: user.score,
 	})
-	room.turn = 'red'
-	room.userIds.push(user.id)
-	room.socketIds.push(socket.id)
+
+	paper.turn = 'red'
+	paper.userIds.push(user.id)
+	paper.socketIds.push(socket.id)
+
+	await updatePaper(
+		paper.id,
+		user.id,
+		socket.id,
+		paper.turn,
+		paper.size,
+		paper.isEnded,
+	)
 
 	socket.emit('hasPermission', user.hasPermission)
-	socket.emit('watch', room.history, room.messages)
+	socket.emit('watch', paper.history, paper.messages)
 
-	socket.join(room.id)
+	socket.join(paper.id)
 	socket.emit('color', 'red')
 	socket.emit('score', user.score)
 
 	socket.emit('mustWait', true)
 }
 
-const hostSecondUser = (room: room, user: user, socket: any) => {
+const hostSecondUser = async (paper: paper, user: user, socket: any) => {
 	console.log(
-		`hosting second user with userId: ${user.id} in room with roomId: ${room.id}`,
+		`hosting second user with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
 
-	if (room.isEnded) {
+	if (paper.isEnded) {
 		const opponentId =
-			room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0]
-		const opponent = findUserById(opponentId, room.id)
+			paper.userIds[1] === user.id ? paper.userIds[2] : paper.userIds[1]
+		const opponent = findUserById(opponentId, paper.id)
 		socket.emit('color', user.color)
 		socket.emit('hasPermission', false)
-		socket.emit('watch', room.history, room.messages)
+		socket.emit('watch', paper.history, paper.messages)
 		socket.emit('score', user.score)
-		io.to(room.id).emit('mustWait', false)
-		socket.emit('name', opponent.id, opponent.score, opponent.color)
+		io.to(paper.id).emit('mustWait', false)
+		socket.emit('name', opponent?.id, opponent?.score, opponent?.color)
 	} else {
-		configUser({
-			user,
-			room,
-			color: undefined,
+		const secondUser = findUserById(
+			paper.userIds[1] === user.id ? paper.userIds[2] : paper.userIds[1],
+			paper.id,
+		)
+		if (secondUser && secondUser.color === 'red') user.color = 'blue'
+		else user.color = 'red'
+
+		await configUser(user, paper, {
+			color: user.color,
 			hasPermission: false,
 			role: 'player',
 			isConnected: true,
 			socketId: socket.id,
+			score: user.score,
 		})
-		const secondUser = findUserById(
-			room.userIds[0] === user.id ? room.userIds[1] : room.userIds[0],
-			room.id,
+
+		user.hasPermission = paper.turn === user.color
+		if (!paper.userIds.includes(user.id)) paper.userIds.push(user.id)
+		if (!paper.socketIds.includes(socket.id)) paper.socketIds.push(socket.id)
+
+		await updatePaper(
+			paper.id,
+			user.id,
+			socket.id,
+			paper.turn,
+			paper.size,
+			paper.isEnded,
 		)
-		console.log('roomTurn: ', room.turn)
-		if (secondUser && secondUser.color === 'red') user.color = 'blue'
-		else user.color = 'red'
-		user.hasPermission = room.turn === user.color
-		console.log('user has permission? ', user.hasPermission)
-		if (!room.userIds.includes(user.id)) room.userIds.push(user.id)
-		if (!room.socketIds.includes(socket.id)) room.socketIds.push(socket.id)
 
 		socket.emit('color', user.color)
 		socket.emit('hasPermission', user.hasPermission)
-		socket.emit('watch', room.history, room.messages)
+		socket.emit('watch', paper.history, paper.messages)
 		socket.emit('score', user.score)
-		socket.join(room.id)
-		io.to(room.id).emit('mustWait', false)
-		io.to(room.id).emit('introduce', 'hello')
+		socket.join(paper.id)
+		io.to(paper.id).emit('mustWait', false)
+		io.to(paper.id).emit('introduce', 'hello')
 	}
 }
 
-const hostSubscriber = (room: room, user: user, socket: any) => {
+const hostSubscriber = (paper: paper, user: user, socket: any) => {
 	console.log(
-		`hosting subscriber with userId: ${user.id} in room with roomId: ${room.id}`,
+		`hosting subscriber with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
-	configUser({
-		user,
-		room,
-		color: undefined,
+	configUser(user, paper, {
+		color: '',
 		hasPermission: false,
 		role: 'subscriber',
 		isConnected: true,
 		socketId: socket.id,
+		score: -1,
 	})
-	room.subscriberIds.push(user.id)
-	socket.join(room.id)
-	socket.emit('role', 'subscriber', room.turn)
-	socket.emit('watch', room.history, room.messages)
+	paper.subscriberIds.push(user.id)
+	socket.join(paper.id)
+	socket.emit('role', 'subscriber', paper.turn)
+	socket.emit('watch', paper.history, paper.messages)
 }
 
-const directUserToRoom = (
-	roomId: string,
+const directUserToPaper = async (
+	paperId: string,
 	userId: string,
 	socket: any,
 	paperSize: number,
 ) => {
-	const room = findRoomById(roomId) || createRoom(socket.id, paperSize, roomId)
-	const user = findUserById(userId, roomId) || createUser(userId, socket.id)
-	if (
-		(room.userIds.includes(user.id) && user.isConnected === true) ||
-		!userId ||
-		!roomId
-	) {
+	const paper =
+		findPaperById(paperId) || createPaper(socket.id, paperSize, paperId)
+	const user = findUserById(userId, paperId) || createUser(userId, socket.id)
+
+	const dbUser =
+		(await getUserByUserId(userId)) || (await createUserById(userId, '', '', 0))
+
+	if (checkMultipleDeviceEntry(paper, user, userId, paperId)) {
 		socket.emit('warning', 'multiple device')
 		socket.disconnect(true)
 	} else {
-		switch (room.userIds.length) {
-			case 0:
-				hostFirstUser(room, user, socket)
-				break
+		switch (paper.userIds.length) {
 			case 1:
-				hostSecondUser(room, user, socket)
+				await hostFirstUser(paper, user, socket)
+				break
+			case 2:
+				await hostSecondUser(paper, user, socket)
 				break
 			default:
-				if (!!findUserById(userId, roomId)) hostSecondUser(room, user, socket)
-				else hostSubscriber(room, user, socket)
+				if (!!findUserById(userId, paperId)) hostSecondUser(paper, user, socket)
+				else hostSubscriber(paper, user, socket)
 				break
 		}
 	}
 }
 
-const checkValidation = (room: room, user: user, type: string): boolean => {
+const checkMultipleDeviceEntry = (
+	paper: paper,
+	user: user,
+	userId: string,
+	paperId: string,
+) =>
+	(paper.userIds.includes(user.id) && user.isConnected === true) ||
+	!userId ||
+	!paperId
+
+const checkValidation = (paper: paper, user: user, type: string): boolean => {
 	const result =
-		user && room && user.isConnected && !room.isEnded && user.role === 'player'
-	if (type === 'change') {
-		console.log(
-			`check validation user id: ${user.id} hasPermission is: ${user.hasPermission}`,
-		)
-		return user.hasPermission && room.turn === user.color && result
-	} else {
-		console.log(
-			`check validation user id: ${user.id}`,
-			!user.hasPermission,
-			room.turn !== user.color,
-			result,
-		)
-		return !user.hasPermission && room.turn !== user.color && result
-	}
+		user &&
+		paper &&
+		user.isConnected &&
+		!paper.isEnded &&
+		user.role === 'player'
+	if (type === 'change')
+		return user.hasPermission && paper.turn === user.color && result
+	else return !user.hasPermission && paper.turn !== user.color && result
 }
 
-const changeTurn = (room: room, userId: string): boolean => {
-	if (room && room.turn === 'red') room.turn = 'blue'
-	else if (room && room.turn === 'blue') room.turn = 'red'
-	for (let i = 0; i < room.userIds.length; i++) {
-		const user = findUserById(room.userIds[i], room.id)
-		user.hasPermission = user.id !== userId;
+const changeTurn = (paper: paper, userId: string): boolean => {
+	if (paper && paper.turn === 'red') paper.turn = 'blue'
+	else if (paper && paper.turn === 'blue') paper.turn = 'red'
+	for (let i = 0; i < paper.userIds.length; i++) {
+		const user = findUserById(paper.userIds[i], paper.id)
+		if (user) user.hasPermission = user?.id !== userId
 	}
 	return true
 }
-const check = (room: room, user: user, type: string): boolean => {
-	if (checkValidation(room, user, type)) return changeTurn(room, user.id)
+const check = (paper: paper, user: user, type: string): boolean => {
+	if (checkValidation(paper, user, type)) return changeTurn(paper, user.id)
 	return false
 }
 
-io.on('isConnected', socket => {
-	socket.emit('handshake', 'welcome! give me your room id!')
-	socket.on('handshake', ({ roomId, userId, paperSize }) =>
-		directUserToRoom(roomId, userId, socket, paperSize),
+const getUserAndPaper = (paperId: string, userId: string) => {
+	const paper = findPaperById(paperId)
+	const user = findUserById(userId, paperId)
+	return { paper, user }
+}
+
+interface handshakeProps {
+	roomId: string
+	userId: string
+	paperSize: number
+}
+
+io.on('connection', socket => {
+	socket.emit('handshake', 'welcome! give me your paper id!')
+	socket.on(
+		'handshake',
+		async ({ roomId: paperId, userId, paperSize }: handshakeProps) =>
+			await directUserToPaper(paperId, userId, socket, paperSize),
 	)
-	socket.on('introduce', (userId: string, roomId: string) => {
-		const user = findUserById(userId, roomId)
-		socket.broadcast.to(roomId).emit('name', userId, user.score, user.color)
+
+	socket.on('introduce', async (userId: string, paperId: string) => {
+		const user = findUserById(userId, paperId)
+		const content = message.default.welcome
+		socket.broadcast.to(paperId).emit('name', userId, user?.score, user?.color)
 		socket.emit('message', {
 			sender: 'noghte-bazi',
-			content: message.default.welcome,
+			content,
 		})
+		await createMessage(userId, paperId, content)
 	})
+
 	socket.on('disconnect', () => {
 		const user = findUserBySocketId(socket.id)
-		const room = findRoomBySocketId(socket.id)
-		console.log(
-			`user with ${user ? 'user' : 'socket'}id ${
-				user ? user.id : socket.id
-			} disconnected`,
-		)
+		const paper = findPaperBySocketId(socket.id)
 		if (user) user.isConnected = false
 		if (user && user.role === 'player')
-			socket.broadcast.to(room.id).emit('mustWait', true)
+			socket.broadcast.to(paper?.id).emit('mustWait', true)
 	})
-	socket.on('change', (userId: string, roomId: string, line: line) => {
-		const room = findRoomById(roomId)
-		const user = findUserById(userId, roomId)
-		console.log('new line arrived: ', line)
-		if (check(room, user, 'change')) {
+
+	socket.on('change', async (userId: string, paperId: string, line: line) => {
+		const { paper, user } = getUserAndPaper(userId, paperId)
+		if (!paper || !user) return
+
+		if (check(paper, user, 'change')) {
 			const { i, j, color } = line
-			line.color = user.color
-			room.lastMove = line
-			room.history[i] = { ...room.history[i] }
-			room.history[i][j] = color
-			socket.broadcast.to(room.id).emit('change', line, color)
+			line.color = user?.color
+			paper.lastMove = line
+			paper.history[i] = { ...paper.history[i] }
+			paper.history[i][j] = color
+			socket.broadcast.to(paper.id).emit('change', line, color)
+			await createLine(paperId, i, j, color)
 		} else socket.emit('warning', 'warning')
 	})
-	socket.on('bonus', (roomId: string, userId: string, bonus: line) => {
-		const room = findRoomById(roomId)
-		const user = findUserById(userId, roomId)
+
+	socket.on('bouns', (paperId: string, userId: string, bonus: line) => {
+		const { paper, user } = getUserAndPaper(userId, paperId)
+		if (!paper || !user) return
+
 		if (user && user.color === bonus.color) {
 			const { i, j, color } = bonus
-			if (room.history[i] && room.history[i][j]) {
-			} else {
-				console.log(`new bonus arrived:`, bonus, `from user:`, user.id)
-				room.history[i] = { ...room.history[i] }
-				room.history[i][j] = color
+			if (!paper.history[i] || !paper.history[i][j]) {
+				paper.history[i] = { ...paper.history[i] }
+				paper.history[i][j] = color
 				user.score += 1
 
 				// sending gift!
-				if (room) room.turn = user.color
+				paper.turn = user.color
 				let sumOfScores = 0
-				for (let i = 0; i < room.userIds.length; i++) {
-					const user = findUserById(room.userIds[i], room.id)
+				for (let i = 0; i < paper.userIds.length; i++) {
+					const user = findUserById(paper.userIds[i], paper.id)
+					if (!user) continue
 					sumOfScores += user.score
-					user.hasPermission = user.id === userId;
+					user.hasPermission = user.id === userId
 				}
-				io.to(roomId).emit('gift', userId)
-				console.log(sumOfScores, room.size)
+				io.to(paperId).emit('gift', userId)
 
-				if (sumOfScores === (room.size - 1) * (room.size - 1)) {
-					room.isEnded = true
-					console.log(user.score)
-					for (let i = 0; i < room.userIds.length; i++) {
-						const user = findUserById(room.userIds[i], room.id)
-						console.log(sumOfScores, user.score)
-						if (user.score > sumOfScores - user.score)
-							user.id === userId
-								? socket.emit('message', {
-										sender: 'noghte-bazi',
-										content: message.default.end.winner,
-								  })
-								: socket.broadcast.to(roomId).emit('message', {
-										sender: 'noghte-bazi',
-										content: message.default.end.winner,
-								  })
-						else
-							user.id === userId
-								? socket.emit('message', {
-										sender: 'noghte-bazi',
-										content: message.default.end.loser,
-								  })
-								: socket.broadcast.to(roomId).emit('message', {
-										sender: 'noghte-bazi',
-										content: message.default.end.loser,
-								  })
+				if (sumOfScores === (paper.size - 1) * (paper.size - 1)) {
+					paper.isEnded = true
+					endPaper(paperId)
+					updateScore(userId, paperId, user.score)
+
+					paper.userIds.map(userId => {
+						const user = findUserById(userId, paper.id)
+						if (!user) return
+					})
+
+					for (let i = 0; i < paper.userIds.length; i++) {
+						const user = findUserById(paper.userIds[i], paper.id)
+						if (!user) continue
+
+						const sender = 'noghte-bazi'
+						if (user.id === userId) {
+							const content =
+								user.score > sumOfScores - user.score
+									? message.default.end.winner
+									: message.default.end.loser
+							socket.emit('message', {
+								sender,
+								content,
+							})
+							createMessage('noghte-bazi', paperId, content)
+						} else {
+							const content =
+								user.score > sumOfScores - user.score
+									? message.default.end.loser
+									: message.default.end.winner
+
+							socket.broadcast.to(paperId).emit('message', {
+								sender,
+								content,
+							})
+							createMessage('noghte-bazi', paperId, content)
+						}
 					}
 				}
 			}
 		}
 	})
-	socket.on('gift', (userId: string, roomId: string) => {
-		const room = findRoomById(roomId)
-		const user = findUserById(userId, roomId)
-		console.log('new gift request arrived by user id:', userId)
-
-		if (check(room, user, 'gift')) io.to(room.id).emit('gift')
+	socket.on('gift', (userId: string, paperId: string) => {
+		const { paper, user } = getUserAndPaper(userId, paperId)
+		if (!paper || !user) return
+		if (check(paper, user, 'gift')) io.to(paper.id).emit('gift')
 		else socket.emit('warning', 'warning')
 	})
 
-	socket.on('resign', (userId: string, roomId: string) => {
-		const room = findRoomById(roomId)
-		const user = findUserById(userId, roomId)
-		room.isEnded = true
+	socket.on('resign', (userId: string, paperId: string) => {
+		const { paper, user } = getUserAndPaper(userId, paperId)
+		if (!paper || !user) return
+
+		paper.isEnded = true
 		user.isConnected = false
-		socket.broadcast.to(room.id).emit('resign', 'salam')
+		socket.broadcast.to(paper.id).emit('resign', 'hello')
 	})
 
-	socket.on('getname', (roomId: string) => {
-		const room = findRoomById(roomId)
-		let redName: string, blueName: string
-		for (let i = 0; i < room.userIds.length; i++) {
-			const user = findUserById(room.userIds[i], roomId)
+	socket.on('name', (paperId: string) => {
+		const paper = findPaperById(paperId)
+		if (!paper) return
+		let redName: string = '',
+			blueName: string = ''
+		for (let i = 0; i < paper.userIds.length; i++) {
+			const user = findUserById(paper.userIds[i], paperId)
+			if (!user) continue
 			if (user.color === 'red') redName = user.name
 			else blueName = user.name
 		}
-		socket.emit('getname', redName, blueName)
+		socket.emit('name', redName, blueName)
 	})
 
-	socket.on('message', (roomId: string, userId: string, message: string) => {
-		const room = findRoomById(roomId)
-		room.messages.push({ sender: userId, content: message })
-		socket.broadcast
-			.to(room.id)
-			.emit('message', { sender: userId, content: message })
-	})
+	socket.on(
+		'message',
+		async (paperId: string, userId: string, message: string) => {
+			const paper = findPaperById(paperId)
+			if (!paper) return
+
+			await createMessage(userId, paperId, message)
+
+			paper.messages.push({ sender: userId, content: message })
+			socket.broadcast
+				.to(paper.id)
+				.emit('message', { sender: userId, content: message })
+		},
+	)
 })
-io.adapter(createAdapter(pool))
 server.listen(config.server.port, () =>
-	console.log(`server is listening on port ${config.server.port}`),
+	console.log(` > server is listening on port ${config.server.port}`),
 )
