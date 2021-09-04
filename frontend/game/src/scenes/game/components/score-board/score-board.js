@@ -5,14 +5,15 @@ import useDarkStyle from './score-board.dark.style'
 import useLiteStyle from './score-board.lite.style'
 
 import clsx from 'clsx'
-// localiztion
 import { useSelector } from 'react-redux'
 import {
   getPlayerHasPermission,
   opponentNameView,
+  opponentProfileImageView,
   opponentScoreView,
   playerColorView,
   playerNameView,
+  playerProfileImageView,
   playerScoreView,
 } from '../../../_slice/game.slice'
 import { Avatar } from '@material-ui/core'
@@ -21,25 +22,28 @@ export default function ScoreBoard({ theme }) {
   const playerName = useSelector(playerNameView)
   const playerColor = useSelector(playerColorView)
   const playerScore = useSelector(playerScoreView)
+  const playerHasPermission = useSelector(getPlayerHasPermission)
+  const playerProfileImage = useSelector(playerProfileImageView)
+
   const opponentName = useSelector(opponentNameView)
   const opponentScore = useSelector(opponentScoreView)
-  const playerHasPermission = useSelector(getPlayerHasPermission)
+  const opponentProfileImage = useSelector(opponentProfileImageView)
 
-  const blueText =
-    playerColor === 'blue' ? `${playerName}: ${playerScore}` : `${opponentName}`
-  const redText =
-    playerColor === 'red'
-      ? `${playerName}`
-      : `${opponentName}: ${opponentScore}`
+  const amIRed = playerColor === 'red'
 
-  const isRedActive =
-    playerColor === 'red'
-      ? playerHasPermission
-        ? true
-        : false
-      : playerHasPermission
-      ? false
-      : true
+  const blueText = !amIRed ? `${playerName}` : `${opponentName}`
+  const redText = amIRed ? `${playerName}` : `${opponentName}`
+
+  const redAvatar = amIRed ? playerProfileImage : opponentProfileImage
+  const blueAvatar = amIRed ? opponentProfileImage : playerProfileImage
+
+  const isRedActive = amIRed
+    ? playerHasPermission
+      ? true
+      : false
+    : playerHasPermission
+    ? false
+    : true
 
   const richClasses = useRichStyle()
   const darkClasses = useDarkStyle()
@@ -57,7 +61,7 @@ export default function ScoreBoard({ theme }) {
       >
         {richMode && (
           <Avatar
-            src="https://picsum.photos/200/300?random=2"
+            src={blueAvatar}
             className={clsx(classes.avatar, classes.blueAvatar)}
           />
         )}
@@ -68,7 +72,7 @@ export default function ScoreBoard({ theme }) {
           isRedActive ? classes.redActiveScores : classes.blueActiveScores,
           classes.scores,
         )}
-      >{`${playerScore} - ${opponentScore}`}</div>
+      >{`${opponentScore} - ${playerScore}`}</div>
       <div
         className={clsx(
           classes.score,
@@ -78,7 +82,7 @@ export default function ScoreBoard({ theme }) {
         <span>{redText}</span>
         {richMode && (
           <Avatar
-            src="https://picsum.photos/200/300?random=1"
+            src={redAvatar}
             className={clsx(classes.avatar, classes.redAvatar)}
           />
         )}

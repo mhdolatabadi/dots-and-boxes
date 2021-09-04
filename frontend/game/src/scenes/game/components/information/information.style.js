@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { purple } from '@material-ui/core/colors'
 
 export default makeStyles(theme => ({

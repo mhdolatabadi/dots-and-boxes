@@ -357,12 +357,16 @@ io.on('connection', socket => {
 
 		if (check(paper, user, 'change')) {
 			const { i, j, color } = line
-			line.color = user?.color
-			paper.lastMove = line
-			paper.history[i] = { ...paper.history[i] }
-			paper.history[i][j] = color
-			socket.broadcast.to(paper.id).emit('change', line, color)
-			await createLine(paperId, i, j, color)
+			if (color) {
+				line.color = user?.color
+				paper.lastMove = line
+				paper.history[i] = { ...paper.history[i] }
+				paper.history[i][j] = color
+				socket.broadcast.to(paper.id).emit('change', line, color)
+				await createLine(paperId, i, j, color)
+			} else {
+				socket.broadcast.to(paper.id).emit('skip', 'opponent timeout')
+			}
 		} else socket.emit('warning', 'warning')
 	})
 

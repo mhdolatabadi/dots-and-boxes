@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 
 export default makeStyles(theme => ({
   root: {
@@ -11,7 +11,7 @@ export default makeStyles(theme => ({
     height: '100%',
     width: '100%',
     overflowY: 'auto',
-    backgroundColor: 'gray',
+    backgroundColor: '#ffffff',
     userSelect: 'none',
     '&::-webkit-scrollbar': {
       display: 'none',
