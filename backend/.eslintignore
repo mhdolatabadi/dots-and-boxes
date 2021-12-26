@@ -1,8 +1,0 @@
-**/node_modules/**
-**/build/**
-**/dist/**
-**/package.json
-**/yarn.lock
-**/*.dll.js
-**/*.worker.js
-**/migrations/**

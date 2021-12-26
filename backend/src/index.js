@@ -1,67 +1,22 @@
-import * as express from 'express'
-import * as http from 'http'
+const express = require('express')
+const http = require('http')
 
-import './setup/mongodb.js'
-
-import { message } from './helper/localization/'
-import { config } from './setup/config'
-import { Server } from 'socket.io'
-import { createUserById, getUserByUserId } from './models/user'
-import { dbSetPaperEnd, updatePaper } from './models/paper.js'
-import { updatePlayer, updateScore } from './models/player.js'
-import { createMessage } from './models/message.js'
-import { createLine } from './models/line.js'
+const message = require('./localization/messages')
+const config = require('./setup/config')
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server, {
+const io = require('socket.io')(http, {
 	cors: {
 		origin: config.server.origin,
 		methods: ['GET', 'POST'],
 	},
 })
 
-const papers: paper[] = []
-const users: user[] = []
+const papers = []
+const users = []
 
-type line = {
-	i: number
-	j: number
-	color: string
-}
-
-type message = {}
-
-type user = {
-	id: string
-	score: number
-	paperIds: string[]
-	color: string
-	hasPermission: boolean
-	role: string
-	isConnected: boolean
-	socketId: string
-	name: string
-}
-
-type paper = {
-	id: string
-	userIds: string[]
-	subscriberIds?: string[]
-	turn: string
-	isEnded: boolean
-	socketIds: string[]
-	lastMove?: line
-	history: string[][]
-	messages: message[]
-	size: number
-	winner?: user
-}
-const createPaper = (
-	socketId: string,
-	paperSize: number,
-	paperId: string,
-): paper => {
+const createPaper = (socketId, paperSize, paperId) => {
 	const paper = {
 		id: paperId,
 		userIds: [''],
@@ -76,7 +31,7 @@ const createPaper = (
 	return paper
 }
 
-const createUser = (userId: string, socketId: string): user => {
+const createUser = (userId, socketId) => {
 	const user = {
 		id: userId,
 		score: 0,
@@ -93,29 +48,19 @@ const createUser = (userId: string, socketId: string): user => {
 	return user
 }
 
-const findPaperById = (paperId: string): paper | undefined =>
-	papers.find(paper => paper.id === paperId)
-const findUserById = (userId: string, paperId: string): user | undefined =>
+const findPaperById = paperId => papers.find(paper => paper.id === paperId)
+const findUserById = (userId, paperId) =>
 	users.find(user => !!(user.id === userId && user.paperIds.includes(paperId)))
 
-const findUserBySocketId = (socketId: string): user | undefined =>
+const findUserBySocketId = socketId =>
 	users.find(user => user.socketId === socketId)
-const findPaperBySocketId = (socketId: string): paper | undefined =>
+const findPaperBySocketId = socketId =>
 	papers.find(paper => paper.socketIds.includes(socketId))
 
-interface configUserProp {
-	color: string
-	hasPermission: boolean
-	role: string
-	isConnected: boolean
-	socketId: string
-	score: number
-}
-
 const configUser = async (
-	user: user,
-	paper: paper,
-	{ color, hasPermission, role, isConnected, socketId, score }: configUserProp,
+	user,
+	paper,
+	{ color, hasPermission, role, isConnected, socketId, score },
 ) => {
 	user.paperIds.push(paper.id)
 	user.color = color
@@ -123,18 +68,8 @@ const configUser = async (
 	user.role = role
 	user.isConnected = isConnected
 	user.socketId = socketId
-	await updatePlayer(
-		user.id,
-		paper.id,
-		color,
-		hasPermission,
-		role,
-		isConnected,
-		socketId,
-		score,
-	)
 }
-const hostFirstUser = async (paper: paper, user: user, socket: any) => {
+const hostFirstUser = async (paper, user, socket) => {
 	console.log(
 		`hosting first user with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
@@ -152,15 +87,6 @@ const hostFirstUser = async (paper: paper, user: user, socket: any) => {
 	paper.userIds.push(user.id)
 	paper.socketIds.push(socket.id)
 
-	await updatePaper(
-		paper.id,
-		user.id,
-		socket.id,
-		paper.turn,
-		paper.size,
-		paper.isEnded,
-	)
-
 	socket.emit('hasPermission', user.hasPermission)
 	socket.emit('watch', paper.history, paper.messages)
 
@@ -171,7 +97,7 @@ const hostFirstUser = async (paper: paper, user: user, socket: any) => {
 	socket.emit('mustWait', true)
 }
 
-const hostSecondUser = async (paper: paper, user: user, socket: any) => {
+const hostSecondUser = async (paper, user, socket) => {
 	console.log(
 		`hosting second user with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
@@ -207,15 +133,6 @@ const hostSecondUser = async (paper: paper, user: user, socket: any) => {
 		if (!paper.userIds.includes(user.id)) paper.userIds.push(user.id)
 		if (!paper.socketIds.includes(socket.id)) paper.socketIds.push(socket.id)
 
-		await updatePaper(
-			paper.id,
-			user.id,
-			socket.id,
-			paper.turn,
-			paper.size,
-			paper.isEnded,
-		)
-
 		socket.emit('color', user.color)
 		socket.emit('hasPermission', user.hasPermission)
 		socket.emit('watch', paper.history, paper.messages)
@@ -226,7 +143,7 @@ const hostSecondUser = async (paper: paper, user: user, socket: any) => {
 	}
 }
 
-const hostSubscriber = (paper: paper, user: user, socket: any) => {
+const hostSubscriber = (paper, user, socket) => {
 	console.log(
 		`hosting subscriber with userId: ${user.id} in paper with paperId: ${paper.id}`,
 	)
@@ -244,18 +161,10 @@ const hostSubscriber = (paper: paper, user: user, socket: any) => {
 	socket.emit('watch', paper.history, paper.messages)
 }
 
-const directUserToPaper = async (
-	paperId: string,
-	userId: string,
-	socket: any,
-	paperSize: number,
-) => {
+const directUserToPaper = async (paperId, userId, socket, paperSize) => {
 	const paper =
 		findPaperById(paperId) || createPaper(socket.id, paperSize, paperId)
 	const user = findUserById(userId, paperId) || createUser(userId, socket.id)
-
-	const dbUser =
-		(await getUserByUserId(userId)) || (await createUserById(userId, 0))
 
 	if (checkMultipleDeviceEntry(paper, user, userId, paperId)) {
 		socket.emit('warning', 'multiple device')
@@ -276,17 +185,12 @@ const directUserToPaper = async (
 	}
 }
 
-const checkMultipleDeviceEntry = (
-	paper: paper,
-	user: user,
-	userId: string,
-	paperId: string,
-) =>
+const checkMultipleDeviceEntry = (paper, user, userId, paperId) =>
 	(paper.userIds.includes(user.id) && user.isConnected === true) ||
 	!userId ||
 	!paperId
 
-const checkValidation = (paper: paper, user: user, type: string): boolean => {
+const checkValidation = (paper, user, type) => {
 	const result =
 		user &&
 		paper &&
@@ -298,7 +202,7 @@ const checkValidation = (paper: paper, user: user, type: string): boolean => {
 	else return !user.hasPermission && paper.turn !== user.color && result
 }
 
-const changeTurn = (paper: paper, userId: string): boolean => {
+const changeTurn = (paper, userId) => {
 	if (paper && paper.turn === 'red') paper.turn = 'blue'
 	else if (paper && paper.turn === 'blue') paper.turn = 'red'
 	for (let i = 0; i < paper.userIds.length; i++) {
@@ -307,32 +211,26 @@ const changeTurn = (paper: paper, userId: string): boolean => {
 	}
 	return true
 }
-const check = (paper: paper, user: user, type: string): boolean => {
+const check = (paper, user, type) => {
 	if (checkValidation(paper, user, type)) return changeTurn(paper, user.id)
 	return false
 }
 
-const getUserAndPaper = (paperId: string, userId: string) => {
+const getUserAndPaper = (paperId, userId) => {
 	const paper = findPaperById(paperId)
 	const user = findUserById(userId, paperId)
 	return { paper, user }
-}
-
-interface handshakeProps {
-	roomId: string
-	userId: string
-	paperSize: number
 }
 
 io.on('connection', socket => {
 	socket.emit('handshake', 'welcome! give me your paper id!')
 	socket.on(
 		'handshake',
-		async ({ roomId: paperId, userId, paperSize }: handshakeProps) =>
+		async ({ roomId: paperId, userId, paperSize }) =>
 			await directUserToPaper(paperId, userId, socket, paperSize),
 	)
 
-	socket.on('introduce', async (userId: string, paperId: string) => {
+	socket.on('introduce', async (userId, paperId) => {
 		const user = findUserById(userId, paperId)
 		const content = message.default.welcome
 		socket.broadcast.to(paperId).emit('name', userId, user?.score, user?.color)
@@ -340,7 +238,6 @@ io.on('connection', socket => {
 			sender: 'noghte-bazi',
 			content,
 		})
-		await createMessage(userId, paperId, content)
 	})
 
 	socket.on('disconnect', () => {
@@ -351,7 +248,7 @@ io.on('connection', socket => {
 			socket.broadcast.to(paper?.id).emit('mustWait', true)
 	})
 
-	socket.on('change', async (userId: string, paperId: string, line: line) => {
+	socket.on('change', async (userId, paperId, line) => {
 		const { paper, user } = getUserAndPaper(userId, paperId)
 		if (!paper || !user) return
 
@@ -363,14 +260,13 @@ io.on('connection', socket => {
 				paper.history[i] = { ...paper.history[i] }
 				paper.history[i][j] = color
 				socket.broadcast.to(paper.id).emit('change', line, color)
-				await createLine(paperId, i, j, color)
 			} else {
 				socket.broadcast.to(paper.id).emit('skip', 'opponent timeout')
 			}
 		} else socket.emit('warning', 'warning')
 	})
 
-	socket.on('bouns', (paperId: string, userId: string, bonus: line) => {
+	socket.on('bouns', (paperId, userId, bonus) => {
 		const { paper, user } = getUserAndPaper(userId, paperId)
 		if (!paper || !user) return
 
@@ -394,7 +290,6 @@ io.on('connection', socket => {
 
 				if (sumOfScores === (paper.size - 1) * (paper.size - 1)) {
 					paper.isEnded = true
-					updateScore(userId, paperId, user.score)
 
 					for (let i = 0; i < paper.userIds.length; i++) {
 						const user = findUserById(paper.userIds[i], paper.id)
@@ -407,29 +302,25 @@ io.on('connection', socket => {
 								? message.default.end.winner
 								: message.default.end.loser
 							socket.emit('message', { sender, content })
-							createMessage('noghte-bazi', paperId, content)
-							if (isWinner) dbSetPaperEnd(paperId, userId)
 						} else {
 							const content = isWinner
 								? message.default.end.loser
 								: message.default.end.winner
 							socket.broadcast.to(paperId).emit('message', { sender, content })
-							createMessage('noghte-bazi', paperId, content)
-							if (isWinner) dbSetPaperEnd(paperId, userId)
 						}
 					}
 				}
 			}
 		}
 	})
-	socket.on('gift', (userId: string, paperId: string) => {
+	socket.on('gift', (userId, paperId) => {
 		const { paper, user } = getUserAndPaper(userId, paperId)
 		if (!paper || !user) return
 		if (check(paper, user, 'gift')) io.to(paper.id).emit('gift')
 		else socket.emit('warning', 'warning')
 	})
 
-	socket.on('resign', (userId: string, paperId: string) => {
+	socket.on('resign', (userId, paperId) => {
 		const { paper, user } = getUserAndPaper(userId, paperId)
 		if (!paper || !user) return
 
@@ -438,11 +329,11 @@ io.on('connection', socket => {
 		socket.broadcast.to(paper.id).emit('resign', 'hello')
 	})
 
-	socket.on('name', (paperId: string) => {
+	socket.on('name', paperId => {
 		const paper = findPaperById(paperId)
 		if (!paper) return
-		let redName: string = '',
-			blueName: string = ''
+		let redName = '',
+			blueName = ''
 		for (let i = 0; i < paper.userIds.length; i++) {
 			const user = findUserById(paper.userIds[i], paperId)
 			if (!user) continue
@@ -452,20 +343,15 @@ io.on('connection', socket => {
 		socket.emit('name', redName, blueName)
 	})
 
-	socket.on(
-		'message',
-		async (paperId: string, userId: string, message: string) => {
-			const paper = findPaperById(paperId)
-			if (!paper) return
+	socket.on('message', async (paperId, userId, message) => {
+		const paper = findPaperById(paperId)
+		if (!paper) return
 
-			await createMessage(userId, paperId, message)
-
-			paper.messages.push({ sender: userId, content: message })
-			socket.broadcast
-				.to(paper.id)
-				.emit('message', { sender: userId, content: message })
-		},
-	)
+		paper.messages.push({ sender: userId, content: message })
+		socket.broadcast
+			.to(paper.id)
+			.emit('message', { sender: userId, content: message })
+	})
 })
 server.listen(config.server.port, () =>
 	console.log(` > server is listening on port ${config.server.port}`),
