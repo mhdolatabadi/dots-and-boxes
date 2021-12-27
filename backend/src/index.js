@@ -1,7 +1,7 @@
-const app = require('express')()
-const http = require('http').createServer(app)
+const { Server } = require('socket.io')
 
 const { createAdapter } = require('@socket.io/postgres-adapter')
+const { pool } = require('./db')
 const { saveGame } = require('./db/game.db')
 const { saveHistory } = require('./db/history.db')
 const { saveMessage } = require('./db/message.db')
@@ -11,12 +11,14 @@ const { savePlays } = require('./db/plays.db')
 const message = require('./localization/messages')
 const config = require('./setup/config')
 
-const io = require('socket.io')(http, {
+const io = new Server(config.server.port, {
 	cors: {
 		origin: '*',
 		methods: ['GET', 'POST'],
 	},
 })
+io.adapter(createAdapter(pool))
+console.log(` ✔️  server is listening on port ${config.server.port}...`)
 
 //migration
 const papers = []
@@ -360,16 +362,10 @@ io.on('connection', socket => {
 	socket.on('message', async (paperId, userId, message) => {
 		const paper = findPaperById(paperId)
 		if (!paper) return
-
 		paper.messages.push({ sender: userId, content: message })
 		saveMessage(message, userId, paperId)
-
 		socket.broadcast
 			.to(paper.id)
 			.emit('message', { sender: userId, content: message })
 	})
 })
-io.adapter(createAdapter(pool))
-io.listen(config.server.port, () =>
-	console.log(` > server is listening on port ${config.server.port}`),
-)

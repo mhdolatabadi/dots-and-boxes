@@ -105,3 +105,4 @@ exports.getClient = async () => {
 	}
 	return client
 }
+exports.pool = pool
