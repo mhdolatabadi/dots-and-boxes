@@ -22,7 +22,7 @@ export default makeStyles(theme => ({
   },
 
   lite: {
-    backgroundColor: theme.palette.primary.lighter,
+    backgroundColor: '#ffd17a',
   },
   dark: {
     backgroundColor: '#000f22',

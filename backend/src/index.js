@@ -1,18 +1,24 @@
-const express = require('express')
-const http = require('http')
+const app = require('express')()
+const http = require('http').createServer(app)
+
+const { createAdapter } = require('@socket.io/postgres-adapter')
+const { saveGame } = require('./db/game.db')
+const { saveHistory } = require('./db/history.db')
+const { saveMessage } = require('./db/message.db')
+const { savePlayer } = require('./db/player.db')
+const { savePlays } = require('./db/plays.db')
 
 const message = require('./localization/messages')
 const config = require('./setup/config')
 
-const app = express()
-const server = http.createServer(app)
 const io = require('socket.io')(http, {
 	cors: {
-		origin: config.server.origin,
+		origin: '*',
 		methods: ['GET', 'POST'],
 	},
 })
 
+//migration
 const papers = []
 const users = []
 
@@ -27,11 +33,12 @@ const createPaper = (socketId, paperSize, paperId) => {
 		size: paperSize,
 		history: [['']],
 	}
+	saveGame(paperId, 'red', paperSize)
 	papers.push(paper)
 	return paper
 }
 
-const createUser = (userId, socketId) => {
+const createUser = (userId, socketId, name) => {
 	const user = {
 		id: userId,
 		score: 0,
@@ -41,10 +48,10 @@ const createUser = (userId, socketId) => {
 		role: '',
 		isConnected: false,
 		socketId,
-		name: '',
+		name,
 	}
 	users.push(user)
-
+	savePlayer(userId, name.split('$')[0], name.split('$')[1])
 	return user
 }
 
@@ -57,7 +64,7 @@ const findUserBySocketId = socketId =>
 const findPaperBySocketId = socketId =>
 	papers.find(paper => paper.socketIds.includes(socketId))
 
-const configUser = async (
+const configUser = (
 	user,
 	paper,
 	{ color, hasPermission, role, isConnected, socketId, score },
@@ -86,6 +93,8 @@ const hostFirstUser = async (paper, user, socket) => {
 	paper.turn = 'red'
 	paper.userIds.push(user.id)
 	paper.socketIds.push(socket.id)
+
+	savePlays(0, false, 'red', 'player', paper.id, user.id)
 
 	socket.emit('hasPermission', user.hasPermission)
 	socket.emit('watch', paper.history, paper.messages)
@@ -120,7 +129,7 @@ const hostSecondUser = async (paper, user, socket) => {
 		if (secondUser && secondUser.color === 'red') user.color = 'blue'
 		else user.color = 'red'
 
-		await configUser(user, paper, {
+		configUser(user, paper, {
 			color: user.color,
 			hasPermission: false,
 			role: 'player',
@@ -132,6 +141,8 @@ const hostSecondUser = async (paper, user, socket) => {
 		user.hasPermission = paper.turn === user.color
 		if (!paper.userIds.includes(user.id)) paper.userIds.push(user.id)
 		if (!paper.socketIds.includes(socket.id)) paper.socketIds.push(socket.id)
+
+		savePlays(user.score, false, user.color, user.role, paper.id, user.id)
 
 		socket.emit('color', user.color)
 		socket.emit('hasPermission', user.hasPermission)
@@ -156,15 +167,18 @@ const hostSubscriber = (paper, user, socket) => {
 		score: -1,
 	})
 	paper.subscriberIds.push(user.id)
+	savePlays(-1, false, red, 'subscriber', paper.id, user.id)
+
 	socket.join(paper.id)
 	socket.emit('role', 'subscriber', paper.turn)
 	socket.emit('watch', paper.history, paper.messages)
 }
 
-const directUserToPaper = async (paperId, userId, socket, paperSize) => {
+const directUserToPaper = (paperId, userId, socket, paperSize, name) => {
 	const paper =
 		findPaperById(paperId) || createPaper(socket.id, paperSize, paperId)
-	const user = findUserById(userId, paperId) || createUser(userId, socket.id)
+	const user =
+		findUserById(userId, paperId) || createUser(userId, socket.id, name)
 
 	if (checkMultipleDeviceEntry(paper, user, userId, paperId)) {
 		socket.emit('warning', 'multiple device')
@@ -172,10 +186,10 @@ const directUserToPaper = async (paperId, userId, socket, paperSize) => {
 	} else {
 		switch (paper.userIds.length) {
 			case 1:
-				await hostFirstUser(paper, user, socket)
+				hostFirstUser(paper, user, socket)
 				break
 			case 2:
-				await hostSecondUser(paper, user, socket)
+				hostSecondUser(paper, user, socket)
 				break
 			default:
 				if (!!findUserById(userId, paperId)) hostSecondUser(paper, user, socket)
@@ -224,15 +238,13 @@ const getUserAndPaper = (paperId, userId) => {
 
 io.on('connection', socket => {
 	socket.emit('handshake', 'welcome! give me your paper id!')
-	socket.on(
-		'handshake',
-		async ({ roomId: paperId, userId, paperSize }) =>
-			await directUserToPaper(paperId, userId, socket, paperSize),
+	socket.on('handshake', ({ roomId: paperId, userId, paperSize, name }) =>
+		directUserToPaper(paperId, userId, socket, paperSize, name),
 	)
 
-	socket.on('introduce', async (userId, paperId) => {
+	socket.on('introduce', (userId, paperId) => {
 		const user = findUserById(userId, paperId)
-		const content = message.default.welcome
+		const content = message.welcome
 		socket.broadcast.to(paperId).emit('name', userId, user?.score, user?.color)
 		socket.emit('message', {
 			sender: 'noghte-bazi',
@@ -248,7 +260,7 @@ io.on('connection', socket => {
 			socket.broadcast.to(paper?.id).emit('mustWait', true)
 	})
 
-	socket.on('change', async (userId, paperId, line) => {
+	socket.on('change', (userId, paperId, line) => {
 		const { paper, user } = getUserAndPaper(userId, paperId)
 		if (!paper || !user) return
 
@@ -259,6 +271,8 @@ io.on('connection', socket => {
 				paper.lastMove = line
 				paper.history[i] = { ...paper.history[i] }
 				paper.history[i][j] = color
+				saveHistory(i, j, userId, paperId)
+
 				socket.broadcast.to(paper.id).emit('change', line, color)
 			} else {
 				socket.broadcast.to(paper.id).emit('skip', 'opponent timeout')
@@ -348,11 +362,14 @@ io.on('connection', socket => {
 		if (!paper) return
 
 		paper.messages.push({ sender: userId, content: message })
+		saveMessage(message, userId, paperId)
+
 		socket.broadcast
 			.to(paper.id)
 			.emit('message', { sender: userId, content: message })
 	})
 })
-server.listen(config.server.port, () =>
+io.adapter(createAdapter(pool))
+io.listen(config.server.port, () =>
 	console.log(` > server is listening on port ${config.server.port}`),
 )

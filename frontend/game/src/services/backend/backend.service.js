@@ -20,6 +20,7 @@ import {
   getPaperSize,
   getPlayerColor,
   getPlayerId,
+  getPlayerName,
   getRoomId,
 } from '../../scenes/_slice/game.slice'
 
@@ -46,6 +47,7 @@ socket.on('handshake', () => {
     roomId: getWisId(),
     userId: getCurrentUserId(),
     paperSize,
+    name: getPlayerName() + '$' + window.W.user.getLastname(),
   })
 })
 

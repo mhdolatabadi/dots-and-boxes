@@ -3,7 +3,6 @@ import { purple } from '@material-ui/core/colors'
 
 export default makeStyles(theme => ({
   root: {
-    margin: theme.spacing(1),
     position: 'absolute',
     top: 0,
     width: '300px',
