@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a83d2461-502b-4123-8341-6fb874e9007e" name="Changes" comment="" />
+    <list default="true" id="a83d2461-502b-4123-8341-6fb874e9007e" name="Changes" comment="Fix prototype polluting assignment and upgrade dependencies">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/game/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/game/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/game/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/game/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,6 +28,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "javascript.nodejs.core.library.configured.version": "14.19.3",
+    "javascript.nodejs.core.library.typings.version": "14.18.20",
     "nodejs_package_manager_path": "yarn",
     "vue.rearranger.settings.migration": "true"
   }
@@ -36,10 +43,15 @@
       <option name="presentableId" value="Default" />
       <updated>1654439512010</updated>
       <workItem from="1654439513314" duration="8000" />
+      <workItem from="1654439740483" duration="500000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fix prototype polluting assignment and upgrade dependencies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix prototype polluting assignment and upgrade dependencies" />
   </component>
 </project>

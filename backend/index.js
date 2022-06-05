@@ -47,8 +47,7 @@ const createUser = (userId, socketId) => {
 const findRoomById = (roomId) => rooms.find((room) => room.id === roomId)
 const findUserById = (userId, roomId) =>
   users.find((user) => {
-    const result = !!(user.id === userId && user.roomIds.includes(roomId))
-    return result
+    return !!(user.id === userId && user.roomIds.includes(roomId))
   })
 
 const findUserBySocketId = (socketId) =>
@@ -72,9 +71,6 @@ const configUser = ({
   user.connection = connection
   user.socketId = socketId
 }
-
-const configRoom = {}
-
 const hostFirstUser = (room, user, socket) => {
   console.log(
     `hosting first user with userId: ${user.id} in room with roomId: ${room.id}`
@@ -219,8 +215,7 @@ const changeTurn = (room, userId) => {
   else if (room && room.turn === 'blue') room.turn = 'red'
   for (let i = 0; i < room.userIds.length; i++) {
     const user = findUserById(room.userIds[i], room.id)
-    if (user.id === userId) user.hasPermission = false
-    else user.hasPermission = true
+    user.hasPermission = user.id !== userId;
   }
   return true
 }
@@ -273,16 +268,16 @@ io.on('connection', (socket) => {
       socket.broadcast.to(room.id).emit('change', line, color)
     } else socket.emit('warning', 'warning')
   })
-  socket.on('bouns', (roomId, userId, bouns) => {
+  socket.on('bonus', (roomId, userId, bonus) => {
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
-    if (user && user.color === bouns.color) {
-      const { i, j, color } = bouns
+    if (user && user.color === bonus.color) {
+      const { i, j, color } = bonus
       if (room.history[i] && room.history[i][j]) {
       } else {
-        console.log(`new bouns arrived:`, bouns, `from user:`, user.id)
+        console.log(`new bonus arrived:`, bonus, `from user:`, user.id)
         room.history[i] = { ...room.history[i] }
-        room.history[i][j] = color
+        room.history.at(i).at(j).value = color
         user.score += 1
 
         // sending gift!
@@ -291,8 +286,7 @@ io.on('connection', (socket) => {
         for (let i = 0; i < room.userIds.length; i++) {
           const user = findUserById(room.userIds[i], room.id)
           sumOfScores += user.score
-          if (user.id === userId) user.hasPermission = true
-          else user.hasPermission = false
+          user.hasPermission = user.id === userId;
         }
         io.to(roomId).emit('gift', userId)
         console.log(sumOfScores, room.size)
