@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { makeStyles } from "@mui/styles";
-=======
 import { makeStyles } from '@mui/styles'
->>>>>>> 4033b70 (Add typescript, remove redundant logics)
 
 export default makeStyles(theme => ({
   root: {
@@ -11,11 +7,7 @@ export default makeStyles(theme => ({
     borderRadius: '15px',
     margin: 'auto',
     '&:hover': {
-<<<<<<< HEAD
       backgroundColor: (props: { playerColor: 'red' | 'blue'}) =>
-=======
-      backgroundColor: (props: { playerColor: 'red' | 'blue' }) =>
->>>>>>> 4033b70 (Add typescript, remove redundant logics)
         props.playerColor === 'red' ? 'rgb(256,100,100)' : 'rgb(100,100,256)',
     },
   },
