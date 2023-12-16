@@ -61,34 +61,34 @@ export default function ScoreBoard({ theme }: Props) {
       <div
         className={clsx(
           classes.score,
-          isRedActive ? classes.blue : classes.activeBlue,
+          // isRedActive ? classes.blue : classes.activeBlue,
         )}
       >
         {richMode && (
           <Avatar
             src={blueAvatar}
-            className={clsx(classes.avatar, classes.blueAvatar)}
+            // className={clsx(classes.avatar, classes.blueAvatar)}
           />
         )}
         <span>{blueText}</span>
       </div>
       <div
         className={clsx(
-          isRedActive ? classes.redActiveScores : classes.blueActiveScores,
+          // isRedActive ? classes.redActiveScores : classes.blueActiveScores,
           classes.scores,
         )}
       >{`${opponentScore} - ${playerScore}`}</div>
       <div
         className={clsx(
           classes.score,
-          isRedActive ? classes.activeRed : classes.red,
+          // isRedActive ? classes.activeRed : classes.red,
         )}
       >
         <span>{redText}</span>
         {richMode && (
           <Avatar
             src={redAvatar}
-            className={clsx(classes.avatar, classes.redAvatar)}
+            // className={clsx(classes.avatar, classes.redAvatar)}
           />
         )}
       </div>

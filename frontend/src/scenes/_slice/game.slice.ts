@@ -7,6 +7,10 @@ interface Message {
   content: string
 }
 
+type Colors = "red" | "blue"
+
+type Status = "connecting" | "connected" | "waiting" | "disconnected"
+
 const gameSlice = createSlice({
   name: 'game',
   initialState: {
@@ -21,7 +25,7 @@ const gameSlice = createSlice({
     player: {
       id: undefined,
       name: 'نامشخص',
-      color: 'red',
+      color: 'red' as Colors,
       score: 0,
       letter: 'ه',
       lastMove: {},
@@ -30,7 +34,7 @@ const gameSlice = createSlice({
     opponent: {
       id: undefined,
       name: 'نامشخص',
-      color: 'blue',
+      color: 'blue' as Colors,
       score: 0,
       letter: 'ب',
       lastMove: {},
@@ -44,13 +48,13 @@ const gameSlice = createSlice({
       end: false,
       gift: false,
       messages: [] as Message[],
-      history: [] as unknown[][],
-      lastMove: {},
-      winner: null,
+      history: [] as ("red" | "blue")[][],
+      lastMove: {} as { i: number; j: number; color: string },
+      winner: {} as { color: string },
     },
     changed: false,
     language: 'persian',
-    status: 'connecting',
+    status: 'connecting' as Status,
   },
   reducers: {
     setPlayerName: (state, action) => {
@@ -87,7 +91,7 @@ const gameSlice = createSlice({
     },
     addNewLine: (state, action) => {
       const { i, j, color } = action.payload
-      state.room.history[i] = [ ...state.room.history[i] ]
+      state.room.history[i] = [...state.room.history[i]]
       state.room.history[i][j] = color
     },
     setPlayerLastMove: (state, action) => {
@@ -251,19 +255,19 @@ export const getPlayerHasPermission = (state: RootState) =>
 export const getLineView = (i: number, j: number) => (state: RootState) =>
   (state ?? store.getState()).game.room.history[i][j] || {}
 
-export const getPlayerScore = (state: RootState) =>
+export const getPlayerScore = (state?: RootState) =>
   (state ?? store.getState()).game.player.score
 
-export const getOpponentColor = (state: RootState) =>
+export const getOpponentColor = (state?: RootState) =>
   (state ?? store.getState()).game.opponent.color
-export const getOpponentId = (state: RootState) =>
+export const getOpponentId = (state?: RootState) =>
   (state ?? store.getState()).game.opponent.id
-export const getOpponentScore = (state: RootState) =>
+export const getOpponentScore = (state?: RootState) =>
   (state ?? store.getState()).game.opponent.score
 export const getPaperSize = (state?: RootState) =>
   (state ?? store.getState()).game.paper.row
 
-export const getRoomWinner = (state: RootState) =>
+export const getRoomWinner = (state?: RootState) =>
   (state ?? store.getState()).game.room.winner
 
 /* Dispatches */
@@ -337,4 +341,5 @@ export const dispatchPlayerProfileImage = (profileImage: string) =>
 export const dispatchOpponentProfileImage = (profileImage: string) =>
   store.dispatch(setOpponentProfileImage(profileImage))
 
-export const dispatchSetChanged = (value: boolean) => store.dispatch(setChanged(value))
+export const dispatchSetChanged = (value: boolean) =>
+  store.dispatch(setChanged(value))

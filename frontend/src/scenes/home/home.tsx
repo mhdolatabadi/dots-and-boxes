@@ -1,10 +1,12 @@
-import Footer from '../../components/footer/footer.js'
-import Header from '../../components/header/header.js'
 import CreateGameMenu from './components/create-game-menu/create-game-menu.js'
-import MainMenu from './components/main-menu/main-menu.js'
 import useStyle from './home.style.js'
 
-export default function Home({ colorId, changeColor }) {
+interface Props {
+  colorId: string
+  changeColor: () => unknown
+}
+
+export default function Home({ colorId, changeColor }: Props) {
   const classes = useStyle({ colorId })
 
   return (

@@ -6,7 +6,11 @@ import t from './header.local'
 import { useSelector } from 'react-redux'
 import { statusView } from '../../scenes/_slice/game.slice'
 
-export default function Header({ type }) {
+interface Props {
+  type: string
+}
+
+export default function Header({ type }: Props) {
   const classes = useStyle()
   const status = useSelector(statusView)
 

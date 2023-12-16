@@ -10,7 +10,7 @@ export default function Message({ type, content }: Props) {
   const direction = type === 'sended' ? 'rtl' : 'ltr'
   return (
     <div className={classes.root} style={{ direction }}>
-      <div className={classes[type]}>
+      <div /* className={classes[type]} */>
         <span>{content}</span>
       </div>
     </div>

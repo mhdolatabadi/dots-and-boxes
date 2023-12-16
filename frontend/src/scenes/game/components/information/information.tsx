@@ -6,6 +6,7 @@ import { setTheme } from '../../../_slice/game.slice'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Drawer, FormControlLabel, Switch } from '@mui/material'
+import { Settings } from '@mui/icons-material'
 
 interface Props {
   theme: {
@@ -22,7 +23,7 @@ export default function Information({ theme }: Props) {
   const [richModeState, setRichModeState] = useState(richMode)
   const [darkModeState, setDarkModeState] = useState(darkMode)
 
-  const toggleDrawer = open => event => {
+  const toggleDrawer = (open: boolean) => (event: KeyboardEvent) => {
     if (
       event.type === 'keydown' &&
       (event.key === 'Tab' || event.key === 'Shift')
@@ -44,16 +45,16 @@ export default function Information({ theme }: Props) {
 
   return (
     <div className={classes.root}>
-      <SettingsIcon
+      <Settings
         style={{
           color: !darkMode && !richMode ? 'black' : 'white',
           fontSize: '35px',
         }}
-        onClick={toggleDrawer(true)}
+        onClick={() => toggleDrawer(true)}
       />
       <Drawer
         open={drawerState}
-        onClose={toggleDrawer(false)}
+        onClose={() => toggleDrawer(false)}
         className={classes.drawer}
         classes={{
           paper: classes.drawerPaper,

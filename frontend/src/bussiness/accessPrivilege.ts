@@ -5,4 +5,4 @@ const privilegedUsers = new Set([
   SUPPORT_USER_ID, // @custom_user_id
 ])
 
-export const hasAccessPrivilege = userId => privilegedUsers.has(userId)
+export const hasAccessPrivilege = (userId: string) => privilegedUsers.has(userId)

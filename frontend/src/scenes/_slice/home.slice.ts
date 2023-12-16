@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { RootState } from '../../setup/store/rootReducer'
 // import { __STORE_DISPATCH__ } from '../../setup/store'
 
 const homeSlice = createSlice({
   name: 'home',
   initialState: {
-    colorId: 0,
+    colorId: 'colorId',
   },
   reducers: {
     setColorId: (state, action) => {
@@ -26,6 +27,6 @@ export const { setColorId } = actions
 // const dispatchSetColorId = colorId => __STORE_DISPATCH__(setColorId(colorId))
 
 // VIEW
-export const colorIdView = state => state.home.colorId
+export const colorIdView = (state: RootState) => state.home.colorId
 // if you need part of your current slice, prefix your function with get
 // const getSomethingView = id => state => state.home.something[id]

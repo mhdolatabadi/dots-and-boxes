@@ -1,1 +1,1 @@
-export { default } from './score-board.tsx'
+export { default } from './score-board'

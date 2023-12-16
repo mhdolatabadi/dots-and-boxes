@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles'
-import { props } from 'ramda'
 
 export default makeStyles(theme => ({
   root: {

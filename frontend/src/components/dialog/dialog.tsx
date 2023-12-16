@@ -9,7 +9,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core'
+} from '@mui/material'
+
+interface Props {
+  open: boolean
+  handleClose: () => unknown
+  onAgree: () => unknown
+  title: string
+  content: string
+  agree: string
+  deny: string
+}
 
 export default function CustomDialog({
   open,
@@ -19,7 +29,7 @@ export default function CustomDialog({
   content,
   agree,
   deny,
-}) {
+}: Props) {
   const classes = useStyle()
   return (
     <Dialog

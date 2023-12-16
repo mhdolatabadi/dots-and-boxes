@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import store from '../../setup/store/store'
+import { RootState } from '../../setup/store/rootReducer'
 
 const loadingSlice = createSlice({
   name: 'loading',
@@ -16,7 +17,7 @@ export const { setLoading } = actions
 export default reducer
 
 /* Views */
-export const isLoadingView = state => state.loading.isLoading
+export const isLoadingView = (state: RootState) => state.loading.isLoading
 
-export const dispatchIsWaiting = isLoading =>
+export const dispatchIsWaiting = (isLoading: boolean) =>
   store.dispatch(setLoading(isLoading))

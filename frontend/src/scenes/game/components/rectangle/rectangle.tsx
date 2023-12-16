@@ -64,9 +64,9 @@ export default function Rectangle({ i, j, lastMove, paperSize }: Props) {
     !playerHasPermission
   ) {
     if (playerColor === lastColor) {
-      dispatch(increasePlayerScore())
+      dispatch(increasePlayerScore({}))
       sendBouns(i, j, playerColor)
-    } else dispatch(increaseOpponentScore())
+    } else dispatch(increaseOpponentScore({}))
   }
 
   return (

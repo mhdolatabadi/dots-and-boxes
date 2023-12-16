@@ -25,7 +25,7 @@ interface Props {
   }
 }
 
-export default function Paper({ theme }) {
+export default function Paper({ theme }: Props) {
   const classes = useStyle()
   const roomLastMove = useSelector(roomLastMoveView)
   const rowNumber = useSelector(paperRowNumberView)
@@ -34,14 +34,14 @@ export default function Paper({ theme }) {
 
   return (
     <div
-      className={cns(
-        classes.root,
-        richMode
-          ? classes['rich']
-          : darkMode
-          ? classes['dark']
-          : classes['lite'],
-      )}
+      // className={cns(
+      //   classes.root,
+      //   richMode
+      //     ? classes['rich']
+      //     : darkMode
+      //     ? classes['dark']
+      //     : classes['lite'],
+      // )}
     >
       {createElements(rowNumber, columnNumber).map(({ i, j }) => {
         if ((i * j) % 2 === 1)

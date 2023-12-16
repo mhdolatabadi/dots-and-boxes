@@ -5,9 +5,10 @@ interface Props {
   open: boolean
   handleClose: () => unknown
   message: string
+  type: string
 }
 
-export default function CustomSnackbar({ open, handleClose, message }: Props) {
+export default function CustomSnackbar({ open, handleClose, message, type }: Props) {
   const classes = useStyle()
 
   return (

@@ -1,18 +1,11 @@
 import * as React from 'react'
-// style
 import useStyle from './footer.style'
-// localiztion
 import t from './footer.local'
 import Dialog from '../dialog'
 import Snackbar from '../snackbar'
-// wapp id: "5e7393898850a7419b1ed495"
-// wis id: "60af996b9532b6ecccaf55c4"
-// channel id as chat id :"60aa7323fa713a0bc0f54d43"
 
-export default function Footer(props) {
+export default function Footer() {
   const classes = useStyle()
-
-  const { W } = window
 
   // const Transition = React.forwardRef(function Transition(props, ref) {
   //   return <Slide direction="up" ref={ref} {...props} />
@@ -27,7 +20,6 @@ export default function Footer(props) {
   const handleCloseSnackbar = () => setOpenSnackbar(false)
 
   const onAgree = () => {
-    W.chats.join('60aa7323fa713a0bc0f54d43')
     handleCloseDialog()
     handleClickOpenSnackbar()
   }
@@ -61,11 +53,7 @@ export default function Footer(props) {
 
         <div
           className={classes.channel}
-          onClick={() =>
-            W.wappSystem.openInDrawer('5f12f01d170f91242534aa92', {
-              wisId: '60afc7f29532b6ecccaf560d',
-            })
-          }
+          onClick={console.log}
         >
           <span>نظرات</span>
           <img
