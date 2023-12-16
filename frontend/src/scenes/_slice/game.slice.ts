@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import store from '../../setup/store/store'
+import { RootState } from '../../setup/store/rootReducer'
+
+interface Message {
+  sender: string
+  content: string
+}
 
 const gameSlice = createSlice({
   name: 'game',
@@ -37,8 +43,8 @@ const gameSlice = createSlice({
       hasPermission: true,
       end: false,
       gift: false,
-      messages: [],
-      history: {},
+      messages: [] as Message[],
+      history: [] as unknown[][],
       lastMove: {},
       winner: null,
     },
@@ -81,7 +87,7 @@ const gameSlice = createSlice({
     },
     addNewLine: (state, action) => {
       const { i, j, color } = action.payload
-      state.room.history[i] = { ...state.room.history[i] }
+      state.room.history[i] = [ ...state.room.history[i] ]
       state.room.history[i][j] = color
     },
     setPlayerLastMove: (state, action) => {
@@ -184,135 +190,151 @@ export const {
 export default reducer
 
 /* Views */
-export const changedView = state => state.game.changed
+export const changedView = (state: RootState) => state.game.changed
 
-export const themeView = state => state.game.theme
+export const themeView = (state: RootState) => state.game.theme
 
-export const statusView = state => state.game.status
+export const statusView = (state: RootState) => state.game.status
 
-export const messagesView = state => state.game.room.messages
+export const messagesView = (state: RootState) => state.game.room.messages
 
-export const playerIdView = state => state.game.player.id
-export const playerColorView = state => state.game.player.color
-export const playerNameView = state => state.game.player.name
-export const playerScoreView = state => state.game.player.score
-export const playerProfileImageView = state => state.game.player.profileImage
+export const playerIdView = (state: RootState) => state.game.player.id
+export const playerColorView = (state: RootState) => state.game.player.color
+export const playerNameView = (state: RootState) => state.game.player.name
+export const playerScoreView = (state: RootState) => state.game.player.score
+export const playerProfileImageView = (state: RootState) =>
+  state.game.player.profileImage
 
-export const opponentIdView = state => state.game.opponent.id
-export const opponentColorView = state => state.game.opponent.color
-export const opponentNameView = state => state.game.opponent.name
-export const opponentScoreView = state => state.game.opponent.score
-export const opponentProfileImageView = state =>
+export const opponentIdView = (state: RootState) => state.game.opponent.id
+export const opponentColorView = (state: RootState) => state.game.opponent.color
+export const opponentNameView = (state: RootState) => state.game.opponent.name
+export const opponentScoreView = (state: RootState) => state.game.opponent.score
+export const opponentProfileImageView = (state: RootState) =>
   state.game.opponent.profileImage
 
-export const roomIsWaitingView = state => state.game.room.isWaiting
-export const roomHasPermissionView = state => state.game.room.hasPermission
-export const roomLastMoveView = state => state.game.room.lastMove
-export const roomWinnerView = state => state.game.room.winner
+export const roomIsWaitingView = (state: RootState) => state.game.room.isWaiting
+export const roomHasPermissionView = (state: RootState) =>
+  state.game.room.hasPermission
+export const roomLastMoveView = (state: RootState) => state.game.room.lastMove
+export const roomWinnerView = (state: RootState) => state.game.room.winner
 
-export const paperRowNumberView = state => state.game.paper.row
-export const paperColumnNumberView = state => state.game.paper.column
+export const paperRowNumberView = (state: RootState) => state.game.paper.row
+export const paperColumnNumberView = (state: RootState) =>
+  state.game.paper.column
 
-export const elementColorView = (i, j) => state =>
+export const elementColorView = (i: number, j: number) => (state: RootState) =>
   state.game.room.history[i] ? state.game.room.history[i][j] : ''
 
 /* Getters */
-export const getThemeView = state => (state ?? store.getState()).game.theme
+export const getThemeView = (state: RootState) =>
+  (state ?? store.getState()).game.theme
 
-export const getRoomId = state => (state ?? store.getState()).game.room.id
-export const getRoomHasPermission = state =>
+export const getRoomId = (state?: RootState) =>
+  (state ?? store.getState()).game.room.id
+export const getRoomHasPermission = (state?: RootState) =>
   (state ?? store.getState()).game.room.hasPermission
-export const getPlayerId = state => (state ?? store.getState()).game.player.id
+export const getPlayerId = (state?: RootState) =>
+  (state ?? store.getState()).game.player.id
 
-export const getPlayerName = state =>
+export const getPlayerName = (state?: RootState) =>
   (state ?? store.getState()).game.player.name
 
-export const getPlayerColor = state =>
+export const getPlayerColor = (state?: RootState) =>
   (state ?? store.getState()).game.player.color
 
-export const getOpponentName = state =>
+export const getOpponentName = (state: RootState) =>
   (state ?? store.getState()).game.opponent.name
 
-export const getPlayerHasPermission = state =>
+export const getPlayerHasPermission = (state: RootState) =>
   (state ?? store.getState()).game.room.hasPermission
 
-export const getLineView = (i, j) => state =>
+export const getLineView = (i: number, j: number) => (state: RootState) =>
   (state ?? store.getState()).game.room.history[i][j] || {}
 
-export const getPlayerScore = state =>
+export const getPlayerScore = (state: RootState) =>
   (state ?? store.getState()).game.player.score
 
-export const getOpponentColor = state =>
+export const getOpponentColor = (state: RootState) =>
   (state ?? store.getState()).game.opponent.color
-export const getOpponentId = state =>
+export const getOpponentId = (state: RootState) =>
   (state ?? store.getState()).game.opponent.id
-export const getOpponentScore = state =>
+export const getOpponentScore = (state: RootState) =>
   (state ?? store.getState()).game.opponent.score
-export const getPaperSize = state => (state ?? store.getState()).game.paper.row
+export const getPaperSize = (state?: RootState) =>
+  (state ?? store.getState()).game.paper.row
 
-export const getRoomWinner = state =>
+export const getRoomWinner = (state: RootState) =>
   (state ?? store.getState()).game.room.winner
 
 /* Dispatches */
-export const dispatchTheme = theme => store.dispatch(setTheme(theme))
+export const dispatchTheme = (theme: object) => store.dispatch(setTheme(theme))
 
-export const dispatchPlayerColor = color =>
+export const dispatchPlayerColor = (color: string) =>
   store.dispatch(setPlayerColor({ color }))
 
-export const dispatchOpponentColor = color =>
+export const dispatchOpponentColor = (color: string) =>
   store.dispatch(setOpponentColor({ color }))
 
-export const dispatchPlayerId = id => store.dispatch(setPlayerId({ id }))
+export const dispatchPlayerId = (id: string) =>
+  store.dispatch(setPlayerId({ id }))
 
-export const dispatchOpponentName = name =>
+export const dispatchOpponentName = (name: string) =>
   store.dispatch(setOpponentName({ name }))
 
-export const dispatchOpponentId = id => store.dispatch(setOpponentId({ id }))
+export const dispatchOpponentId = (id: string) =>
+  store.dispatch(setOpponentId({ id }))
 
-export const dispatchRoomId = id => store.dispatch(setRoomId({ id }))
+export const dispatchRoomId = (id: string) => store.dispatch(setRoomId({ id }))
 
-export const dispatchIsWaiting = isWaiting =>
+export const dispatchIsWaiting = (isWaiting: boolean) =>
   store.dispatch(setIsWaiting({ isWaiting }))
 
-export const dispatchHasPermission = hasPermission =>
+export const dispatchHasPermission = (hasPermission: boolean) =>
   store.dispatch(setHasPermission({ hasPermission }))
 
-export const dispatchAddNewLine = (i, j, color) =>
+export const dispatchAddNewLine = (i: number, j: number, color: string) =>
   store.dispatch(addNewLine({ i, j, color }))
 
-export const dispatchSetPlayerLastMove = (i, j, color) =>
-  store.dispatch(setPlayerLastMove({ i, j, color }))
+export const dispatchSetPlayerLastMove = (
+  i: number,
+  j: number,
+  color: string,
+) => store.dispatch(setPlayerLastMove({ i, j, color }))
 
-export const dispatchSetOpponentLastMove = (i, j, color) =>
-  store.dispatch(setOpponentLastMove({ i, j, color }))
+export const dispatchSetOpponentLastMove = (
+  i: number,
+  j: number,
+  color: string,
+) => store.dispatch(setOpponentLastMove({ i, j, color }))
 
-export const dispatchSetRoomLastMove = (i, j, color) =>
+export const dispatchSetRoomLastMove = (i: number, j: number, color: string) =>
   store.dispatch(setRoomLastMove({ i, j, color }))
 
-export const dispatchSetStatus = status => store.dispatch(setStatus({ status }))
+export const dispatchSetStatus = (status: string) =>
+  store.dispatch(setStatus({ status }))
 
-export const dispatchSetHistory = history =>
+export const dispatchSetHistory = (history: object) =>
   store.dispatch(setHistory({ history }))
 
-export const dispatchSetMessages = messages =>
+export const dispatchSetMessages = (messages: Message[]) =>
   store.dispatch(setMessages({ messages }))
 
-export const dispatchAddNewMessage = message =>
+export const dispatchAddNewMessage = (message: string) =>
   store.dispatch(addNewMessage(message))
 
-export const dispatchSetPlayerName = name =>
+export const dispatchSetPlayerName = (name: string) =>
   store.dispatch(setPlayerName({ name }))
 
-export const dispatchOpponentScore = score =>
+export const dispatchOpponentScore = (score: number) =>
   store.dispatch(setOpponentScore({ score }))
 
-export const dispatchPlayerScore = score =>
+export const dispatchPlayerScore = (score: number) =>
   store.dispatch(setPlayerScore({ score }))
 
-export const dispatchPlayerProfileImage = profileImage =>
+export const dispatchPlayerProfileImage = (profileImage: string) =>
   store.dispatch(setPlayerProfileImage(profileImage))
 
-export const dispatchOpponentProfileImage = profileImage =>
+export const dispatchOpponentProfileImage = (profileImage: string) =>
   store.dispatch(setOpponentProfileImage(profileImage))
 
-export const dispatchSetChanged = value => store.dispatch(setChanged(value))
+export const dispatchSetChanged = (value: boolean) => store.dispatch(setChanged(value))

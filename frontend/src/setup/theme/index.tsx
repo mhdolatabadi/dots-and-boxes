@@ -1,5 +1,10 @@
-import { createTheme, CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material'
+import {
+  createTheme,
+  CssBaseline,
+  ThemeProvider as MuiThemeProvider,
+} from '@mui/material'
 import './scrollbar.css'
+import { ReactNode } from 'react'
 
 const theme = createTheme({
   palette: {
@@ -9,9 +14,9 @@ const theme = createTheme({
     },
   },
   typography: { fontFamily: 'Vazir' },
-  overrides: {
+  components: {
     MuiCssBaseline: {
-      '@global': {
+      styleOverrides: {
         html: {
           WebkitFontSmoothing: 'auto',
           height: '100%',
@@ -33,7 +38,11 @@ const theme = createTheme({
   },
 })
 
-export default function ThemeProvider({ children }) {
+interface Props {
+  children: ReactNode
+}
+
+export default function ThemeProvider({ children }: Props) {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />

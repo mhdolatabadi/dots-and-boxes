@@ -43,10 +43,10 @@ socket.on('handshake', () => {
   const paperSize = getPaperSize()
 
   socket.emit('handshake', {
-    roomId: getWisId(),
-    userId: getCurrentUserId(),
+    roomId: "roomId",
+    userId: "userId",
     paperSize,
-    name: getPlayerName() + '$' + window.W.user.getLastname(),
+    name: getPlayerName(),
   })
 })
 
@@ -55,7 +55,7 @@ socket.on('color', (color: string) => {
   dispatchPlayerColor(color)
 })
 
-socket.on('mustWait', (type: string) => {
+socket.on('mustWait', (type: boolean) => {
   console.log('waiting...')
   // W.messages.sendMessageToCurrentChat('text', 'نقطه بازی کنیم؟')
   dispatchIsWaiting(type)
@@ -87,15 +87,13 @@ socket.on('score', (score: number) => {
   dispatchPlayerScore(score)
 })
 
-socket.on('name', (opponentId: string, opponentScore: string, opponentColor: string) => {
+socket.on('name', (opponentId: string, opponentScore: number, opponentColor: string) => {
   console.log('getting opponent name')
   dispatchOpponentId(opponentId)
   dispatchOpponentScore(opponentScore)
   dispatchOpponentColor(opponentColor)
-  window.W.users.getById([String(opponentId)]).then((data: unknown) => {
-    dispatchOpponentName(data[opponentId].firstname)
-    dispatchOpponentProfileImage(data[opponentId].profileImage)
-  })
+  dispatchOpponentName("opponentName")
+  dispatchOpponentProfileImage("oponnentProfileImage")
 })
 
 socket.on('role', (role: string, color: string) => {
