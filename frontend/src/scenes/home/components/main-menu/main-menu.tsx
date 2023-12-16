@@ -1,9 +1,7 @@
-import { Button, Stack } from '@material-ui/core'
-import * as React from 'react'
-// style
+import { Button, Stack } from '@mui/material'
 import useStyle from './main-menu.style'
 
-export default function MainMenu(props) {
+export default function MainMenu() {
   const classes = useStyle()
 
   return (
