@@ -4,7 +4,7 @@ import useStyle from './header.style'
 // localiztion
 import t from './header.local'
 import { useSelector } from 'react-redux'
-import { statusView } from '../../scenes/_slice/game.slice'
+import { statusView } from '../../slices/game.slice'
 
 interface Props {
   type: string

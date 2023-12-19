@@ -22,9 +22,9 @@ import {
   getPlayerId,
   getPlayerName,
   getRoomId,
-} from '../../scenes/_slice/game.slice'
+} from '../../slices/game.slice'
 
-import { HTTP_BACKEND } from '../../setup/api'
+import { HTTP_BACKEND } from '../../setting/api'
 // /**
 //  * @param {Object} params - your passed data
 //  * @return {Promise<unknown>}
