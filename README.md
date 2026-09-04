@@ -3,11 +3,10 @@ This an implementation of Noghte Bazi(which means dots and boxes in persian).
 
 ## Self-hosted deployment
 
-The project has three pieces:
+The project has two pieces:
 
 - `backend` — a Node/Express + Socket.IO server that hosts game rooms.
 - `frontend/game` — the React app players actually play the game in.
-- `frontend/cover` — a static landing/cover page.
 
 Each match happens in a room identified by a `room` query parameter on the
 game app's URL (e.g. `https://game.example.com/?room=abc123`). Opening the
@@ -19,12 +18,11 @@ so the host can copy the link and send it to an opponent. Player identity
 ### Docker Compose (recommended)
 
 1. Copy `.env.example` to `.env` and fill in your own values:
-   - `CORS_ORIGIN` — the public URL(s) the frontends are served from
-     (comma-separated if you serve `game` and `cover` on different origins).
+   - `CORS_ORIGIN` — the public URL the game frontend is served from.
    - `REACT_APP_BACKEND_URL` — the public URL players' browsers will use to
      reach the backend's Socket.IO server. This is baked into the `game`
      frontend at build time, so changing it requires rebuilding that image.
-   - `BACKEND_PORT`, `GAME_PORT`, `COVER_PORT` — host ports to publish.
+   - `BACKEND_PORT`, `GAME_PORT` — host ports to publish.
 2. Build and start everything:
 
    ```sh
@@ -40,7 +38,6 @@ so the host can copy the link and send it to an opponent. Player identity
 
 - **Backend**: `cd backend && yarn install && NODE_ENV=production PORT=13797 CORS_ORIGIN=https://your-game-domain yarn start` (or `node index.js`).
 - **Game frontend**: `cd frontend/game && yarn install && REACT_APP_BACKEND_URL=https://your-backend-domain yarn build`, then serve the `build/` folder with any static file server.
-- **Cover page**: `cd frontend/cover && yarn install && yarn build`, then serve `build/` the same way.
 
 ### Configuration reference (backend)
 
