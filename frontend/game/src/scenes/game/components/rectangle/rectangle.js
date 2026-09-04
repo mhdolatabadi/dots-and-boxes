@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 // style
 import useStyle from './rectangle.style'
 // localiztion
@@ -35,32 +36,44 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
   if (i === lastI && j - 1 === lastJ) lastLineColor = leftLineColor || ''
   if (i === lastI && j + 1 === lastJ) lastLineColor = rightLineColor || ''
 
+  const isBoxSurrounded =
+    !!topLineColor && !!rightLineColor && !!leftLineColor && !!downLineColor
   const backgroundColor = background
     ? background
-    : !!topLineColor && !!rightLineColor && !!leftLineColor && !!downLineColor
+    : isBoxSurrounded
     ? lastLineColor
     : ''
-  if (!background && backgroundColor) {
-    dispatch(addNewLine({ i, j, color: backgroundColor }))
-  }
+  const isAdjacentToLastMove =
+    (i - 1 === lastI && j === lastJ) ||
+    (i + 1 === lastI && j === lastJ) ||
+    (i === lastI && j - 1 === lastJ) ||
+    (i === lastI && j + 1 === lastJ)
 
-  if (
-    ((i - 1 === lastI && j === lastJ) ||
-      (i + 1 === lastI && j === lastJ) ||
-      (i === lastI && j - 1 === lastJ) ||
-      (i === lastI && j + 1 === lastJ)) &&
-    !background &&
-    !!topLineColor &&
-    !!rightLineColor &&
-    !!leftLineColor &&
-    !!downLineColor &&
-    !playerHasPermission
-  ) {
-    if (playerColor === lastColor) {
-      dispatch(increasePlayerScore())
-      sendBonus(i, j, playerColor)
-    } else dispatch(increaseOpponentScore())
-  }
+  // Claiming a completed box is a side effect (redux dispatch, a socket
+  // emit), so it belongs in an effect rather than directly in render --
+  // dispatching mid-render triggers React's "Cannot update a component
+  // while rendering a different component" warning.
+  useEffect(() => {
+    if (background || !backgroundColor) return
+    dispatch(addNewLine({ i, j, color: backgroundColor }))
+
+    if (isAdjacentToLastMove && isBoxSurrounded && !playerHasPermission) {
+      if (playerColor === lastColor) {
+        dispatch(increasePlayerScore())
+        sendBonus(i, j, playerColor)
+      } else dispatch(increaseOpponentScore())
+    }
+  }, [
+    i,
+    j,
+    background,
+    backgroundColor,
+    isAdjacentToLastMove,
+    isBoxSurrounded,
+    playerHasPermission,
+    playerColor,
+    lastColor,
+  ])
 
   return (
     <div
