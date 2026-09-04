@@ -38,8 +38,38 @@ const gameSlice = createSlice({
     },
     language: 'persian',
     status: 'connecting',
+    // 'menu' | 'online' | 'computer'
+    mode: 'menu',
   },
   reducers: {
+    setGameMode: (state, action) => {
+      const { mode } = action.payload
+      state.mode = mode
+    },
+    resetGame: (state, action) => {
+      state.player.score = 0
+      state.player.lastMove = {}
+      state.opponent = {
+        id: undefined,
+        name: 'نامشخص',
+        color: 'blue',
+        score: 0,
+        letter: 'ب',
+        lastMove: {},
+      }
+      state.room = {
+        id: undefined,
+        role: undefined,
+        isWaiting: false,
+        hasPermission: true,
+        end: false,
+        gift: false,
+        messages: [],
+        history: {},
+        lastMove: {},
+        winner: null,
+      }
+    },
     setPlayerName: (state, action) => {
       const { name } = action.payload
       state.player.name = name
@@ -132,6 +162,8 @@ const gameSlice = createSlice({
 
 const { actions, reducer } = gameSlice
 export const {
+  setGameMode,
+  resetGame,
   setPlayerName,
   setPlayerColor,
   setPlayerId,
@@ -159,6 +191,7 @@ export default reducer
 
 /* Views */
 export const statusView = state => state.game.status
+export const gameModeView = state => state.game.mode
 
 export const messagesView = state => state.game.room.messages
 
@@ -184,6 +217,7 @@ export const elementColorView = (i, j) => state =>
   state.game.room.history[i] ? state.game.room.history[i][j] : ''
 
 /* Getters */
+export const getGameMode = state => (state ?? store.getState()).game.mode
 export const getRoomId = state => (state ?? store.getState()).game.room.id
 export const getRoomHasPermission = state =>
   (state ?? store.getState()).game.room.hasPermission
@@ -219,6 +253,8 @@ export const getRoomWinner = state =>
   (state ?? store.getState()).game.room.winner
 
 /* Dispatches */
+export const dispatchGameMode = mode => store.dispatch(setGameMode({ mode }))
+export const dispatchResetGame = () => store.dispatch(resetGame())
 export const dispatchPlayerColor = color =>
   store.dispatch(setPlayerColor({ color }))
 export const dispatchOpponentColor = color =>

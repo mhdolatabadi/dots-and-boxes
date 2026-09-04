@@ -16,6 +16,7 @@ import {
   dispatchSetOpponentLastMove,
   dispatchSetRoomLastMove,
   dispatchSetStatus,
+  getGameMode,
   getPaperSize,
   getPlayerColor,
   getPlayerId,
@@ -37,7 +38,14 @@ socket.on('connect', () => {
   dispatchSetStatus('connected')
 })
 
-socket.on('handshake', () => {
+// The server only sends its 'handshake' invite once per connection --
+// which happens as soon as this module loads, before the player has
+// necessarily chosen "online" from the home menu yet. So this can't
+// just be answered inline in the listener below: joinOnlineRoom is
+// exported so online.service can call it directly once the player
+// actually picks online mode, in case that invite already came and
+// went by then.
+export const joinOnlineRoom = () => {
   console.log('handshaking...')
   const paperSize = getPaperSize()
 
@@ -47,6 +55,10 @@ socket.on('handshake', () => {
     name: getUserFirstName(),
     paperSize,
   })
+}
+
+socket.on('handshake', () => {
+  if (getGameMode() === 'online') joinOnlineRoom()
 })
 
 socket.on('color', color => {
@@ -160,20 +172,26 @@ socket.on('warning', warning => {
 socket.on('disconnect', () => dispatchSetStatus('connecting'))
 
 export const sendNewLine = (i, j, color) => {
-  const roomId = getRoomId()
-  const playerId = getPlayerId()
-  const message = { i, j, color }
-  socket.emit('change', playerId, roomId, message)
+  if (getGameMode() === 'online') {
+    const roomId = getRoomId()
+    const playerId = getPlayerId()
+    socket.emit('change', playerId, roomId, { i, j, color })
+  }
   dispatchHasPermission(false)
   const sendAudio = new Audio('line.mp3')
   sendAudio.play()
 }
 
 export const sendBonus = (i, j, color) => {
-  const roomId = getRoomId()
-  const userId = getPlayerId()
-  const bonus = { i, j, color }
-  socket.emit('bonus', roomId, userId, bonus)
+  if (getGameMode() === 'online') {
+    const roomId = getRoomId()
+    const userId = getPlayerId()
+    socket.emit('bonus', roomId, userId, { i, j, color })
+  } else {
+    // No server to grant the bonus turn back -- the client already
+    // knows for certain it just completed the box, so grant it directly.
+    dispatchHasPermission(true)
+  }
 }
 
 export const sendMessage = message => {

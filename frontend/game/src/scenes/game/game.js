@@ -12,12 +12,14 @@ import SendField from './components/send-field'
 import '../../services/backend/backend.service'
 import ScoreBoard from './components/score-board'
 import { useInitializeData } from '../_hook'
-import { roomWinnerView } from '../_slice/game.slice'
+import { gameModeView, roomWinnerView } from '../_slice/game.slice'
 import { useSelector } from 'react-redux'
 
 export default function GamePresentational(props) {
   const classes = useStyle()
   const winner = useSelector(roomWinnerView)
+  const mode = useSelector(gameModeView)
+  const isOnline = mode === 'online'
   useInitializeData()
 
   return (
@@ -26,11 +28,11 @@ export default function GamePresentational(props) {
       style={{ backgroundColor: winner ? `dark${winner.color}` : 'gray' }}
     >
       <Header type="game" />
-      <Chat />
+      {isOnline && <Chat />}
       {/* <Information /> */}
       <Paper />
       <ScoreBoard />
-      <SendField />
+      {isOnline && <SendField />}
       <Footer />
     </div>
   )
