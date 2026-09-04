@@ -9,6 +9,7 @@ import {
   dispatchOpponentId,
   dispatchOpponentName,
   dispatchOpponentScore,
+  dispatchPaperSize,
   dispatchPlayerColor,
   dispatchPlayerScore,
   dispatchSetHistory,
@@ -73,15 +74,14 @@ socket.on('mustWait', type => {
   type ? dispatchSetStatus('waiting') : dispatchSetStatus('connected')
 })
 
-socket.on('watch', (history, messages) => {
+socket.on('watch', (history, messages, paperSize) => {
   console.log('wathcing history...')
   dispatchSetHistory(history)
   dispatchSetMessages(messages)
-  // if (history.length > 0) {
-  //   for (let i = 0; i < history.length; i++) {
-  //     recieve(history[i], history[i].color)
-  //   }
-  // }
+  // The room's size is set once by whoever created it; a joining
+  // player's own board-size pick only matters if they end up hosting a
+  // new room, so sync to whatever the room actually is.
+  if (paperSize) dispatchPaperSize(paperSize)
 })
 
 socket.on('introduce', () => {

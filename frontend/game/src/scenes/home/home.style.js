@@ -17,6 +17,31 @@ export default makeStyles(theme => ({
     fontWeight: 600,
     marginBottom: '16px',
   },
+  sizePicker: {
+    display: 'flex',
+    gap: '8px',
+  },
+  sizeOption: {
+    padding: '8px 18px',
+    borderRadius: '8px',
+    color: '#c8cad0',
+    backgroundColor: '#282c34',
+    border: '2px solid transparent',
+    fontSize: '14px',
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+  },
+  sizeOptionSelected: {
+    color: '#fff',
+    borderColor: '#3b82c4',
+  },
+  hint: {
+    color: '#767c8a',
+    fontSize: '12px',
+    maxWidth: '260px',
+    textAlign: 'center',
+    marginBottom: '8px',
+  },
   button: {
     padding: '16px 32px',
     borderRadius: '10px',

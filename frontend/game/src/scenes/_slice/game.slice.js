@@ -46,6 +46,11 @@ const gameSlice = createSlice({
       const { mode } = action.payload
       state.mode = mode
     },
+    setPaperSize: (state, action) => {
+      const { size } = action.payload
+      state.paper.row = size
+      state.paper.column = size
+    },
     resetGame: (state, action) => {
       state.player.score = 0
       state.player.lastMove = {}
@@ -163,6 +168,7 @@ const gameSlice = createSlice({
 const { actions, reducer } = gameSlice
 export const {
   setGameMode,
+  setPaperSize,
   resetGame,
   setPlayerName,
   setPlayerColor,
@@ -212,6 +218,7 @@ export const roomWinnerView = state => state.game.room.winner
 
 export const paperRowNumberView = state => state.game.paper.row
 export const paperColumnNumberView = state => state.game.paper.column
+export const paperSizeView = state => state.game.paper.row
 
 export const elementColorView = (i, j) => state =>
   state.game.room.history[i] ? state.game.room.history[i][j] : ''
@@ -254,6 +261,7 @@ export const getRoomWinner = state =>
 
 /* Dispatches */
 export const dispatchGameMode = mode => store.dispatch(setGameMode({ mode }))
+export const dispatchPaperSize = size => store.dispatch(setPaperSize({ size }))
 export const dispatchResetGame = () => store.dispatch(resetGame())
 export const dispatchPlayerColor = color =>
   store.dispatch(setPlayerColor({ color }))

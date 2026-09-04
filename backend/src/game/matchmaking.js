@@ -24,7 +24,7 @@ const createRoomDirector = (io) => {
     room.userIds.push(user.id)
     room.socketIds.push(socket.id)
     socket.emit('hasPermission', user.hasPermission)
-    socket.emit('watch', room.history, room.messages)
+    socket.emit('watch', room.history, room.messages, room.size)
 
     socket.join(room.id)
     socket.emit('color', 'red')
@@ -44,7 +44,7 @@ const createRoomDirector = (io) => {
       const opponent = findUserById(opponentId, room.id)
       socket.emit('color', user.color)
       socket.emit('hasPermission', false)
-      socket.emit('watch', room.history, room.messages)
+      socket.emit('watch', room.history, room.messages, room.size)
       socket.emit('score', user.score)
       io.to(room.id).emit('mustWait', false)
       socket.emit(
@@ -78,7 +78,7 @@ const createRoomDirector = (io) => {
 
       socket.emit('color', user.color)
       socket.emit('hasPermission', user.hasPermission)
-      socket.emit('watch', room.history, room.messages)
+      socket.emit('watch', room.history, room.messages, room.size)
       socket.emit('score', user.score)
       socket.join(room.id)
       io.to(room.id).emit('mustWait', false)
@@ -102,7 +102,7 @@ const createRoomDirector = (io) => {
     room.subscriberIds.push(user.id)
     socket.join(room.id)
     socket.emit('role', 'subscriber', room.turn)
-    socket.emit('watch', room.history, room.messages)
+    socket.emit('watch', room.history, room.messages, room.size)
   }
 
   const directUserToRoom = (roomId, userId, name, socket, paperSize) => {
