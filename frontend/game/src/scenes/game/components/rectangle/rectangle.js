@@ -6,6 +6,7 @@ import useStyle from './rectangle.style'
 
 import { useSelector } from 'react-redux'
 import { sendBonus } from '../../../../services/backend/backend.service'
+import { boxDisplayColor } from '../../displayColor'
 import { dispatch } from '../../../../setup/store/store'
 import {
   addNewLine,
@@ -89,7 +90,7 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
       style={{
         gridColumn: `${j - 1} / ${j + 2}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor,
+        backgroundColor: boxDisplayColor(backgroundColor),
       }}
     >
       <span></span>

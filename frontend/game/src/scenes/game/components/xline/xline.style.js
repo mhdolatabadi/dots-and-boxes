@@ -9,9 +9,9 @@ export default makeStyles(theme => ({
     transition: 'background-color 0.25s',
     borderRadius: '15px',
     margin: 'auto',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.035)',
     '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.22)',
+      backgroundColor: 'rgba(255, 255, 255, 0.16)',
     },
   },
 }))
