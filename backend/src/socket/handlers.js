@@ -137,9 +137,9 @@ const registerSocketHandlers = (io) => {
       const room = findRoomById(roomId)
       let redName, blueName
       for (let i = 0; i < room.userIds.length; i++) {
-        const element = room.userIds[i]
-        if (element.color === 'red') redName = element.name
-        else blueName = element.name
+        const user = findUserById(room.userIds[i], room.id)
+        if (user.color === 'red') redName = user.name
+        else blueName = user.name
       }
       socket.emit('getname', redName, blueName)
     })
