@@ -5,6 +5,7 @@ import useStyle from './yline.style'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { sendNewLine } from '../../../../services/backend/backend.service'
+import { lineDisplayColor } from '../../displayColor'
 import {
   addNewLine,
   elementColorView,
@@ -31,7 +32,7 @@ export default function Yline({ i, j }) {
       style={{
         gridColumn: `${j}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor: lineColor || undefined,
+        backgroundColor: lineColor ? lineDisplayColor(lineColor) : undefined,
       }}
       onClick={() => {
         if (!isWaiting && hasPermission && !lineColor) {

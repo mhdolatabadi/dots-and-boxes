@@ -13,6 +13,7 @@ import {
   setRoomLastMove,
 } from '../../../_slice/game.slice'
 import { sendNewLine } from '../../../../services/backend/backend.service'
+import { lineDisplayColor } from '../../displayColor'
 
 export default function Xline({ i, j }) {
   const dispatch = useDispatch()
@@ -30,7 +31,7 @@ export default function Xline({ i, j }) {
       style={{
         gridColumn: `${j - 1} / ${j + 2}`,
         gridRow: `${i}`,
-        backgroundColor: lineColor || undefined,
+        backgroundColor: lineColor ? lineDisplayColor(lineColor) : undefined,
       }}
       onClick={() => {
         if (!isWaiting && hasPermission && !lineColor) {

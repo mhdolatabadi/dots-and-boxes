@@ -45,7 +45,17 @@ let isThinking = false
 
 const playComputerMove = () => {
   const state = store.getState()
-  if (getGameMode(state) !== 'computer' || getRoomWinner(state)) {
+  // hasPermission may have flipped back to the human by the time this
+  // fires -- e.g. their move was scheduled as "computer's turn" the
+  // instant they drew a line, but that same line completed a box and
+  // granted them a bonus turn before the 600ms delay elapsed. Re-check
+  // here rather than trusting the state at schedule time, or the
+  // computer steals the human's bonus turn out from under them.
+  if (
+    getGameMode(state) !== 'computer' ||
+    getRoomWinner(state) ||
+    getRoomHasPermission(state)
+  ) {
     isThinking = false
     return
   }
