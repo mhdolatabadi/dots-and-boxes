@@ -281,7 +281,7 @@ io.on('connection', (socket) => {
       } else {
         console.log(`new bonus arrived:`, bonus, `from user:`, user.id)
         room.history[i] = { ...room.history[i] }
-        room.history.at(i).at(j).value = color
+        room.history[i][j] = color
         user.score += 1
 
         // sending gift!

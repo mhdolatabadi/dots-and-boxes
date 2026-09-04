@@ -169,11 +169,11 @@ export const sendNewLine = (i, j, color) => {
   sendAudio.play()
 }
 
-export const sendBouns = (i, j, color) => {
+export const sendBonus = (i, j, color) => {
   const roomId = getRoomId()
   const userId = getPlayerId()
-  const bouns = { i, j, color }
-  socket.emit('bouns', roomId, userId, bouns)
+  const bonus = { i, j, color }
+  socket.emit('bonus', roomId, userId, bonus)
 }
 
 export const sendMessage = message => {

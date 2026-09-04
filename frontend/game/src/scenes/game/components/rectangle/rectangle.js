@@ -4,7 +4,7 @@ import useStyle from './rectangle.style'
 // localiztion
 
 import { useSelector } from 'react-redux'
-import { sendBouns } from '../../../../services/backend/backend.service'
+import { sendBonus } from '../../../../services/backend/backend.service'
 import { dispatch } from '../../../../setup/store/store'
 import {
   addNewLine,
@@ -58,7 +58,7 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
   ) {
     if (playerColor === lastColor) {
       dispatch(increasePlayerScore())
-      sendBouns(i, j, playerColor)
+      sendBonus(i, j, playerColor)
     } else dispatch(increaseOpponentScore())
   }
 
