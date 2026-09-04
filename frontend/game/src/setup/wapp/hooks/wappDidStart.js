@@ -5,12 +5,16 @@ import {
 } from '../../../scenes/_slice/game.slice'
 import { setLoading } from '../../../scenes/_slice/loading.slice'
 import store from '../../store/store'
+import {
+  getCurrentUserId,
+  getUserFirstName,
+  getWisId,
+} from '../../../services/weblite/weblite.api'
 
-const { W } = window
 export const wappDidStart = () => {
-  const userId = W.user.getId()
-  const roomId = W.wapp.getWisId()
-  const playerName = W.user.getFirstname()
+  const userId = getCurrentUserId()
+  const roomId = getWisId()
+  const playerName = getUserFirstName()
 
   store.dispatch(setPlayerId({ id: userId }))
   store.dispatch(setRoomId({ id: roomId }))

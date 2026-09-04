@@ -57,7 +57,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@web-lite/api-types": "^1.4.1"
-  }
+  "devDependencies": {}
 }
