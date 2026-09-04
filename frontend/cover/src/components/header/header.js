@@ -9,7 +9,7 @@ export default function Header(props) {
 
   return (
     <div className={classes.root}>
-      <img className={classes.icon} src="dotsandboxes.png" />
+      <img className={classes.icon} src="dotsandboxes.png" alt={t.title} />
       <span className={classes.title}>{t.title}</span>
       <div className={classes.subscribers}>
         <span>۳۴</span>
