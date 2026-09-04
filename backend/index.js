@@ -27,9 +27,10 @@ const createRoom = (roomId, socketId, paperSize) => {
   return room
 }
 
-const createUser = (userId, socketId) => {
+const createUser = (userId, socketId, name) => {
   const user = {
     id: userId,
+    name,
     score: 0,
     roomIds: [],
     color: '',
@@ -112,7 +113,7 @@ const hostSecondUser = (room, user, socket) => {
     socket.emit('watch', room.history, room.messages)
     socket.emit('score', user.score)
     io.to(room.id).emit('mustWait', false)
-    socket.emit('name', opponent.id, opponent.score, opponent.color)
+    socket.emit('name', opponent.id, opponent.score, opponent.color, opponent.name)
   } else {
     configUser({
       user,
@@ -164,9 +165,10 @@ const hostSubscriber = (room, user, socket) => {
   socket.emit('watch', room.history, room.messages)
 }
 
-const directUserToRoom = (roomId, userId, socket, paperSize) => {
+const directUserToRoom = (roomId, userId, name, socket, paperSize) => {
   const room = findRoomById(roomId) || createRoom(roomId, socket.id, paperSize)
-  const user = findUserById(userId, roomId) || createUser(userId, socket.id)
+  const user = findUserById(userId, roomId) || createUser(userId, socket.id, name)
+  if (name) user.name = name
   if (
     (room.userIds.includes(user.id) && user.connection === true) ||
     !userId ||
@@ -227,14 +229,16 @@ const check = (room, user, type) => {
 io.on('connection', (socket) => {
   socket.emit('handshake', 'welcome! give me your room id!')
   socket.on('handshake', (input) => {
-    const { roomId, userId, paperSize } = input
+    const { roomId, userId, paperSize, name } = input
     const room = findRoomById(roomId)
     const user = findUserById(userId, roomId)
-    directUserToRoom(roomId, userId, socket, paperSize)
+    directUserToRoom(roomId, userId, name, socket, paperSize)
   })
   socket.on('introduce', (userId, roomId) => {
     const user = findUserById(userId, roomId)
-    socket.broadcast.to(roomId).emit('name', userId, user.score, user.color)
+    socket.broadcast
+      .to(roomId)
+      .emit('name', userId, user.score, user.color, user.name)
     socket.emit('message', {
       sender: 'noghte-bazi',
       content:
@@ -365,4 +369,8 @@ io.on('connection', (socket) => {
       .emit('message', { sender: userId, content: message })
   })
 })
-http.listen(config.server.port, () => {})
+http.listen(config.server.port, config.server.host, () => {
+  console.log(
+    `noghte-bazi backend listening on ${config.server.host}:${config.server.port}`
+  )
+})

@@ -1,28 +1,16 @@
-const R = require('ramda')
-const fse = require('fs-extra')
+const parseOrigin = (origin) => {
+  if (!origin) return process.env.NODE_ENV === 'production' ? '*' : 'http://localhost:3000'
+  const origins = origin
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean)
+  return origins.length > 1 ? origins : origins[0]
+}
 
-const production = process.env.NODE_ENV === 'production'
-
-const defaultConfig = {
+module.exports = {
   server: {
-    host: production ? 'localhost' : undefined, // all IPs
-    port: 13797,
-    origin: production
-      ? 'https://www.weblite.me:3000'
-      : 'http://localhost:3000',
+    host: process.env.HOST || '0.0.0.0',
+    port: Number(process.env.PORT) || 13797,
+    origin: parseOrigin(process.env.CORS_ORIGIN),
   },
 }
-
-const getLocalConfig = () => {
-  try {
-    const config = fse.readJsonSync(process.env.WEBLITE_CONFIG_PATH)[
-      'dots-and-boxes'
-    ]
-    if (!R.is(Object, config) || R.is(Array, config)) throw new TypeError()
-    return config
-  } catch (e) {
-    return {}
-  }
-}
-
-module.exports = R.mergeDeepRight(defaultConfig, getLocalConfig())

@@ -1,39 +1,58 @@
-/// <reference path="../../../node_modules/@web-lite/api-types/index.d.ts" />
+const PLAYER_STORAGE_KEY = 'dots-and-boxes:player'
 
-const { W } = window
+const generateId = () =>
+  window.crypto && window.crypto.randomUUID
+    ? window.crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}`
 
-export const getCurrentUserId = () => (W ? W.user.getId() : prompt('user id'))
+const loadPlayer = () => {
+  try {
+    return JSON.parse(window.localStorage.getItem(PLAYER_STORAGE_KEY)) || {}
+  } catch (e) {
+    return {}
+  }
+}
 
-export const getUserFirstName = () => (W ? W.user.getFirstname() : 'بیژن')
+const savePlayer = (player) => {
+  try {
+    window.localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(player))
+  } catch (e) {
+    // storage unavailable (private mode, disabled cookies, ...): keep playing in-memory
+  }
+}
 
-export const openImageInModal = src => W.images.openModal({ src })
+const player = loadPlayer()
+if (!player.id) player.id = generateId()
+if (!player.name)
+  player.name = window.prompt('اسمت رو وارد کن:', '')?.trim() || 'مهمان'
+savePlayer(player)
 
-export const getUsersEducationalProfile = () => W.user.getProfile('school')
+export const getCurrentUserId = () => player.id
 
-// export const fetchUserEducationalProfile = () => W.user.getProfile('school')
+export const getUserFirstName = () => player.name
 
-// TODO: Add getUsersById for more performant version
-// export const fetchUserById = userId =>
-//   W.users.getById([userId]).then(usersInfo => usersInfo[userId] || {})
+export const openImageInModal = () => {}
 
-// export const openImageInModal = src => W.images.openModal({ src })
+export const getUsersEducationalProfile = async () => ({})
 
-// export const upload = (...args) => W.fileSystem.upload(...args)
+export const sendAnalytics = () => {}
 
-// export const sendToUsers = ({
-//   title,
-//   body,
-//   type = ['push'],
-//   data = {},
-//   userIds = [],
-// }) => W.notifications.sendToUsers(title, body, type, data, userIds)
+export const doneDrawer = () => {}
 
-// export const openProfile = userId => W.users.openProfile(userId)
-export const sendAnalytics = ({ type, ...args }) => W.analytics(type, args)
-
-export const doneDrawer = output => W.wapp.doneDrawer(output)
-
-export const getWisId = () =>
-  W
-    ? W.wapp.getWisId()
-    : 'lswea13zenV34ed5m361sskh91s1d0n4LnK383kJHiHgF8Nlj23esosdm1f45AXQwl4dsw'
+// A room is a shared link: whoever opens the URL with the same ?room= id
+// joins the same game. If none is present, generate one and put it in the
+// URL so the host can share the link with an opponent.
+export const getWisId = () => {
+  const params = new URLSearchParams(window.location.search)
+  let roomId = params.get('room')
+  if (!roomId) {
+    roomId = generateId()
+    params.set('room', roomId)
+    window.history.replaceState(
+      null,
+      '',
+      `${window.location.pathname}?${params.toString()}`
+    )
+  }
+  return roomId
+}

@@ -23,7 +23,7 @@ import {
 } from '../../scenes/_slice/game.slice'
 
 import { HTTP_BACKEND } from '../../setup/api'
-import { getCurrentUserId, getWisId } from '../weblite/weblite.api'
+import { getCurrentUserId, getUserFirstName, getWisId } from '../weblite/weblite.api'
 // /**
 //  * @param {Object} params - your passed data
 //  * @return {Promise<unknown>}
@@ -44,6 +44,7 @@ socket.on('handshake', () => {
   socket.emit('handshake', {
     roomId: getWisId(),
     userId: getCurrentUserId(),
+    name: getUserFirstName(),
     paperSize,
   })
 })
@@ -85,14 +86,12 @@ socket.on('score', score => {
   dispatchPlayerScore(score)
 })
 
-socket.on('name', (opponentId, opponentScore, opponentColor) => {
+socket.on('name', (opponentId, opponentScore, opponentColor, opponentName) => {
   console.log('getting opponent name')
   dispatchOpponentId(opponentId)
   dispatchOpponentScore(opponentScore)
   dispatchOpponentColor(opponentColor)
-  window.W.users.getById([String(opponentId)]).then(data => {
-    dispatchOpponentName(data[opponentId].firstname)
-  })
+  dispatchOpponentName(opponentName || 'حریف')
 })
 
 socket.on('role', (role, color) => {
