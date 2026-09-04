@@ -24,26 +24,27 @@ export const useInitializeData = () => {
   const opponentColor = getOpponentColor()
 
   const winner = useSelector(roomWinnerView)
-  console.log({
-    playerScore,
-    opponentScore,
-    playerColor,
-    opponentColor,
-    winner,
-    paperSize,
-    bool: playerScore + opponentScore === (paperSize - 1) * (paperSize - 1),
-  })
+
   useEffect(() => {
     if (winner) return
-    if (playerScore + opponentScore === (paperSize - 1) * (paperSize - 1)) {
-      console.log('here')
-      const winner =
-        playerScore > opponentScore
-          ? { id: playerId, color: playerColor }
-          : opponentScore > playerScore
-          ? { id: opponentId, color: opponentColor }
-          : console.log('draw!(')
-      dispatch(setRoomWinner(winner))
-    }
-  })
+    if (playerScore + opponentScore !== (paperSize - 1) * (paperSize - 1))
+      return
+
+    const result =
+      playerScore > opponentScore
+        ? { id: playerId, color: playerColor }
+        : opponentScore > playerScore
+        ? { id: opponentId, color: opponentColor }
+        : { id: null, color: 'gray' }
+    dispatch(setRoomWinner(result))
+  }, [
+    winner,
+    playerScore,
+    opponentScore,
+    paperSize,
+    playerId,
+    playerColor,
+    opponentId,
+    opponentColor,
+  ])
 }
