@@ -1,4 +1,3 @@
-import Button from '../../components/button'
 import useStyle from './home.style.js'
 import Header from '../../components/header'
 import Body from '../../components/body/body'
