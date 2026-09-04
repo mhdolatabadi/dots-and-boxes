@@ -16,20 +16,20 @@ export default makeStyles(theme => ({
     maxWidth: '650px',
 
     height: '35px',
-    backgroundColor: 'wheat',
+    backgroundColor: '#282c34',
   },
   input: {
     direction: 'rtl',
-    backgroundColor: 'wheat',
-    border: '2px solid wheat',
+    color: '#f5f6fa',
+    backgroundColor: '#282c34',
+    border: '2px solid #282c34',
     flexGrow: 4,
     '&:focus': {
       outline: 'none',
     },
   },
   button: {
-    // backgroundColor: 'orange',
-    border: '2px solid wheat',
+    border: '2px solid #282c34',
     width: '40px',
     cursor: 'pointer',
     borderRadius: '10px',
@@ -38,8 +38,6 @@ export default makeStyles(theme => ({
     alignItems: 'center',
   },
   icon: {
-    // backgroundColor: 'orange',
-
     transform: 'scaleX(-1)',
     height: '70%',
     width: '70%',

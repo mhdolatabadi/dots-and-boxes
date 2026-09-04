@@ -89,7 +89,7 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
       style={{
         gridColumn: `${j - 1} / ${j + 2}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor: `dark${backgroundColor}`,
+        backgroundColor,
       }}
     >
       <span></span>

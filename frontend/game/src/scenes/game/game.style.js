@@ -12,7 +12,8 @@ export default makeStyles(theme => ({
     height: '100%',
     width: '100%',
     overflowY: 'auto',
-    backgroundColor: 'gray',
+    backgroundColor: '#1f2430',
+    transition: 'background-color 0.6s ease',
     userSelect: 'none',
     '&::-webkit-scrollbar': {
       display: 'none',

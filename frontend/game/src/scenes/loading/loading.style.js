@@ -9,8 +9,9 @@ export default makeStyles(theme => ({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url("header.png")',
+    backgroundColor: '#1f2430',
     flexDirection: 'column',
+    gap: '16px',
   },
   icon: {
     width: '200px',
@@ -18,6 +19,7 @@ export default makeStyles(theme => ({
   },
   message: {
     direction: 'rtl',
-    fontSize: '30px',
+    fontSize: '24px',
+    color: '#f5f6fa',
   },
 }))

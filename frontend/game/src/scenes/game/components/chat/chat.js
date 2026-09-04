@@ -13,7 +13,7 @@ export default function Chat(props) {
   const playerId = useSelector(playerIdView)
   const messages = useSelector(messagesView)
 
-  const [chatExpansion, setChatExpansion] = React.useState('block')
+  const [chatExpansion, setChatExpansion] = React.useState('none')
 
   const messagesRef = React.useRef(null)
 
