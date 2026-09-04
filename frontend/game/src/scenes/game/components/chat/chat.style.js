@@ -10,34 +10,29 @@ export default makeStyles(theme => ({
       width: '100vw',
       height: '100%',
     },
-    // margin: '0 10px 10px',
     maxWidth: '650px',
-    backgroundColor: 'wheat',
+    backgroundColor: '#2f3542',
   },
   messageList: {
-    // borderRadius: '0 0 50px 50px',
     minHeight: '35px',
     width: '100%',
     height: '50px',
     '@media (min-height: 720px)': {
       height: '80px',
     },
-
-    // maxHeight: '100px',
     overflowY: 'auto',
     direction: 'rtl',
-    backgroundColor: 'wheat',
+    backgroundColor: '#282c34',
     padding: '5px 0',
     '&::-webkit-scrollbar': {
-      backgroundColor: 'wheat',
+      backgroundColor: '#282c34',
       width: '5px',
     },
     '&::-webkit-scrollbar-track': {
-      // borderRadius: '9px',
-      backgroundColor: 'wheat',
+      backgroundColor: '#282c34',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'orange',
+      backgroundColor: '#4b5262',
       borderRadius: '9px',
     },
     '&::-webkit-scrollbar-button': {
@@ -50,7 +45,8 @@ export default makeStyles(theme => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     direction: 'rtl',
-    backgroundColor: 'orange',
+    color: '#f5f6fa',
+    backgroundColor: '#2f3542',
     padding: '5px 15px',
     height: '20px',
     fontSize: '12px',
@@ -70,5 +66,7 @@ export default makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    color: '#9aa0ac',
+    fontSize: '12px',
   },
 }))

@@ -31,7 +31,7 @@ export default function Yline({ i, j }) {
       style={{
         gridColumn: `${j}`,
         gridRow: `${i - 1} / ${i + 2}`,
-        backgroundColor: lineColor,
+        backgroundColor: lineColor || undefined,
       }}
       onClick={() => {
         if (!isWaiting && hasPermission && !lineColor) {

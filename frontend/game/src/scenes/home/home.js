@@ -9,10 +9,16 @@ export default function Home() {
   return (
     <div className={classes.root}>
       <h1 className={classes.title}>نقطه‌بازی</h1>
-      <div className={classes.button} onClick={startComputerGame}>
+      <div
+        className={`${classes.button} ${classes.computerButton}`}
+        onClick={startComputerGame}
+      >
         بازی با کامپیوتر
       </div>
-      <div className={classes.button} onClick={startOnlineGame}>
+      <div
+        className={`${classes.button} ${classes.onlineButton}`}
+        onClick={startOnlineGame}
+      >
         بازی آنلاین (دونفره)
       </div>
     </div>

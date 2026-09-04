@@ -30,7 +30,7 @@ export default function Xline({ i, j }) {
       style={{
         gridColumn: `${j - 1} / ${j + 2}`,
         gridRow: `${i}`,
-        backgroundColor: lineColor,
+        backgroundColor: lineColor || undefined,
       }}
       onClick={() => {
         if (!isWaiting && hasPermission && !lineColor) {

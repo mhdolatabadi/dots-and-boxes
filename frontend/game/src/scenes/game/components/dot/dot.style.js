@@ -5,12 +5,9 @@ export default makeStyles(theme => ({
     zIndex: '1000',
     width: '90%',
     height: '90%',
-    borderRadius: '99999999px',
-    backgroundColor: 'yellow',
+    borderRadius: '50%',
+    backgroundColor: '#e8e8ea',
     margin: 'auto',
-    boxShadow: '10px purple',
-    '&:hover': {
-      backgroundColor: 'orange',
-    },
+    boxShadow: '0 0 4px rgba(0, 0, 0, 0.5)',
   },
 }))

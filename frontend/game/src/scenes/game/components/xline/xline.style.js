@@ -5,11 +5,13 @@ export default makeStyles(theme => ({
     position: 'relative',
     height: '50%',
     width: '90%',
-    transition: 'all 0.5s',
+    cursor: 'pointer',
+    transition: 'background-color 0.25s',
     borderRadius: '15px',
     margin: 'auto',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     '&:hover': {
-      backgroundColor: 'rgb(65, 65, 65)',
+      backgroundColor: 'rgba(255, 255, 255, 0.22)',
     },
   },
 }))

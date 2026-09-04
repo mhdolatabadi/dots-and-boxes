@@ -16,6 +16,7 @@ export default makeStyles(theme => ({
       height: '100vw',
     },
     margin: '0 25px',
-    backgroundColor: 'rgb(46, 46, 46)',
+    borderRadius: '8px',
+    backgroundColor: '#282c34',
   },
 }))

@@ -4,7 +4,6 @@ import useStyle from './game.style'
 //localization
 //components
 import Chat from './components/chat'
-import Footer from '../../components/footer/footer'
 import Header from '../../components/header/header'
 import Paper from './components/paper'
 import SendField from './components/send-field'
@@ -25,15 +24,13 @@ export default function GamePresentational(props) {
   return (
     <div
       className={classes.root}
-      style={{ backgroundColor: winner ? `dark${winner.color}` : 'gray' }}
+      style={{ backgroundColor: winner ? `dark${winner.color}` : undefined }}
     >
       <Header type="game" />
       {isOnline && <Chat />}
-      {/* <Information /> */}
       <Paper />
       <ScoreBoard />
       {isOnline && <SendField />}
-      <Footer />
     </div>
   )
 }

@@ -9,24 +9,35 @@ export default makeStyles(theme => ({
     gap: '16px',
     height: '100%',
     width: '100%',
-    backgroundColor: 'gray',
+    backgroundColor: '#1f2430',
     userSelect: 'none',
   },
   title: {
-    color: 'white',
-    marginBottom: '24px',
+    color: '#f5f6fa',
+    fontWeight: 600,
+    marginBottom: '16px',
   },
   button: {
     padding: '16px 32px',
-    borderRadius: '8px',
-    backgroundColor: 'darkred',
-    color: 'white',
+    borderRadius: '10px',
+    color: '#fff',
     fontSize: '18px',
+    fontWeight: 600,
     cursor: 'pointer',
     textAlign: 'center',
     minWidth: '220px',
-    '&:active': {
-      opacity: 0.8,
+    transition: 'transform 0.15s, opacity 0.15s',
+    '&:hover': {
+      opacity: 0.9,
     },
+    '&:active': {
+      transform: 'scale(0.97)',
+    },
+  },
+  computerButton: {
+    backgroundColor: '#3b82c4',
+  },
+  onlineButton: {
+    backgroundColor: '#e63950',
   },
 }))
