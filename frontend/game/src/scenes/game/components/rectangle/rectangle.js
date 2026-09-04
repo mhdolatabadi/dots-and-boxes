@@ -10,7 +10,6 @@ import { dispatch } from '../../../../setup/store/store'
 import {
   addNewLine,
   elementColorView,
-  getPlayerHasPermission,
   increaseOpponentScore,
   increasePlayerScore,
   playerColorView,
@@ -21,7 +20,6 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
   let lastLineColor
   const { i: lastI, j: lastJ, color: lastColor } = lastMove
 
-  const playerHasPermission = useSelector(getPlayerHasPermission)
   const playerColor = useSelector(playerColorView)
 
   const topLineColor = useSelector(elementColorView(i - 1, j))
@@ -53,11 +51,22 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
   // emit), so it belongs in an effect rather than directly in render --
   // dispatching mid-render triggers React's "Cannot update a component
   // while rendering a different component" warning.
+  //
+  // `background` (whether this box already has a persisted color) is what
+  // makes this idempotent -- it flips to a truthy value in the very same
+  // effect run that scores the box, so a re-run for the same completion
+  // short-circuits above. Don't gate this on hasPermission: the opponent
+  // learns about the completing line via a few chained dispatches from a
+  // socket callback (setRoomLastMove/addNewLine/setHasPermission), and
+  // once those are batched together (as of React 18 automatic batching)
+  // hasPermission is already flipped by the time this effect sees the
+  // completed box, so requiring !hasPermission here would just make the
+  // opponent's own score view silently stop updating.
   useEffect(() => {
     if (background || !backgroundColor) return
     dispatch(addNewLine({ i, j, color: backgroundColor }))
 
-    if (isAdjacentToLastMove && isBoxSurrounded && !playerHasPermission) {
+    if (isAdjacentToLastMove && isBoxSurrounded) {
       if (playerColor === lastColor) {
         dispatch(increasePlayerScore())
         sendBonus(i, j, playerColor)
@@ -70,7 +79,6 @@ export default function Rectangle({ i, j, lastMove, paperSize }) {
     backgroundColor,
     isAdjacentToLastMove,
     isBoxSurrounded,
-    playerHasPermission,
     playerColor,
     lastColor,
   ])

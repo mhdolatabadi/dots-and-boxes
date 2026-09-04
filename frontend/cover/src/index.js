@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import './setup/wapp/initialize'
 
@@ -8,7 +8,8 @@ import ThemeProvider from './setup/theme'
 
 import App from './scenes/home'
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'))
+root.render(
   <React.StrictMode>
     <ReduxProvider>
       <ThemeProvider>
@@ -16,7 +17,6 @@ ReactDOM.render(
       </ThemeProvider>
     </ReduxProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
 )
 
 // import reportWebVitals from './setup/benchmark';
