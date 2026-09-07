@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useSelector } from 'react-redux'
 import useStyle from './home.style'
 import { startComputerGame } from '../../services/computer/computer.service'
+import { startComputer3DGame } from '../../services/computer3d/computer3d.service'
 import { startOnlineGame } from '../../services/online/online.service'
 import { dispatchPaperSize, paperSizeView } from '../../scenes/_slice/game.slice'
 
@@ -49,6 +50,12 @@ export default function Home() {
         onClick={startOnlineGame}
       >
         بازی آنلاین (دونفره)
+      </div>
+      <div
+        className={`${classes.button} ${classes.button3D}`}
+        onClick={() => startComputer3DGame()}
+      >
+        بازی سه‌بعدی (آزمایشی)
       </div>
     </div>
   )

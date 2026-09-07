@@ -38,7 +38,7 @@ const gameSlice = createSlice({
     },
     language: 'persian',
     status: 'connecting',
-    // 'menu' | 'online' | 'computer'
+    // 'menu' | 'online' | 'computer' | 'computer3d'
     mode: 'menu',
   },
   reducers: {
