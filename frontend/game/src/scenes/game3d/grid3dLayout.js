@@ -9,9 +9,19 @@ export const CUBE_FILL_SIZE = UNIT * 0.68
 // cross-section (see cube3d.js for the same idea applied to a box's 6
 // faces). A flat rectangle with a painted gradient can never actually
 // look round from every angle; this has real volume, so it does.
-export const EDGE_RADIUS = 4
-export const EDGE_SEGMENTS = 8
-export const EDGE_STAVE_HEIGHT = (2 * Math.PI * EDGE_RADIUS) / EDGE_SEGMENTS
+//
+// Radius is close to the dot radius (dot3d.style.js: 8px) on purpose --
+// too thin a rod next to a much fatter ball reads as two different
+// objects that happen to touch, not one continuous piece. The staves
+// overlap each other slightly (1.25x their tiled width) so there's
+// never a hairline gap between facets showing the hollow inside.
+export const EDGE_RADIUS = 6
+export const EDGE_SEGMENTS = 18
+export const EDGE_STAVE_HEIGHT =
+  ((2 * Math.PI * EDGE_RADIUS) / EDGE_SEGMENTS) * 1.3
+// Rods run slightly past each dot's center (not just to it), so they
+// visibly plunge into the sphere instead of merely grazing its surface.
+export const EDGE_OVERSHOOT = 10
 
 // Centers the whole size x size x size lattice on the scene's origin.
 export const toPx = (coord, size) => (coord - (size - 1) / 2) * UNIT
