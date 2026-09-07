@@ -65,4 +65,7 @@ export default makeStyles(theme => ({
   onlineButton: {
     backgroundColor: '#e63950',
   },
+  button3D: {
+    backgroundColor: '#6c5ce7',
+  },
 }))

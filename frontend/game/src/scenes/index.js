@@ -1,5 +1,6 @@
 import React from 'react'
 import Game from './game'
+import Game3D from './game3d'
 import Home from './home'
 import Loading from './loading'
 import { useSelector } from 'react-redux'
@@ -11,5 +12,6 @@ export default function Root() {
   const isLoading = useSelector(isLoadingView)
 
   if (mode === 'menu') return <Home />
+  if (mode === 'computer3d') return <Game3D />
   return isLoading ? <Loading /> : <Game />
 }
