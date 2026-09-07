@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import useStyle from './game3d.style'
 import Header from '../../components/header/header'
@@ -20,6 +21,7 @@ export default function Game3D() {
   const size = useSelector(size3DView)
   const cubes = useSelector(cubes3DView)
   const winner = useSelector(winner3DView)
+  const [rotation, setRotation] = useState({ x: -22, y: -32 })
 
   const dots = []
   for (let x = 0; x < size; x++)
@@ -46,9 +48,14 @@ export default function Game3D() {
       <Header type="menu" />
       <ScoreBoard3D />
 
-      <Scene3D>
+      <Scene3D rotation={rotation} onRotate={setRotation}>
         {dots.map(d => (
-          <Dot3D key={`d-${d.x}-${d.y}-${d.z}`} {...d} size={size} />
+          <Dot3D
+            key={`d-${d.x}-${d.y}-${d.z}`}
+            {...d}
+            size={size}
+            rotation={rotation}
+          />
         ))}
         {edges.map(e => (
           <Edge3D

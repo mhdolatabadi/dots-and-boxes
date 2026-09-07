@@ -1,15 +1,17 @@
 import * as React from 'react'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import useStyle from './scene3d.style'
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
 
 // Perspective viewport for the 3D board -- lets the player drag to orbit
 // the lattice, since a fixed camera angle would leave far edges/cubes
-// occluded on anything bigger than a handful of dots.
-export default function Scene3D({ children }) {
+// occluded on anything bigger than a handful of dots. Rotation state
+// lives in the parent (Game3D) rather than here, because Dot3D also
+// needs it to counter-rotate itself back to facing the camera -- see
+// dot3d.js for why.
+export default function Scene3D({ rotation, onRotate, children }) {
   const classes = useStyle()
-  const [rotation, setRotation] = useState({ x: -22, y: -32 })
   const dragRef = useRef(null)
 
   const startDrag = (clientX, clientY) => {
@@ -20,7 +22,7 @@ export default function Scene3D({ children }) {
     if (!dragRef.current) return
     const dx = clientX - dragRef.current.x
     const dy = clientY - dragRef.current.y
-    setRotation({
+    onRotate({
       x: clamp(dragRef.current.from.x - dy * 0.4, -85, 10),
       y: dragRef.current.from.y + dx * 0.4,
     })
