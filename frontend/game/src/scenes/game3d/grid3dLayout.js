@@ -3,6 +3,9 @@
 
 export const UNIT = 68 // px between adjacent lattice dots
 export const CUBE_FILL_SIZE = UNIT * 0.68
+// A dot is a small rounded box (see dot3d.js) sized close to the
+// edge's own thickness, on purpose -- see EDGE_RADIUS below.
+export const DOT_SIZE = 20
 
 // Edges are built as real 3D rods -- a ring of thin flat "staves"
 // around a shared axis, the standard CSS way to fake a round cylinder

@@ -56,12 +56,7 @@ export default function Game3D() {
         onZoom={setZoom}
       >
         {dots.map(d => (
-          <Dot3D
-            key={`d-${d.x}-${d.y}-${d.z}`}
-            {...d}
-            size={size}
-            rotation={rotation}
-          />
+          <Dot3D key={`d-${d.x}-${d.y}-${d.z}`} {...d} size={size} />
         ))}
         {edges.map(e => (
           <Edge3D
