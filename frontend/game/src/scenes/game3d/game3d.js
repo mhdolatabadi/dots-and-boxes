@@ -22,6 +22,7 @@ export default function Game3D() {
   const cubes = useSelector(cubes3DView)
   const winner = useSelector(winner3DView)
   const [rotation, setRotation] = useState({ x: -22, y: -32 })
+  const [zoom, setZoom] = useState(1)
 
   const dots = []
   for (let x = 0; x < size; x++)
@@ -48,7 +49,12 @@ export default function Game3D() {
       <Header type="menu" />
       <ScoreBoard3D />
 
-      <Scene3D rotation={rotation} onRotate={setRotation}>
+      <Scene3D
+        rotation={rotation}
+        onRotate={setRotation}
+        zoom={zoom}
+        onZoom={setZoom}
+      >
         {dots.map(d => (
           <Dot3D
             key={`d-${d.x}-${d.y}-${d.z}`}
@@ -73,6 +79,21 @@ export default function Game3D() {
           ) : null
         })}
       </Scene3D>
+
+      <div className={classes.zoomControls}>
+        <div
+          className={classes.zoomButton}
+          onClick={() => setZoom(z => Math.min(3, z * 1.2))}
+        >
+          +
+        </div>
+        <div
+          className={classes.zoomButton}
+          onClick={() => setZoom(z => Math.max(0.5, z / 1.2))}
+        >
+          −
+        </div>
+      </div>
 
       <span className={classes.hint}>
         برای چرخوندن مکعب، صفحه رو بکش. برای کشیدن خط، روی یکی از میله‌های

@@ -24,6 +24,32 @@ export default makeStyles(theme => ({
     textAlign: 'center',
     margin: '10px 0',
   },
+  zoomControls: {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '8px',
+  },
+  zoomButton: {
+    width: '36px',
+    height: '36px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '8px',
+    color: '#c8cad0',
+    backgroundColor: '#282c34',
+    fontSize: '20px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    userSelect: 'none',
+    transition: 'opacity 0.15s',
+    '&:hover': {
+      opacity: 0.85,
+    },
+    '&:active': {
+      transform: 'scale(0.94)',
+    },
+  },
   backButton: {
     marginTop: '18px',
     padding: '10px 24px',

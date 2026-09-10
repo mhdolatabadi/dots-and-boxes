@@ -4,8 +4,9 @@ export default makeStyles(theme => ({
   viewport: {
     position: 'relative',
     width: '100%',
-    maxWidth: '420px',
-    height: '340px',
+    maxWidth: '520px',
+    height: '460px',
+    overflow: 'hidden',
     perspective: '1000px',
     touchAction: 'none',
     cursor: 'grab',
