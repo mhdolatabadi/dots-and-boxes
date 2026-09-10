@@ -1,8 +1,8 @@
-import { CssBaseline } from '@material-ui/core'
+import CssBaseline from '@material-ui/core/CssBaseline'
 import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
-} from '@material-ui/core'
+} from '@material-ui/core/styles'
 import palette from './palette'
 import './scrollbar.css'
 

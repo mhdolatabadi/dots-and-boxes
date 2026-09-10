@@ -1,4 +1,4 @@
-import { makeStyles as muiMakeStyle } from '@material-ui/core'
+import { makeStyles as muiMakeStyle } from '@material-ui/core/styles'
 
 export const makeStyles = (Theme, Props, ClassKey) =>
   muiMakeStyle(Theme, { index: 1, ...Props }, ClassKey)

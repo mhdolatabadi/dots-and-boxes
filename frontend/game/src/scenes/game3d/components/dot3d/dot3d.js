@@ -1,27 +1,16 @@
 import * as React from 'react'
-import useStyle from './dot3d.style'
-import { toPx } from '../../grid3dLayout'
+import { DOT_RADIUS, toWorld } from '../../grid3dLayout'
 
-// A dot is drawn as a flat shaded disc (see dot3d.style.js) -- cheap,
-// and a sphere's silhouette is a circle from every angle anyway. But a
-// *flat* disc sitting in the scene's rotated 3D space rotates along
-// with everything else, so past a certain drag angle it foreshortens
-// edge-on and vanishes -- the lattice then reads as flat stacked
-// sheets instead of a volume of balls. Countering the scene's current
-// rotation here keeps the disc always facing the camera (a "billboard"),
-// so it stays a circle no matter how the scene is rotated.
-export default function Dot3D({ x, y, z, size, rotation }) {
-  const classes = useStyle()
-
+// A real sphere mesh -- looks correctly round from every angle and
+// has genuine volume, so a rod approaching from any direction has
+// something to actually plug into (no billboarding tricks needed).
+export default function Dot3D({ x, y, z, size }) {
   return (
-    <div
-      className={classes.root}
-      style={{
-        transform: `translate3d(${toPx(x, size)}px, ${toPx(
-          y,
-          size,
-        )}px, ${toPx(z, size)}px) rotateY(${-rotation.y}deg) rotateX(${-rotation.x}deg)`,
-      }}
-    />
+    <mesh
+      position={[toWorld(x, size), toWorld(y, size), toWorld(z, size)]}
+    >
+      <sphereGeometry args={[DOT_RADIUS, 24, 16]} />
+      <meshStandardMaterial color="#d7d9de" roughness={0.4} metalness={0.1} />
+    </mesh>
   )
 }

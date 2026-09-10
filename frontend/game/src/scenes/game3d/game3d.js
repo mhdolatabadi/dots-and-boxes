@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import useStyle from './game3d.style'
 import Header from '../../components/header/header'
@@ -21,7 +20,6 @@ export default function Game3D() {
   const size = useSelector(size3DView)
   const cubes = useSelector(cubes3DView)
   const winner = useSelector(winner3DView)
-  const [rotation, setRotation] = useState({ x: -22, y: -32 })
 
   const dots = []
   for (let x = 0; x < size; x++)
@@ -48,14 +46,9 @@ export default function Game3D() {
       <Header type="menu" />
       <ScoreBoard3D />
 
-      <Scene3D rotation={rotation} onRotate={setRotation}>
+      <Scene3D size={size}>
         {dots.map(d => (
-          <Dot3D
-            key={`d-${d.x}-${d.y}-${d.z}`}
-            {...d}
-            size={size}
-            rotation={rotation}
-          />
+          <Dot3D key={`d-${d.x}-${d.y}-${d.z}`} {...d} size={size} />
         ))}
         {edges.map(e => (
           <Edge3D
@@ -75,8 +68,8 @@ export default function Game3D() {
       </Scene3D>
 
       <span className={classes.hint}>
-        برای چرخوندن مکعب، صفحه رو بکش. برای کشیدن خط، روی یکی از میله‌های
-        کم‌رنگ بین نقطه‌ها کلیک کن.
+        برای چرخوندن صحنه بکش؛ برای زوم، اسکرول کن یا با دو انگشت پینچ کن.
+        برای کشیدن خط، روی یکی از میله‌های خاکستری بین نقطه‌ها کلیک کن.
       </span>
 
       {winnerText && <div className={classes.winnerBanner}>{winnerText}</div>}

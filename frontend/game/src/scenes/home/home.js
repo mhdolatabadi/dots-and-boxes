@@ -12,6 +12,13 @@ const BOARD_SIZES = [
   { size: 8, label: 'بزرگ' },
 ]
 
+// The 3D lattice's edge/cube count grows with the cube of its size
+// (an 8x8x8 board has 1344 edges vs. a 4x4x4's 144), so it can't reuse
+// the 2D sizes directly -- the same "بزرگ" pick would be wildly
+// heavier in 3D than in 2D. Scaled down to keep each pick roughly as
+// playable in 3D as its 2D counterpart.
+const SIZE_3D_BY_SIZE = { 4: 3, 6: 4, 8: 5 }
+
 export default function Home() {
   const classes = useStyle()
   const selectedSize = useSelector(paperSizeView)
@@ -53,7 +60,7 @@ export default function Home() {
       </div>
       <div
         className={`${classes.button} ${classes.button3D}`}
-        onClick={() => startComputer3DGame()}
+        onClick={() => startComputer3DGame(SIZE_3D_BY_SIZE[selectedSize])}
       >
         بازی سه‌بعدی (آزمایشی)
       </div>

@@ -1,54 +1,49 @@
 import * as React from 'react'
-import { useRef } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
 import useStyle from './scene3d.style'
+import { UNIT } from '../../grid3dLayout'
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+// Direction the default camera looks from, before scaling by distance.
+const CAMERA_DIRECTION = [3.4, 2.8, 4.2]
+const DIRECTION_LENGTH = Math.hypot(...CAMERA_DIRECTION)
 
-// Perspective viewport for the 3D board -- lets the player drag to orbit
-// the lattice, since a fixed camera angle would leave far edges/cubes
-// occluded on anything bigger than a handful of dots. Rotation state
-// lives in the parent (Game3D) rather than here, because Dot3D also
-// needs it to counter-rotate itself back to facing the camera -- see
-// dot3d.js for why.
-export default function Scene3D({ rotation, onRotate, children }) {
+// A real WebGL scene for the 3D board -- proper depth buffering and
+// lighting instead of stacking flat CSS-transformed divs, which kept
+// hitting new rendering artifacts (billboards that vanish edge-on,
+// overlapping planes that flicker, rods that never quite look round).
+// OrbitControls gives drag-to-rotate and scroll/pinch-to-zoom for
+// free, so the scene no longer needs to track rotation/zoom itself.
+//
+// The board size is configurable (same size picker as the 2D game),
+// so the camera can't sit at a fixed distance -- an 8x8x8 lattice is
+// physically much bigger than the default 3x3x3 one, and a fixed
+// camera tuned for the small case ends up sitting *inside* the large
+// one. Distance and zoom limits scale with the lattice's span instead.
+export default function Scene3D({ size, children }) {
   const classes = useStyle()
-  const dragRef = useRef(null)
 
-  const startDrag = (clientX, clientY) => {
-    dragRef.current = { x: clientX, y: clientY, from: rotation }
-  }
-
-  const continueDrag = (clientX, clientY) => {
-    if (!dragRef.current) return
-    const dx = clientX - dragRef.current.x
-    const dy = clientY - dragRef.current.y
-    onRotate({
-      x: clamp(dragRef.current.from.x - dy * 0.4, -85, 10),
-      y: dragRef.current.from.y + dx * 0.4,
-    })
-  }
-
-  const endDrag = () => {
-    dragRef.current = null
-  }
+  const span = (size - 1) * UNIT
+  const distance = span * 1.15 + 3
+  const cameraPosition = CAMERA_DIRECTION.map(
+    v => (v / DIRECTION_LENGTH) * distance,
+  )
 
   return (
-    <div
-      className={classes.viewport}
-      onPointerDown={e => startDrag(e.clientX, e.clientY)}
-      onPointerMove={e => continueDrag(e.clientX, e.clientY)}
-      onPointerUp={endDrag}
-      onPointerLeave={endDrag}
-      onPointerCancel={endDrag}
-    >
-      <div
-        className={classes.world}
-        style={{
-          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-        }}
-      >
+    <div className={classes.viewport}>
+      <Canvas camera={{ position: cameraPosition, fov: 45 }}>
+        <color attach="background" args={['#1f2430']} />
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[5, 8, 5]} intensity={0.9} />
+        <directionalLight position={[-4, -2, -4]} intensity={0.25} />
+        <OrbitControls
+          enablePan={false}
+          minDistance={Math.max(2.5, span * 0.4)}
+          maxDistance={distance * 3}
+          rotateSpeed={0.7}
+        />
         {children}
-      </div>
+      </Canvas>
     </div>
   )
 }
