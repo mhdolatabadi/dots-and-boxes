@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import useStyle from './game3d.style'
 import Header from '../../components/header/header'
@@ -21,8 +20,6 @@ export default function Game3D() {
   const size = useSelector(size3DView)
   const cubes = useSelector(cubes3DView)
   const winner = useSelector(winner3DView)
-  const [rotation, setRotation] = useState({ x: -22, y: -32 })
-  const [zoom, setZoom] = useState(1)
 
   const dots = []
   for (let x = 0; x < size; x++)
@@ -49,12 +46,7 @@ export default function Game3D() {
       <Header type="menu" />
       <ScoreBoard3D />
 
-      <Scene3D
-        rotation={rotation}
-        onRotate={setRotation}
-        zoom={zoom}
-        onZoom={setZoom}
-      >
+      <Scene3D>
         {dots.map(d => (
           <Dot3D key={`d-${d.x}-${d.y}-${d.z}`} {...d} size={size} />
         ))}
@@ -75,24 +67,9 @@ export default function Game3D() {
         })}
       </Scene3D>
 
-      <div className={classes.zoomControls}>
-        <div
-          className={classes.zoomButton}
-          onClick={() => setZoom(z => Math.min(3, z * 1.2))}
-        >
-          +
-        </div>
-        <div
-          className={classes.zoomButton}
-          onClick={() => setZoom(z => Math.max(0.5, z / 1.2))}
-        >
-          −
-        </div>
-      </div>
-
       <span className={classes.hint}>
-        برای چرخوندن مکعب، صفحه رو بکش. برای کشیدن خط، روی یکی از میله‌های
-        کم‌رنگ بین نقطه‌ها کلیک کن.
+        برای چرخوندن صحنه بکش؛ برای زوم، اسکرول کن یا با دو انگشت پینچ کن.
+        برای کشیدن خط، روی یکی از میله‌های خاکستری بین نقطه‌ها کلیک کن.
       </span>
 
       {winnerText && <div className={classes.winnerBanner}>{winnerText}</div>}
