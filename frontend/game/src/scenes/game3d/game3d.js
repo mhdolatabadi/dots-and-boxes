@@ -46,7 +46,7 @@ export default function Game3D() {
       <Header type="menu" />
       <ScoreBoard3D />
 
-      <Scene3D>
+      <Scene3D size={size}>
         {dots.map(d => (
           <Dot3D key={`d-${d.x}-${d.y}-${d.z}`} {...d} size={size} />
         ))}
