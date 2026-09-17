@@ -2,12 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 export default makeStyles(theme => ({
   root: {
-    width: '300px',
-    '@media (min-width: 420px) and (min-height: 700px)': {
-      width: '420px',
-    },
+    width: 'clamp(300px, 90vmin, 650px)',
     '@media (max-width: 350px) and (max-height: 550px)': {
-      width: '100vw',
       height: '100%',
     },
     maxWidth: '650px',

@@ -3,16 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 export default makeStyles(theme => ({
   root: {
     display: 'flex',
-    width: '300px',
+    width: 'clamp(300px, 90vmin, 650px)',
     marginBottom: '6px',
     maxWidth: '650px',
     height: '20px',
     '@media (min-width: 420px) and (min-height: 700px)': {
-      width: '420px',
       height: '30px',
-    },
-    '@media (max-width: 350px) and (max-height: 550px)': {
-      width: '100vw',
     },
   },
   blue: {

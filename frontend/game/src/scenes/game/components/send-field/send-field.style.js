@@ -4,13 +4,11 @@ export default makeStyles(theme => ({
   root: {
     display: 'flex', //TODO set it to none value as it is flex
     gridArea: 'message',
-    width: '300px',
+    width: 'clamp(300px, 90vmin, 650px)',
     '@media (min-width: 420px) and (min-height: 700px)': {
-      width: '420px',
       height: '40px',
     },
     '@media (max-width: 350px) and (max-height: 550px)': {
-      width: '100vw',
       height: '25px',
     },
     maxWidth: '650px',

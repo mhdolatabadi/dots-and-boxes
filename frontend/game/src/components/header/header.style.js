@@ -11,12 +11,8 @@ export default makeStyles(theme => ({
     letterSpacing: '0.02em',
     fontSize: '20px',
     height: '50px',
-    width: '300px',
-    '@media (min-width: 420px) and (min-height: 700px)': {
-      width: '420px',
-    },
+    width: 'clamp(270px, 90vmin, 650px)',
     '@media (max-width: 350px) and (max-height: 550px)': {
-      width: '100vw',
       borderRadius: '0px',
       height: '30px',
       fontSize: '15px',

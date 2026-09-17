@@ -5,16 +5,8 @@ export default makeStyles(theme => ({
     padding: '20px',
     display: 'grid',
 
-    height: '300px',
-    width: '300px',
-    '@media (min-width: 420px) and (min-height: 700px)': {
-      width: '420px',
-      height: '420px',
-    },
-    '@media (max-width: 350px) and (max-height: 550px)': {
-      width: '100vw',
-      height: '100vw',
-    },
+    height: 'clamp(300px, 90vmin, 650px)',
+    width: 'clamp(300px, 90vmin, 650px)',
     margin: '0 25px',
     borderRadius: '8px',
     backgroundColor: '#282c34',
