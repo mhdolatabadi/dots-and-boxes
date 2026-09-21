@@ -10,8 +10,9 @@ export default function Information(props) {
   return (
     <div className={classes.root}>
       <a
-        href="https://github.com/mhdolatabadi/noghte-bazi"
+        href="https://github.com/mhdolatabadi/dots-and-boxes"
         target="_blank"
+        rel="noopener noreferrer"
         style={{ marginTop: '7px' }}
       >
         <img className={classes.github} src="github.png" alt="github" />
