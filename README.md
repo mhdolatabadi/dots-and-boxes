@@ -15,6 +15,11 @@ so the host can copy the link and send it to an opponent. Player identity
 (id + display name) is generated once per browser and stored in
 `localStorage` — no account system is required.
 
+The UI is available in Persian (default) and English. A `lang` query
+parameter (`?lang=fa` or `?lang=en`) picks the language for that visit and
+is remembered in `localStorage` after that; there's also an in-app switcher
+on the home screen.
+
 ### Docker Compose (recommended)
 
 1. Copy `.env.example` to `.env` and fill in your own values:

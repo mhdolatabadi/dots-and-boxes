@@ -17,12 +17,16 @@ import {
   setStatus,
 } from '../../scenes/_slice/game.slice'
 import { setLoading } from '../../scenes/_slice/loading.slice'
+import { getLocale } from '../../scenes/_slice/locale.slice'
 import store from '../../setup/store/store'
 import { chooseMove } from './ai'
 
 export const COMPUTER_ID = 'computer'
 export const COMPUTER_COLOR = 'blue'
-export const COMPUTER_NAME = 'کامپیوتر'
+
+const COMPUTER_NAME_BY_LOCALE = { fa: 'کامپیوتر', en: 'Computer' }
+export const getComputerName = locale =>
+  COMPUTER_NAME_BY_LOCALE[locale] || COMPUTER_NAME_BY_LOCALE.fa
 
 const THINK_DELAY_MS = 600
 
@@ -34,7 +38,7 @@ export const startComputerGame = () => {
   dispatchPlayerColor('red')
   dispatchOpponentId(COMPUTER_ID)
   dispatchOpponentColor(COMPUTER_COLOR)
-  dispatchOpponentName(COMPUTER_NAME)
+  dispatchOpponentName(getComputerName(getLocale()))
   dispatchRoomId(`local-${Date.now()}`)
   dispatchHasPermission(true)
   store.dispatch(setStatus({ status: 'connected' }))

@@ -6,10 +6,12 @@ import Loading from './loading'
 import { useSelector } from 'react-redux'
 import { gameModeView } from './_slice/game.slice'
 import { isLoadingView } from './_slice/loading.slice'
+import useSyncDocumentLocale from '../setup/i18n/useSyncDocumentLocale'
 
 export default function Root() {
   const mode = useSelector(gameModeView)
   const isLoading = useSelector(isLoadingView)
+  useSyncDocumentLocale()
 
   if (mode === 'menu') return <Home />
   if (mode === 'computer3d') return <Game3D />

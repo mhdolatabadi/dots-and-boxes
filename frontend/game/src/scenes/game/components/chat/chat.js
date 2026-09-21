@@ -2,7 +2,8 @@ import * as React from 'react'
 // style
 import useStyle from './chat.style'
 // localiztion
-import t from './chat.local'
+import dict from './chat.local'
+import useLocal from '../../../../setup/i18n/useLocal'
 //components
 import Message from '../message'
 import { useSelector } from 'react-redux'
@@ -12,6 +13,7 @@ export default function Chat(props) {
   const classes = useStyle()
   const playerId = useSelector(playerIdView)
   const messages = useSelector(messagesView)
+  const t = useLocal(dict)
 
   const [chatExpansion, setChatExpansion] = React.useState('none')
 
