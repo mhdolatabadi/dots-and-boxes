@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Self-hosters: replace the URL below with your own domain
+  (see README's "Self-hosted deployment" section). The game is a
+  single-page app -- every match just adds a ?room= parameter to this
+  same URL -- so one entry covers the whole site.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://your-game-domain/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

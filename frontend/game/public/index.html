@@ -1,18 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--
-      replace font with url of your used font
-      e.g. https://example.com/static/fonts/yourFont.min.css
+    <meta name="theme-color" content="#1a1a2e" />
 
-      This is better way of loading font than loading directly in stylesheet files
-      importing in this manner with prevent blocking your app.
-     -->
-    <!--    TODO: UPDATE FONT LINK -->
-    <link rel="stylesheet" href="[FONT]" crossorigin />
-    <title>noghte-bazi</title>
+    <title>نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes) با دوستان</title>
+    <meta
+      name="description"
+      content="نقطه‌بازی، بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام. با یک لینک، دوستت رو به بازی دونفره آنلاین دعوت کن، یا با کامپیوتر و در حالت آزمایشی سه‌بعدی بازی کن."
+    />
+    <meta
+      name="keywords"
+      content="نقطه بازی, بازی دوز, dots and boxes, بازی آنلاین دونفره, بازی فکری آنلاین"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!--
+      SEO tags below assume this app is deployed at a single public
+      domain. Self-hosters: replace the URL in `canonical`, `og:url` and
+      `og:image`/`twitter:image` with your own domain after deploying
+      (see README's "Self-hosted deployment" section).
+    -->
+    <link rel="canonical" href="https://your-game-domain/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:site_name" content="نقطه‌بازی" />
+    <meta property="og:title" content="نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes)" />
+    <meta
+      property="og:description"
+      content="بازی آنلاین دوز رایگان و بدون ثبت‌نام. با یک لینک دوستت رو دعوت کن و دونفره بازی کن."
+    />
+    <meta property="og:url" content="https://your-game-domain/" />
+    <meta property="og:image" content="https://your-game-domain/header.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes)" />
+    <meta
+      name="twitter:description"
+      content="بازی آنلاین دوز رایگان و بدون ثبت‌نام. با یک لینک دوستت رو دعوت کن و دونفره بازی کن."
+    />
+    <meta name="twitter:image" content="https://your-game-domain/header.png" />
+
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/dotsandboxes.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/dotsandboxes.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "نقطه‌بازی",
+        "alternateName": "Dots and Boxes",
+        "description": "بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام، با حالت دونفره آنلاین، بازی با کامپیوتر و حالت آزمایشی سه‌بعدی.",
+        "genre": "Puzzle",
+        "playMode": ["SinglePlayer", "MultiPlayer"],
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "IRR"
+        }
+      }
+    </script>
+
     <style>
       @font-face {
         font-family: Vazir;
@@ -32,7 +82,7 @@
     </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>برای اجرای این برنامه باید جاوااسکریپت را در مرورگر خود فعال کنید.</noscript>
     <div id="root"></div>
     <!--
       Remove assets if you are not using any assets in your project

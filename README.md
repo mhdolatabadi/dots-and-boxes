@@ -33,6 +33,10 @@ so the host can copy the link and send it to an opponent. Player identity
    the published ports if you're exposing this on the public internet, and
    point `CORS_ORIGIN`/`REACT_APP_BACKEND_URL` at the proxy's public
    hostnames rather than the raw container ports.
+4. For search engines to index the site correctly, replace every
+   `https://your-game-domain` placeholder in
+   `frontend/game/public/index.html`, `robots.txt` and `sitemap.xml` with
+   your real public domain before building the `game` image.
 
 ### Manual deployment
 
