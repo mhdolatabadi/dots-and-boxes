@@ -6,6 +6,7 @@ import { startComputer3DGame } from '../../services/computer3d/computer3d.servic
 import { startOnlineGame } from '../../services/online/online.service'
 import { dispatchPaperSize, paperSizeView } from '../../scenes/_slice/game.slice'
 import HowToPlay from '../../components/how-to-play'
+import Information from '../../components/information'
 
 const BOARD_SIZES = [
   { size: 4, label: 'کوچک' },
@@ -67,6 +68,7 @@ export default function Home() {
       </div>
 
       <HowToPlay />
+      <Information />
     </div>
   )
 }

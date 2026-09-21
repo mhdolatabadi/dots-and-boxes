@@ -1,8 +1,6 @@
 import * as React from 'react'
 // style
 import useStyle from './information.style'
-// localiztion
-import t from './information.local'
 
 export default function Information(props) {
   const classes = useStyle()
