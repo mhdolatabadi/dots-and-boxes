@@ -11,6 +11,9 @@ export default makeStyles(theme => ({
     width: '100%',
     backgroundColor: '#1f2430',
     userSelect: 'none',
+    overflowY: 'auto',
+    padding: '16px 0',
+    boxSizing: 'border-box',
   },
   title: {
     color: '#f5f6fa',
