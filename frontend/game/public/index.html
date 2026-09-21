@@ -83,7 +83,27 @@
   </head>
   <body>
     <noscript>برای اجرای این برنامه باید جاوااسکریپت را در مرورگر خود فعال کنید.</noscript>
-    <div id="root"></div>
+    <!--
+      Crawlable fallback content: React's createRoot() clears and replaces
+      this on mount for real users, but a crawler that doesn't execute JS
+      (or reads the raw response) still sees real page content instead of
+      an empty <div>. Keep this in sync with src/scenes/home/home.js.
+    -->
+    <div id="root">
+      <main>
+        <h1>نقطه‌بازی</h1>
+        <p>
+          بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام. یک
+          لینک بساز و برای دوستت بفرست تا دونفره آنلاین بازی کنید، یا با
+          کامپیوتر و در حالت آزمایشی سه‌بعدی تمرین کن.
+        </p>
+        <ul>
+          <li>بازی با کامپیوتر</li>
+          <li>بازی آنلاین (دونفره)</li>
+          <li>بازی سه‌بعدی (آزمایشی)</li>
+        </ul>
+      </main>
+    </div>
     <!--
       Remove assets if you are not using any assets in your project
       keep assets organize inside a assets directory
