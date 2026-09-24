@@ -15,6 +15,11 @@ so the host can copy the link and send it to an opponent. Player identity
 (id + display name) is generated once per browser and stored in
 `localStorage` — no account system is required.
 
+The UI is available in Persian (default) and English. A `lang` query
+parameter (`?lang=fa` or `?lang=en`) picks the language for that visit and
+is remembered in `localStorage` after that; there's also an in-app switcher
+on the home screen.
+
 ### Docker Compose (recommended)
 
 1. Copy `.env.example` to `.env` and fill in your own values:
@@ -33,6 +38,10 @@ so the host can copy the link and send it to an opponent. Player identity
    the published ports if you're exposing this on the public internet, and
    point `CORS_ORIGIN`/`REACT_APP_BACKEND_URL` at the proxy's public
    hostnames rather than the raw container ports.
+4. For search engines to index the site correctly, replace every
+   `https://your-game-domain` placeholder in
+   `frontend/game/public/index.html`, `robots.txt` and `sitemap.xml` with
+   your real public domain before building the `game` image.
 
 ### Manual deployment
 

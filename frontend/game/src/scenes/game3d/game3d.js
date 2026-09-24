@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 import useStyle from './game3d.style'
+import dict from './game3d.local'
+import useLocal from '../../setup/i18n/useLocal'
 import Header from '../../components/header/header'
 import Scene3D from './components/scene3d'
 import Dot3D from './components/dot3d'
@@ -20,6 +22,7 @@ export default function Game3D() {
   const size = useSelector(size3DView)
   const cubes = useSelector(cubes3DView)
   const winner = useSelector(winner3DView)
+  const t = useLocal(dict)
 
   const dots = []
   for (let x = 0; x < size; x++)
@@ -36,10 +39,10 @@ export default function Game3D() {
   const winnerText = !winner
     ? null
     : winner.draw
-    ? 'مساوی شد!'
+    ? t.draw
     : winner.color === 'red'
-    ? 'شما بردید! 🎉'
-    : 'کامپیوتر برد.'
+    ? t.won
+    : t.lost
 
   return (
     <div className={classes.root}>
@@ -67,10 +70,7 @@ export default function Game3D() {
         })}
       </Scene3D>
 
-      <span className={classes.hint}>
-        برای چرخوندن صحنه بکش؛ برای زوم، اسکرول کن یا با دو انگشت پینچ کن.
-        برای کشیدن خط، روی یکی از میله‌های خاکستری بین نقطه‌ها کلیک کن.
-      </span>
+      <span className={classes.hint}>{t.hint}</span>
 
       {winnerText && <div className={classes.winnerBanner}>{winnerText}</div>}
 
@@ -78,7 +78,7 @@ export default function Game3D() {
         className={classes.backButton}
         onClick={() => dispatchGameMode('menu')}
       >
-        بازگشت به منو
+        {t.backToMenu}
       </div>
     </div>
   )

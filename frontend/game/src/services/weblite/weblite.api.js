@@ -1,4 +1,9 @@
+import { getLocale } from '../../scenes/_slice/locale.slice'
+
 const PLAYER_STORAGE_KEY = 'dots-and-boxes:player'
+
+const NAME_PROMPT_BY_LOCALE = { fa: 'اسمت رو وارد کن:', en: 'Enter your name:' }
+const GUEST_NAME_BY_LOCALE = { fa: 'مهمان', en: 'Guest' }
 
 const generateId = () =>
   window.crypto && window.crypto.randomUUID
@@ -23,8 +28,13 @@ const savePlayer = (player) => {
 
 const player = loadPlayer()
 if (!player.id) player.id = generateId()
-if (!player.name)
-  player.name = window.prompt('اسمت رو وارد کن:', '')?.trim() || 'مهمان'
+if (!player.name) {
+  const locale = getLocale()
+  player.name =
+    window.prompt(NAME_PROMPT_BY_LOCALE[locale] || NAME_PROMPT_BY_LOCALE.fa, '')?.trim() ||
+    GUEST_NAME_BY_LOCALE[locale] ||
+    GUEST_NAME_BY_LOCALE.fa
+}
 savePlayer(player)
 
 export const getCurrentUserId = () => player.id

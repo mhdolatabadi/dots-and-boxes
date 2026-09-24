@@ -1,0 +1,6 @@
+# Self-hosters: update the Sitemap URL below with your own domain
+# (see README's "Self-hosted deployment" section).
+User-agent: *
+Allow: /
+
+Sitemap: https://your-game-domain/sitemap.xml

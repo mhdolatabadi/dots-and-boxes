@@ -2,21 +2,17 @@ import { makeStyles } from '@material-ui/core/styles'
 
 export default makeStyles(theme => ({
   root: {
-    gridArea: 'info-container',
-    height: '30px',
-    width: '300px',
-    minWidth: '270px',
-    maxWidth: '450px',
-
-    display: 'flex', //TODO set to display none as it is flex
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'wheat',
-
-    padding: '3px',
+    marginTop: '8px',
+    opacity: 0.7,
+    transition: 'opacity 0.15s',
+    '&:hover': {
+      opacity: 1,
+    },
   },
   github: {
-    height: '28px',
-    margin: '0 5px',
+    height: '22px',
   },
 }))

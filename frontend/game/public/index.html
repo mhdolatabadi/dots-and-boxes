@@ -1,18 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--
-      replace font with url of your used font
-      e.g. https://example.com/static/fonts/yourFont.min.css
+    <meta name="theme-color" content="#1a1a2e" />
 
-      This is better way of loading font than loading directly in stylesheet files
-      importing in this manner with prevent blocking your app.
-     -->
-    <!--    TODO: UPDATE FONT LINK -->
-    <link rel="stylesheet" href="[FONT]" crossorigin />
-    <title>noghte-bazi</title>
+    <title>نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes) با دوستان</title>
+    <meta
+      name="description"
+      content="نقطه‌بازی، بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام. با یک لینک، دوستت رو به بازی دونفره آنلاین دعوت کن، یا با کامپیوتر و در حالت آزمایشی سه‌بعدی بازی کن."
+    />
+    <meta
+      name="keywords"
+      content="نقطه بازی, بازی نقطه و خط, بازی دوز آنلاین, بازی دوز دو نفره بدون دانلود, dots and boxes, بازی آنلاین دونفره بدون ثبت نام, بازی فکری آنلاین"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!--
+      SEO tags below assume this app is deployed at a single public
+      domain. Self-hosters: replace the URL in `canonical`, `og:url` and
+      `og:image`/`twitter:image` with your own domain after deploying
+      (see README's "Self-hosted deployment" section).
+    -->
+    <link rel="canonical" href="https://your-game-domain/" />
+    <!--
+      The game is a client-side language toggle (?lang=fa|en), not
+      separate pages, but each variant still gets its own indexable URL.
+    -->
+    <link rel="alternate" hreflang="fa" href="https://your-game-domain/?lang=fa" />
+    <link rel="alternate" hreflang="en" href="https://your-game-domain/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://your-game-domain/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:site_name" content="نقطه‌بازی" />
+    <meta property="og:title" content="نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes)" />
+    <meta
+      property="og:description"
+      content="بازی آنلاین دوز رایگان و بدون ثبت‌نام. با یک لینک دوستت رو دعوت کن و دونفره بازی کن."
+    />
+    <meta property="og:url" content="https://your-game-domain/" />
+    <meta property="og:image" content="https://your-game-domain/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="نقطه‌بازی | بازی آنلاین دوز (Dots and Boxes)" />
+    <meta
+      name="twitter:description"
+      content="بازی آنلاین دوز رایگان و بدون ثبت‌نام. با یک لینک دوستت رو دعوت کن و دونفره بازی کن."
+    />
+    <meta name="twitter:image" content="https://your-game-domain/og-image.png" />
+
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/dotsandboxes.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/dotsandboxes.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "نقطه‌بازی",
+        "alternateName": "Dots and Boxes",
+        "description": "بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام، با حالت دونفره آنلاین، بازی با کامپیوتر و حالت آزمایشی سه‌بعدی.",
+        "genre": "Puzzle",
+        "playMode": ["SinglePlayer", "MultiPlayer"],
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "image": "https://your-game-domain/og-image.png",
+        "inLanguage": ["fa", "en"],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "IRR"
+        }
+      }
+    </script>
+
+    <!--
+      Keep in sync with the FAQ list in
+      src/components/how-to-play/how-to-play.js.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "قوانین نقطه‌بازی چیست؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "بازیکن‌ها به نوبت یک خط بین دو نقطه‌ی مجاور می‌کشند. هر کس با کشیدن ضلع چهارم یک مربع، اون جعبه رو برای خودش می‌بره و یک نوبت اضافه می‌گیره. وقتی همه‌ی خط‌ها کشیده شد، برنده کسیه که جعبه‌ی بیشتری برده باشه."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "نقطه‌بازی با بازی دوز چه فرقی دارد؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نقطه‌بازی همون Dots and Boxes است: خط کشیدن بین نقطه‌ها برای ساختن جعبه. واژه‌ی «دوز» در فارسی معمولاً به بازی‌های دیگه‌ای مثل دوز سه‌تایی (XO) یا دوز نه‌تایی (آسیاب) اشاره داره که بازی‌های متفاوتی هستن."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "آیا نقطه‌بازی نیاز به نصب یا ثبت‌نام دارد؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نه. نقطه‌بازی کاملاً توی مرورگر اجرا می‌شه، بدون نصب اپلیکیشن و بدون ساختن اکانت. هویت بازیکن فقط توی همون مرورگر ذخیره می‌شه."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "چطور با دوستم آنلاین بازی کنم؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "حالت «بازی آنلاین (دونفره)» رو انتخاب کن؛ یک لینک اتاق ساخته می‌شه که می‌تونی برای دوستت بفرستی. با باز کردن همون لینک، دوستت مستقیم وارد همون بازی می‌شه."
+            }
+          }
+        ]
+      }
+    </script>
+
     <style>
       @font-face {
         font-family: Vazir;
@@ -23,6 +129,17 @@
       * {
         font-family: Vazir;
       }
+      /*
+        Vazir's digit glyphs are Persian-Indic (so "2 Players" renders as
+        "۲ Players") -- fine for fa, wrong for en. Switch to a plain
+        Latin font wherever <html lang="en"> is set (useSyncDocumentLocale
+        sets that attribute when the English UI is active).
+      */
+      :lang(en),
+      :lang(en) * {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+      }
       body,
       html,
       #root {
@@ -32,8 +149,28 @@
     </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <noscript>برای اجرای این برنامه باید جاوااسکریپت را در مرورگر خود فعال کنید.</noscript>
+    <!--
+      Crawlable fallback content: React's createRoot() clears and replaces
+      this on mount for real users, but a crawler that doesn't execute JS
+      (or reads the raw response) still sees real page content instead of
+      an empty <div>. Keep this in sync with src/scenes/home/home.js.
+    -->
+    <div id="root">
+      <main>
+        <h1>نقطه‌بازی</h1>
+        <p>
+          بازی آنلاین دوز (Dots and Boxes) رایگان و بدون نیاز به ثبت‌نام. یک
+          لینک بساز و برای دوستت بفرست تا دونفره آنلاین بازی کنید، یا با
+          کامپیوتر و در حالت آزمایشی سه‌بعدی تمرین کن.
+        </p>
+        <ul>
+          <li>بازی با کامپیوتر</li>
+          <li>بازی آنلاین (دونفره)</li>
+          <li>بازی سه‌بعدی (آزمایشی)</li>
+        </ul>
+      </main>
+    </div>
     <!--
       Remove assets if you are not using any assets in your project
       keep assets organize inside a assets directory

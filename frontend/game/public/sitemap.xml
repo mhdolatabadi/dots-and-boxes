@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Self-hosters: replace the URL below with your own domain
+  (see README's "Self-hosted deployment" section). The game is a
+  single-page app -- every match just adds a ?room= parameter to this
+  same URL -- so these two entries (one per language, ?lang=fa/en) cover
+  the whole site. See the hreflang alternates in index.html.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://your-game-domain/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://your-game-domain/?lang=fa" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://your-game-domain/?lang=en" />
+  </url>
+  <url>
+    <loc>https://your-game-domain/?lang=en</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://your-game-domain/?lang=fa" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://your-game-domain/?lang=en" />
+  </url>
+</urlset>

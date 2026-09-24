@@ -26,6 +26,9 @@ import {
 
 import { HTTP_BACKEND } from '../../setup/api'
 import { getCurrentUserId, getUserFirstName, getWisId } from '../weblite/weblite.api'
+import { getLocale } from '../../scenes/_slice/locale.slice'
+
+const OPPONENT_NAME_BY_LOCALE = { fa: 'حریف', en: 'Opponent' }
 // /**
 //  * @param {Object} params - your passed data
 //  * @return {Promise<unknown>}
@@ -103,7 +106,9 @@ socket.on('name', (opponentId, opponentScore, opponentColor, opponentName) => {
   dispatchOpponentId(opponentId)
   dispatchOpponentScore(opponentScore)
   dispatchOpponentColor(opponentColor)
-  dispatchOpponentName(opponentName || 'حریف')
+  dispatchOpponentName(
+    opponentName || OPPONENT_NAME_BY_LOCALE[getLocale()] || OPPONENT_NAME_BY_LOCALE.fa
+  )
 })
 
 socket.on('role', (role, color) => {

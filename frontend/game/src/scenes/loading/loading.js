@@ -2,10 +2,12 @@ import * as React from 'react'
 // style
 import useStyle from './loading.style'
 // localiztion
-import t from './loading.local'
+import dict from './loading.local'
+import useLocal from '../../setup/i18n/useLocal'
 
 export default function LoadingPresentational(props) {
   const classes = useStyle()
+  const t = useLocal(dict)
 
   return (
     <div className={classes.root}>
